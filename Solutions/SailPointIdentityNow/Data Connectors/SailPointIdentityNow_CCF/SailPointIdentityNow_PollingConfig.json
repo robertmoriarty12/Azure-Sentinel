@@ -13,10 +13,14 @@
         "GrantType": "client_credentials",
         "ClientId": "{{ClientId}}",
         "ClientSecret": "{{ClientSecret}}",
-        "TokenEndpoint": "https://{{TenantId}}.api.identitynow.com/oauth/token"
+        "TokenEndpoint": "https://{{TenantId}}.api.identitynow-demo.com/oauth/token",
+        "tokenEndpointHeaders": {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
       },
       "request": {
-        "apiEndpoint": "https://{{TenantId}}.api.identitynow.com/v2025/search/events",
+        "apiEndpoint": "https://{{TenantId}}.api.identitynow-demo.com/v2025/search/events",
         "httpMethod": "POST",
         "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss.fffZ",
         "startTimeAttributeName": "startTime",
