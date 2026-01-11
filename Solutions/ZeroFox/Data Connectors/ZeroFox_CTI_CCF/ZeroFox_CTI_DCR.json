@@ -1,0 +1,568 @@
+{
+  "name": "ZeroFoxCTIDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for ZeroFox CTI feeds",
+    "streamDeclarations": {
+      "Custom-ZeroFox_CTI_malware_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_phishing_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_ransomware_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_exploits_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_c2domains_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_vulnerabilities_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_breaches_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_compromisedcredentials_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_botnet_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_darkweb_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_threatactors_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_discord_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_telegram_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_irc_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_disruption_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_emailaddresses_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_phonenumbers_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_nationalids_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_creditcards_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_advanceddarkweb_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-ZeroFox_CTI_botnetcompromisedcredentials_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_malware_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_malware_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='malware', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_phishing_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_phishing_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='phishing', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_ransomware_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_ransomware_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='ransomware', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_exploits_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_exploits_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='exploits', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_c2domains_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_c2domains_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='c2domains', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_vulnerabilities_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_vulnerabilities_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='vulnerabilities', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_breaches_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_breaches_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='breaches', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_compromisedcredentials_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_compromisedcredentials_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='compromisedcredentials', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_botnet_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_botnet_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='botnet', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_darkweb_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_darkweb_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='darkweb', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_threatactors_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_threatactors_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='threatactors', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_discord_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_discord_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='discord', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_telegram_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_telegram_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='telegram', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_irc_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_irc_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='irc', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_disruption_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_disruption_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='disruption', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_emailaddresses_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_emailaddresses_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='emailaddresses', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_phonenumbers_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_phonenumbers_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='phonenumbers', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_nationalids_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_nationalids_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='nationalids', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_creditcards_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_creditcards_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='creditcards', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_advanceddarkweb_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_advanceddarkweb_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='advanceddarkweb', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      },
+      {
+        "streams": [
+          "Custom-ZeroFox_CTI_botnetcompromisedcredentials_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ZeroFox_CTI_botnetcompromisedcredentials_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='botnetcompromisedcredentials', EventData=pack_all() | project TimeGenerated, EventType, EventData"
+      }
+    ]
+  }
+}

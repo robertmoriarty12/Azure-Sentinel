@@ -1,0 +1,527 @@
+[
+  {
+    "name": "ZeroFox_CTI_malware_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_malware_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_phishing_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_phishing_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_ransomware_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_ransomware_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_exploits_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_exploits_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_c2domains_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_c2domains_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_vulnerabilities_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_vulnerabilities_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_breaches_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_breaches_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_compromisedcredentials_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_compromisedcredentials_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_botnet_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_botnet_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_darkweb_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_darkweb_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_threatactors_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_threatactors_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_discord_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_discord_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_telegram_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_telegram_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_irc_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_irc_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_disruption_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_disruption_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_emailaddresses_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_emailaddresses_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_phonenumbers_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_phonenumbers_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_nationalids_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_nationalids_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_creditcards_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_creditcards_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_advanceddarkweb_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_advanceddarkweb_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "ZeroFox_CTI_botnetcompromisedcredentials_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ZeroFox_CTI_botnetcompromisedcredentials_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  }
+]

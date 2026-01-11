@@ -1,0 +1,237 @@
+{
+  "name": "ZeroFoxCTIConnectorDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "ZeroFoxCTIDefinition",
+      "title": "ZeroFox CTI (Cyber Threat Intelligence)",
+      "publisher": "ZeroFox",
+      "descriptionMarkdown": "The ZeroFox CTI connector provides access to comprehensive threat intelligence feeds including malware, phishing, ransomware, exploits, C2 domains, vulnerabilities, breaches, compromised credentials, and more. This connector uses the ZeroFox CTI API to ingest threat intelligence data into Microsoft Sentinel for correlation and analysis.\n\n**Note:** This connector uses Basic Authentication as a workaround for ZeroFox's custom token authentication. Ensure you have valid ZeroFox API credentials.",
+      "graphQueriesTableName": "ZeroFox_CTI_malware_CL",
+      "graphQueries": [
+        {
+          "metricName": "Malware Intelligence",
+          "legend": "ZeroFox_CTI_malware_CL",
+          "baseQuery": "ZeroFox_CTI_malware_CL"
+        },
+        {
+          "metricName": "Phishing Intelligence",
+          "legend": "ZeroFox_CTI_phishing_CL",
+          "baseQuery": "ZeroFox_CTI_phishing_CL"
+        },
+        {
+          "metricName": "Ransomware Intelligence",
+          "legend": "ZeroFox_CTI_ransomware_CL",
+          "baseQuery": "ZeroFox_CTI_ransomware_CL"
+        },
+        {
+          "metricName": "Exploits Intelligence",
+          "legend": "ZeroFox_CTI_exploits_CL",
+          "baseQuery": "ZeroFox_CTI_exploits_CL"
+        },
+        {
+          "metricName": "C2 Domains Intelligence",
+          "legend": "ZeroFox_CTI_c2domains_CL",
+          "baseQuery": "ZeroFox_CTI_c2domains_CL"
+        },
+        {
+          "metricName": "Vulnerabilities Intelligence",
+          "legend": "ZeroFox_CTI_vulnerabilities_CL",
+          "baseQuery": "ZeroFox_CTI_vulnerabilities_CL"
+        },
+        {
+          "metricName": "Breaches Intelligence",
+          "legend": "ZeroFox_CTI_breaches_CL",
+          "baseQuery": "ZeroFox_CTI_breaches_CL"
+        },
+        {
+          "metricName": "Compromised Credentials Intelligence",
+          "legend": "ZeroFox_CTI_compromisedcredentials_CL",
+          "baseQuery": "ZeroFox_CTI_compromisedcredentials_CL"
+        },
+        {
+          "metricName": "Botnet Intelligence",
+          "legend": "ZeroFox_CTI_botnet_CL",
+          "baseQuery": "ZeroFox_CTI_botnet_CL"
+        },
+        {
+          "metricName": "Dark Web Intelligence",
+          "legend": "ZeroFox_CTI_darkweb_CL",
+          "baseQuery": "ZeroFox_CTI_darkweb_CL"
+        },
+        {
+          "metricName": "Threat Actors Intelligence",
+          "legend": "ZeroFox_CTI_threatactors_CL",
+          "baseQuery": "ZeroFox_CTI_threatactors_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All Malware Intelligence Events",
+          "query": "ZeroFox_CTI_malware_CL\n| sort by TimeGenerated desc\n| take 100"
+        },
+        {
+          "description": "All Phishing Intelligence Events",
+          "query": "ZeroFox_CTI_phishing_CL\n| sort by TimeGenerated desc\n| take 100"
+        },
+        {
+          "description": "All Ransomware Intelligence Events",
+          "query": "ZeroFox_CTI_ransomware_CL\n| sort by TimeGenerated desc\n| take 100"
+        },
+        {
+          "description": "All Exploits Intelligence Events",
+          "query": "ZeroFox_CTI_exploits_CL\n| sort by TimeGenerated desc\n| take 100"
+        },
+        {
+          "description": "Recent Threat Intelligence (All Feeds)",
+          "query": "union ZeroFox_CTI_malware_CL, ZeroFox_CTI_phishing_CL, ZeroFox_CTI_ransomware_CL, ZeroFox_CTI_exploits_CL\n| where TimeGenerated > ago(7d)\n| summarize count() by EventType\n| order by count_ desc"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "ZeroFox_CTI_malware_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_malware_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_phishing_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_phishing_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_ransomware_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_ransomware_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_exploits_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_exploits_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_c2domains_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_c2domains_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_vulnerabilities_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_vulnerabilities_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_breaches_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_breaches_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_compromisedcredentials_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_compromisedcredentials_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_botnet_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_botnet_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_darkweb_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_darkweb_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_threatactors_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_threatactors_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_discord_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_discord_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_telegram_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_telegram_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_irc_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_irc_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_disruption_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_disruption_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_emailaddresses_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_emailaddresses_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_phonenumbers_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_phonenumbers_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_nationalids_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_nationalids_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_creditcards_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_creditcards_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_advanceddarkweb_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_advanceddarkweb_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "ZeroFox_CTI_botnetcompromisedcredentials_CL",
+          "lastDataReceivedQuery": "ZeroFox_CTI_botnetcompromisedcredentials_CL\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": false
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": false
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "ZeroFox API Credentials",
+            "description": "ZeroFox API username and token are required. You can obtain these from your ZeroFox account under API Data Feeds settings."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "Connect ZeroFox CTI to Microsoft Sentinel",
+          "description": "Provide your ZeroFox API credentials to enable threat intelligence data ingestion. This connector will ingest data from 21 different CTI feeds into separate tables.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "ZeroFox Username",
+                "placeholder": "Enter your ZeroFox API username",
+                "type": "text",
+                "name": "ZeroFoxUsername"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "ZeroFox API Token",
+                "placeholder": "Enter your ZeroFox API token",
+                "type": "password",
+                "name": "ZeroFoxToken"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,863 @@
+[
+  {
+    "name": "ZeroFoxCTIMalware",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_malware_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_malware_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/malware/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIPhishing",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_phishing_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_phishing_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/phishing/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "scanned_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIRansomware",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_ransomware_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_ransomware_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/ransomware/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIExploits",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_exploits_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_exploits_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/exploits/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIC2Domains",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_c2domains_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_c2domains_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/c2-domains/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIVulnerabilities",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_vulnerabilities_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_vulnerabilities_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/vulnerabilities/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIBreaches",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_breaches_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_breaches_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/breaches/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTICompromisedCredentials",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_compromisedcredentials_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_compromisedcredentials_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/compromised-credentials/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIBotnet",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_botnet_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_botnet_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/botnet/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "listed_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIDarkWeb",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_darkweb_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_darkweb_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/dark-web/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIThreatActors",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_threatactors_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_threatactors_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/threat-actors/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIDiscord",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_discord_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_discord_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/discord/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTITelegram",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_telegram_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_telegram_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/telegram/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIIRC",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_irc_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_irc_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/irc/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIDisruption",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_disruption_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_disruption_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/disruption/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIEmailAddresses",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_emailaddresses_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_emailaddresses_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/email-addresses/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIPhoneNumbers",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_phonenumbers_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_phonenumbers_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/phone-numbers/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTINationalIDs",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_nationalids_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_nationalids_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/national-ids/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTICreditCards",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_creditcards_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_creditcards_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/credit-cards/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIAdvancedDarkWeb",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_advanceddarkweb_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_advanceddarkweb_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/advanced-dark-web/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  },
+  {
+    "name": "ZeroFoxCTIBotnetCompromisedCredentials",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ZeroFoxCTIDefinition",
+      "dataType": "ZeroFox_CTI_botnetcompromisedcredentials_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ZeroFox_CTI_botnetcompromisedcredentials_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ZeroFoxUsername}}",
+        "Password": "{{ZeroFoxToken}}"
+      },
+      "request": {
+        "apiEndpoint": "https://api.zerofox.com/cti/botnet-compromised-credentials/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "created_after",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.results"
+        ],
+        "format": "json"
+      },
+      "paging": {
+        "pagingType": "NextPageUrl",
+        "nextPageUrl": "$.next"
+      }
+    }
+  }
+]
