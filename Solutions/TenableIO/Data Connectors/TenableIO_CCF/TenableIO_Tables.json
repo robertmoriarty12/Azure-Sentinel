@@ -1,0 +1,276 @@
+[
+  {
+    "name": "TenableIO_Assets_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "TenableIO_Assets_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventVendor",
+            "type": "string"
+          },
+          {
+            "name": "EventProduct",
+            "type": "string"
+          },
+          {
+            "name": "ID",
+            "type": "guid"
+          },
+          {
+            "name": "FQDNs",
+            "type": "string"
+          },
+          {
+            "name": "IPV4s",
+            "type": "string"
+          },
+          {
+            "name": "IPV6s",
+            "type": "string"
+          },
+          {
+            "name": "MACAddresses",
+            "type": "string"
+          },
+          {
+            "name": "OperatingSystems",
+            "type": "string"
+          },
+          {
+            "name": "NetworkName",
+            "type": "string"
+          },
+          {
+            "name": "NetworkID",
+            "type": "guid"
+          },
+          {
+            "name": "AzureResourceID",
+            "type": "string"
+          },
+          {
+            "name": "AzureVMID",
+            "type": "guid"
+          },
+          {
+            "name": "AWSEC2InstanceID",
+            "type": "string"
+          },
+          {
+            "name": "AWSRegion",
+            "type": "string"
+          },
+          {
+            "name": "GCPInstanceID",
+            "type": "string"
+          },
+          {
+            "name": "GCPProjectID",
+            "type": "string"
+          },
+          {
+            "name": "FirstSeen",
+            "type": "datetime"
+          },
+          {
+            "name": "LastSeenDate",
+            "type": "datetime"
+          },
+          {
+            "name": "FirstScanTime",
+            "type": "datetime"
+          },
+          {
+            "name": "LastScanDate",
+            "type": "datetime"
+          },
+          {
+            "name": "LastAuthenticatedScanDate",
+            "type": "datetime"
+          },
+          {
+            "name": "HasAgent",
+            "type": "boolean"
+          },
+          {
+            "name": "HasPluginResults",
+            "type": "boolean"
+          },
+          {
+            "name": "InstalledSoftware",
+            "type": "string"
+          },
+          {
+            "name": "Tags",
+            "type": "string"
+          },
+          {
+            "name": "Sources",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "TenableIO_Vuln_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "TenableIO_Vuln_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventVendor",
+            "type": "string"
+          },
+          {
+            "name": "EventProduct",
+            "type": "string"
+          },
+          {
+            "name": "AssetUUID",
+            "type": "guid"
+          },
+          {
+            "name": "AssetFQDN",
+            "type": "string"
+          },
+          {
+            "name": "AssetIPV4",
+            "type": "string"
+          },
+          {
+            "name": "AssetOperatingSystem",
+            "type": "string"
+          },
+          {
+            "name": "PluginID",
+            "type": "int"
+          },
+          {
+            "name": "PluginName",
+            "type": "string"
+          },
+          {
+            "name": "PluginFamily",
+            "type": "string"
+          },
+          {
+            "name": "PluginCVE",
+            "type": "string"
+          },
+          {
+            "name": "PluginCPE",
+            "type": "string"
+          },
+          {
+            "name": "PluginCVSS3BaseScore",
+            "type": "real"
+          },
+          {
+            "name": "PluginCVSSBaseScore",
+            "type": "real"
+          },
+          {
+            "name": "PluginVPRScore",
+            "type": "real"
+          },
+          {
+            "name": "PluginRiskFactor",
+            "type": "string"
+          },
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "SeverityID",
+            "type": "int"
+          },
+          {
+            "name": "State",
+            "type": "string"
+          },
+          {
+            "name": "FirstFoundDate",
+            "type": "datetime"
+          },
+          {
+            "name": "LastFoundDate",
+            "type": "datetime"
+          },
+          {
+            "name": "LastFixedDate",
+            "type": "datetime"
+          },
+          {
+            "name": "PluginDescription",
+            "type": "string"
+          },
+          {
+            "name": "PluginSolution",
+            "type": "string"
+          },
+          {
+            "name": "PluginSynopsis",
+            "type": "string"
+          },
+          {
+            "name": "PluginExploitAvailable",
+            "type": "boolean"
+          },
+          {
+            "name": "PluginExploitedByMalware",
+            "type": "boolean"
+          },
+          {
+            "name": "PluginInTheNews",
+            "type": "boolean"
+          },
+          {
+            "name": "PortNumber",
+            "type": "int"
+          },
+          {
+            "name": "PortProtocol",
+            "type": "string"
+          },
+          {
+            "name": "PortService",
+            "type": "string"
+          },
+          {
+            "name": "ScanID",
+            "type": "guid"
+          },
+          {
+            "name": "ScanCompletedAtTime",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "name": "TenableIODCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for Tenable.io connector (NON-FUNCTIONAL - see README.md)",
+    "streamDeclarations": {
+      "Custom-TenableIO_Vuln_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "uuid",
+            "type": "string"
+          }
+        ]
+      },
+      "Custom-TenableIO_Assets_CL": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "uuid",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-TenableIO_Vuln_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-TenableIO_Vuln_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='VulnerabilityExport', EventVendor='TenableIO', EventProduct='Vulnerabilities' | project TimeGenerated, EventType, EventVendor, EventProduct"
+      },
+      {
+        "streams": [
+          "Custom-TenableIO_Assets_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-TenableIO_Assets_CL",
+        "transformKql": "source | extend TimeGenerated=now(), EventType='AssetExport', EventVendor='TenableIO', EventProduct='Assets' | project TimeGenerated, EventType, EventVendor, EventProduct"
+      }
+    ]
+  }
+}

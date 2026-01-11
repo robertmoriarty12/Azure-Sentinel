@@ -1,0 +1,88 @@
+[
+  {
+    "name": "TenableIOVulnerabilitiesPoller",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "TenableIOConnectorDefinition",
+      "dataType": "TenableIO_Vuln_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-TenableIO_Vuln_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{TenableAccessKey}}",
+        "Password": "{{TenableSecretKey}}"
+      },
+      "request": {
+        "apiEndpoint": "https://cloud.tenable.com/vulns/export",
+        "httpMethod": "POST",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-ApiKeys": "accessKey={{TenableAccessKey}}; secretKey={{TenableSecretKey}}"
+        },
+        "isPostPayloadJson": true,
+        "queryTimeFormat": "UnixTimestampInMills",
+        "startTimeAttributeName": "last_found",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "retryCount": 3,
+        "timeoutInSeconds": 60
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.uuid"
+        ],
+        "format": "json"
+      }
+    }
+  },
+  {
+    "name": "TenableIOAssetsPoller",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "TenableIOConnectorDefinition",
+      "dataType": "TenableIO_Assets_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-TenableIO_Assets_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{TenableAccessKey}}",
+        "Password": "{{TenableSecretKey}}"
+      },
+      "request": {
+        "apiEndpoint": "https://cloud.tenable.com/assets/export",
+        "httpMethod": "POST",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-ApiKeys": "accessKey={{TenableAccessKey}}; secretKey={{TenableSecretKey}}"
+        },
+        "isPostPayloadJson": true,
+        "queryTimeFormat": "UnixTimestampInMills",
+        "startTimeAttributeName": "updated_at",
+        "queryWindowInMin": 1440,
+        "rateLimitQPS": 1,
+        "retryCount": 3,
+        "timeoutInSeconds": 60
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.uuid"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]

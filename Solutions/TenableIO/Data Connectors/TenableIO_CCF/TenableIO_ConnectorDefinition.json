@@ -1,0 +1,137 @@
+{
+  "name": "TenableIOConnectorDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "TenableIOConnectorDefinition",
+      "title": "Tenable.io Vulnerability Management (CCF - NON-FUNCTIONAL)",
+      "publisher": "Tenable",
+      "descriptionMarkdown": "⚠️ **CRITICAL WARNING: THIS CCF CONNECTOR DOES NOT FUNCTION PROPERLY**\n\nThis Codeless Connector Format (CCF) version of the Tenable.io connector has **fundamental architectural limitations** that prevent it from collecting data correctly. **Use the Azure Durable Functions connector instead** (located in the parent directory).\n\n## Why This Connector Cannot Work\n\nTenable.io uses an asynchronous export job API that is incompatible with CCF:\n- Export jobs take minutes/hours to complete\n- CCF cannot poll status endpoints until completion\n- CCF cannot iterate over dynamically discovered data chunks\n- No state management for export job tracking\n\n## Recommended Action\n\n**DO NOT USE THIS CONNECTOR.** Instead, deploy the fully functional Azure Durable Functions connector from the TenableIO solution.\n\n---\n\n[See full technical documentation](https://aka.ms/sentinel-TenableIO-CCF-limitations)\n\nThe original [Tenable.io](https://www.tenable.com/products/tenable-io) data connector provides reliable ingestion of Asset and Vulnerability data through Azure Durable Functions. This CCF version exists for reference only.",
+      "graphQueriesTableName": "TenableIO_Vuln_CL",
+      "graphQueries": [
+        {
+          "metricName": "Vulnerability Records (Incomplete)",
+          "legend": "TenableIO_Vuln_CL",
+          "baseQuery": "TenableIO_Vuln_CL"
+        },
+        {
+          "metricName": "Asset Records (Incomplete)",
+          "legend": "TenableIO_Assets_CL",
+          "baseQuery": "TenableIO_Assets_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All Vulnerability Records (will be empty/incomplete)",
+          "query": "TenableIO_Vuln_CL\n | sort by TimeGenerated desc\n | take 10"
+        },
+        {
+          "description": "All Asset Records (will be empty/incomplete)",
+          "query": "TenableIO_Assets_CL\n | sort by TimeGenerated desc\n | take 10"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "TenableIO_Vuln_CL",
+          "lastDataReceivedQuery": "TenableIO_Vuln_CL\n | summarize Time = max(TimeGenerated)\n | where isnotempty(Time)"
+        },
+        {
+          "name": "TenableIO_Assets_CL",
+          "lastDataReceivedQuery": "TenableIO_Assets_CL\n | summarize Time = max(TimeGenerated)\n | where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": true
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": false
+            }
+          },
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces/sharedKeys",
+            "permissionsDisplayText": "Read permissions to shared keys are required.",
+            "providerDisplayName": "Keys",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "action": true
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "Tenable.io API Credentials",
+            "description": "Access Key and Secret Key from Tenable.io are required. [See documentation](https://docs.tenable.com/tenableio/vulnerabilitymanagement/Content/Settings/GenerateAPIKey.htm) for obtaining credentials."
+          },
+          {
+            "name": "CRITICAL LIMITATION",
+            "description": "⚠️ **THIS CONNECTOR WILL NOT COLLECT DATA PROPERLY.** The Tenable.io Export API requires asynchronous job management that CCF cannot provide. Use the Azure Durable Functions connector instead."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "⚠️ CRITICAL: Do Not Use This Connector",
+          "description": "This CCF connector **cannot function correctly** due to Tenable.io's asynchronous export API architecture. It will not collect vulnerability or asset data properly.\n\n**Recommended Action:** Use the Azure Durable Functions connector located in the parent directory of this solution. That connector provides full functionality including:\n- Proper export job management\n- Status polling until completion\n- Chunk download and processing\n- Error handling and retry logic\n- Data partitioning for large payloads\n\n[Deploy the Durable Functions connector](https://aka.ms/sentinel-TenableIO-azuredeploy)"
+        },
+        {
+          "title": "Step 1 - Obtain Tenable.io API Credentials",
+          "description": "Even though this connector won't work correctly, if you proceed, you'll need:\n\n1. Log in to your Tenable.io account\n2. Navigate to **Settings** > **My Account** > **API Keys**\n3. Click **Generate** to create new API keys\n4. Copy both the **Access Key** and **Secret Key**\n5. Store them securely (you won't be able to view the Secret Key again)\n\n[Detailed Instructions](https://docs.tenable.com/tenableio/vulnerabilitymanagement/Content/Settings/GenerateAPIKey.htm)"
+        },
+        {
+          "title": "Step 2 - Configure Connection (Non-Functional)",
+          "description": "Enter your Tenable.io API credentials. Note: This connector will create export jobs but cannot properly retrieve the data.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Tenable Access Key",
+                "name": "TenableAccessKey",
+                "type": "text",
+                "placeholder": "Enter your Tenable.io Access Key"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Tenable Secret Key",
+                "name": "TenableSecretKey",
+                "type": "password",
+                "placeholder": "Enter your Tenable.io Secret Key"
+              }
+            },
+            {
+              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "Connect (Not Recommended)",
+                "disconnectLabel": "Disconnect",
+                "name": "connect"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Step 3 - Expected Result",
+          "description": "⚠️ **After connecting, you will NOT see data in your tables.**\n\nThe connector will:\n- ❌ Create export jobs that never complete\n- ❌ Fail to poll job status properly\n- ❌ Never download actual vulnerability/asset data\n- ❌ Leave orphaned export jobs in Tenable.io\n\n**Again: Use the Azure Durable Functions connector for working data collection.**"
+        }
+      ]
+    }
+  }
+}
