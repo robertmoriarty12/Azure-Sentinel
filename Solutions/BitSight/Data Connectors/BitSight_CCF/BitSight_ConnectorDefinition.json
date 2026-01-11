@@ -1,0 +1,184 @@
+{
+  "name": "BitSightDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "title": "BitSight Security Ratings (Serverless)",
+      "publisher": "BitSight",
+      "id": "BitSightDefinition",
+      "descriptionMarkdown": "The BitSight connector provides the capability to ingest security ratings data from the BitSight Security Ratings Platform. The connector provides visibility into company security posture, findings, breaches, alerts, and statistical data across your portfolio of monitored companies.",
+      "graphQueriesTableName": "BitSightCompanyDetails_CL",
+      "graphQueries": [
+        {
+          "metricName": "Company Details Events",
+          "legend": "BitSightCompanyDetails_CL",
+          "baseQuery": "BitSightCompanyDetails_CL"
+        },
+        {
+          "metricName": "Company Ratings Events",
+          "legend": "BitSightCompanyRatings_CL",
+          "baseQuery": "BitSightCompanyRatings_CL"
+        },
+        {
+          "metricName": "Breaches Events",
+          "legend": "BitSightBreaches_CL",
+          "baseQuery": "BitSightBreaches_CL"
+        },
+        {
+          "metricName": "Findings Events",
+          "legend": "BitSightFindings_CL",
+          "baseQuery": "BitSightFindings_CL"
+        },
+        {
+          "metricName": "Findings Summary Events",
+          "legend": "BitSightFindingsSummary_CL",
+          "baseQuery": "BitSightFindingsSummary_CL"
+        },
+        {
+          "metricName": "Alerts Events",
+          "legend": "BitSightAlerts_CL",
+          "baseQuery": "BitSightAlerts_CL"
+        },
+        {
+          "metricName": "Graph Data Events",
+          "legend": "BitSightGraphData_CL",
+          "baseQuery": "BitSightGraphData_CL"
+        },
+        {
+          "metricName": "Diligence Statistics Events",
+          "legend": "BitSightDiligenceStatistics_CL",
+          "baseQuery": "BitSightDiligenceStatistics_CL"
+        },
+        {
+          "metricName": "Industrial Statistics Events",
+          "legend": "BitSightIndustrialStatistics_CL",
+          "baseQuery": "BitSightIndustrialStatistics_CL"
+        },
+        {
+          "metricName": "Observation Statistics Events",
+          "legend": "BitSightObservationStatistics_CL",
+          "baseQuery": "BitSightObservationStatistics_CL"
+        },
+        {
+          "metricName": "Diligence Historical Statistics Events",
+          "legend": "BitSightDiligenceHistoricalStatistics_CL",
+          "baseQuery": "BitSightDiligenceHistoricalStatistics_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "Get recent company details",
+          "query": "BitSightCompanyDetails_CL\n| where TimeGenerated > ago(7d)\n| project TimeGenerated, Name, GUID, Industry, RatingIndustryMedian\n| take 10"
+        },
+        {
+          "description": "Get recent security findings",
+          "query": "BitSightFindings_CL\n| where TimeGenerated > ago(7d)\n| project TimeGenerated, CompanyName, RiskCategory, RiskVector, Severity\n| take 10"
+        },
+        {
+          "description": "Get recent breach events",
+          "query": "BitSightBreaches_CL\n| where TimeGenerated > ago(30d)\n| project TimeGenerated, Companyname, Severity, EventType, Text\n| take 10"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "BitSightCompanyDetails_CL",
+          "lastDataReceivedQuery": "BitSightCompanyDetails_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightCompanyRatings_CL",
+          "lastDataReceivedQuery": "BitSightCompanyRatings_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightBreaches_CL",
+          "lastDataReceivedQuery": "BitSightBreaches_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightFindings_CL",
+          "lastDataReceivedQuery": "BitSightFindings_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightFindingsSummary_CL",
+          "lastDataReceivedQuery": "BitSightFindingsSummary_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightAlerts_CL",
+          "lastDataReceivedQuery": "BitSightAlerts_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightGraphData_CL",
+          "lastDataReceivedQuery": "BitSightGraphData_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightDiligenceStatistics_CL",
+          "lastDataReceivedQuery": "BitSightDiligenceStatistics_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightIndustrialStatistics_CL",
+          "lastDataReceivedQuery": "BitSightIndustrialStatistics_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightObservationStatistics_CL",
+          "lastDataReceivedQuery": "BitSightObservationStatistics_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        },
+        {
+          "name": "BitSightDiligenceHistoricalStatistics_CL",
+          "lastDataReceivedQuery": "BitSightDiligenceHistoricalStatistics_CL\n| where TimeGenerated > ago(7d)\n| summarize Time=max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": false
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "BitSight API Token",
+            "description": "A BitSight API token is required. The token can be obtained from your BitSight account portal."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "Connect BitSight to Microsoft Sentinel",
+          "description": "Provide the BitSight API Token to connect your BitSight security ratings data to Microsoft Sentinel.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "API Token",
+                "placeholder": "Enter your BitSight API Token",
+                "type": "password",
+                "name": "ApiToken"
+              }
+            },
+            {
+              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "Connect",
+                "disconnectLabel": "Disconnect",
+                "name": "connect"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

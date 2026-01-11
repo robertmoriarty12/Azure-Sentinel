@@ -1,0 +1,327 @@
+[
+  {
+    "name": "BitSightCompanyDetails_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightCompanyDetails_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "PrimaryCompanyGUID", "type": "string" },
+          { "name": "PrimaryCompanyName", "type": "string" },
+          { "name": "AvailableUpgradeTypes", "type": "dynamic" },
+          { "name": "BulkEmailSenderStatus", "type": "string" },
+          { "name": "CompanyFeatures", "type": "dynamic" },
+          { "name": "CustomerMonitoringCount", "type": "int" },
+          { "name": "Description", "type": "string" },
+          { "name": "DisplayURL", "type": "string" },
+          { "name": "GUID", "type": "string" },
+          { "name": "HasCompanyTree", "type": "boolean" },
+          { "name": "HasPreferredContact", "type": "boolean" },
+          { "name": "Hompage", "type": "string" },
+          { "name": "InSpmPortfolio", "type": "boolean" },
+          { "name": "Industry", "type": "string" },
+          { "name": "IndustrySlug", "type": "string" },
+          { "name": "Ipv4Count", "type": "int" },
+          { "name": "IsBundle", "type": "boolean" },
+          { "name": "IsCsp", "type": "boolean" },
+          { "name": "IsMycompMysubsBundle", "type": "boolean" },
+          { "name": "IsPrimary", "type": "boolean" },
+          { "name": "IsUnsampledAllowed", "type": "boolean" },
+          { "name": "Name", "type": "string" },
+          { "name": "PeopleCount", "type": "int" },
+          { "name": "PermissionCanAnnotate", "type": "boolean" },
+          { "name": "PermissionCanDownloadCompanyReport", "type": "boolean" },
+          { "name": "PermissionCanEnableVendorAccess", "type": "boolean" },
+          { "name": "PermissionCanViewCompanyReports", "type": "boolean" },
+          { "name": "PermissionCanViewForensics", "type": "boolean" },
+          { "name": "PermissionCanViewInfrastructure", "type": "boolean" },
+          { "name": "PermissionCanViewIpAttributions", "type": "boolean" },
+          { "name": "PermissionCanViewServiceProviders", "type": "boolean" },
+          { "name": "PermissionsHasControl", "type": "boolean" },
+          { "name": "PrimaryDomain", "type": "string" },
+          { "name": "RatingIndustryMedian", "type": "int" },
+          { "name": "Ratings", "type": "dynamic" },
+          { "name": "RelatedCompanies", "type": "dynamic" },
+          { "name": "SearchCount", "type": "int" },
+          { "name": "ServiceProvider", "type": "dynamic" },
+          { "name": "Shortname", "type": "string" },
+          { "name": "Sparkline", "type": "dynamic" },
+          { "name": "SubIndustry", "type": "string" },
+          { "name": "SubIndustrySlug", "type": "string" },
+          { "name": "SubscriptionType", "type": "string" },
+          { "name": "SubscriptionTypeKey", "type": "string" },
+          { "name": "ComplianceClaimCertifications", "type": "dynamic" },
+          { "name": "ComplianceClaimTrustPage", "type": "string" },
+          { "name": "RecordType", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightCompanyRatings_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightCompanyRatings_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "Beta", "type": "real" },
+          { "name": "Category", "type": "string" },
+          { "name": "CategoryOrder", "type": "int" },
+          { "name": "DisplayURL", "type": "string" },
+          { "name": "Grade", "type": "string" },
+          { "name": "GradeColor", "type": "string" },
+          { "name": "Name", "type": "string" },
+          { "name": "Order", "type": "int" },
+          { "name": "Percentile", "type": "real" },
+          { "name": "Rating", "type": "int" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightBreaches_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightBreaches_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "GUID", "type": "string" },
+          { "name": "Date", "type": "datetime" },
+          { "name": "Severity", "type": "string" },
+          { "name": "Text", "type": "string" },
+          { "name": "DateCreated", "type": "datetime" },
+          { "name": "PreviwURL", "type": "string" },
+          { "name": "EventType", "type": "string" },
+          { "name": "EventTypeDescription", "type": "string" },
+          { "name": "BreachedCompanies", "type": "dynamic" },
+          { "name": "DependentCompanies", "type": "dynamic" },
+          { "name": "Companyname", "type": "string" },
+          { "name": "CompanyGUID", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightFindings_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightFindings_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "RemediationHistoryLastRequestedRefreshDate", "type": "datetime" },
+          { "name": "RemediationHistoryLastRefreshStatusDate", "type": "datetime" },
+          { "name": "RemediationHistoryLastRefreshStatusLabel", "type": "string" },
+          { "name": "RemediationHistoryLastRefreshReasonCode", "type": "string" },
+          { "name": "Comments", "type": "string" },
+          { "name": "TemporaryId", "type": "string" },
+          { "name": "PcapID", "type": "string" },
+          { "name": "AffectsRating", "type": "boolean" },
+          { "name": "Assets", "type": "dynamic" },
+          { "name": "Details", "type": "dynamic" },
+          { "name": "EvidenceKey", "type": "string" },
+          { "name": "FirstSeen", "type": "datetime" },
+          { "name": "LastSeen", "type": "datetime" },
+          { "name": "RelatedFindings", "type": "dynamic" },
+          { "name": "RiskCategory", "type": "string" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "RiskVectorLabel", "type": "string" },
+          { "name": "RolledupObservationId", "type": "string" },
+          { "name": "Severity", "type": "real" },
+          { "name": "SeverityCategory", "type": "string" },
+          { "name": "Tags", "type": "dynamic" },
+          { "name": "AssetOverrides", "type": "dynamic" },
+          { "name": "Duration", "type": "int" },
+          { "name": "AttributedCompanies", "type": "dynamic" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RemainingDecay", "type": "int" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightFindingsSummary_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightFindingsSummary_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "Company", "type": "string" },
+          { "name": "Confidence", "type": "real" },
+          { "name": "EndDate", "type": "datetime" },
+          { "name": "EventCount", "type": "int" },
+          { "name": "FirstSeen", "type": "datetime" },
+          { "name": "HostCount", "type": "int" },
+          { "name": "Id", "type": "string" },
+          { "name": "Name", "type": "string" },
+          { "name": "Severity", "type": "real" },
+          { "name": "StartDate", "type": "datetime" },
+          { "name": "Description", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightAlerts_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightAlerts_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "GUID", "type": "string" },
+          { "name": "AlertType", "type": "string" },
+          { "name": "AlertDate", "type": "datetime" },
+          { "name": "StartDate", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "CompanyGUID", "type": "string" },
+          { "name": "CompanyURL", "type": "string" },
+          { "name": "FolderGUID", "type": "string" },
+          { "name": "FolderName", "type": "string" },
+          { "name": "Severity", "type": "string" },
+          { "name": "Trigger", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightGraphData_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightGraphData_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "RatingDate", "type": "datetime" },
+          { "name": "Rating", "type": "int" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RatingDifferance", "type": "int" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightDiligenceStatistics_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightDiligenceStatistics_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "Unknown", "type": "int" },
+          { "name": "Bad", "type": "int" },
+          { "name": "Warn", "type": "int" },
+          { "name": "Neutral", "type": "int" },
+          { "name": "Fair", "type": "int" },
+          { "name": "Good", "type": "int" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "SpearPhishing", "type": "int" },
+          { "name": "BitFlip", "type": "int" },
+          { "name": "TypographicalErrors", "type": "int" },
+          { "name": "TLDVariant", "type": "int" },
+          { "name": "TotalCount", "type": "int" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightIndustrialStatistics_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightIndustrialStatistics_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "Count", "type": "int" },
+          { "name": "CountPeriod", "type": "string" },
+          { "name": "AverageDurationDays", "type": "real" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "CompanyName", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightObservationStatistics_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightObservationStatistics_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "Count", "type": "int" },
+          { "name": "CountPeriod", "type": "string" },
+          { "name": "AverageDurationDays", "type": "real" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "CompanyName", "type": "string" }
+        ]
+      }
+    }
+  },
+  {
+    "name": "BitSightDiligenceHistoricalStatistics_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "BitSightDiligenceHistoricalStatistics_CL",
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "EventVendor", "type": "string" },
+          { "name": "EventProduct", "type": "string" },
+          { "name": "Count", "type": "int" },
+          { "name": "Category", "type": "string" },
+          { "name": "Date", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" }
+        ]
+      }
+    }
+  }
+]

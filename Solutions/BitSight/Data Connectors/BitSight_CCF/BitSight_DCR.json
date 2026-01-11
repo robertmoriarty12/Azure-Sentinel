@@ -1,0 +1,177 @@
+{
+  "name": "BitSightDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for BitSight connector",
+    "streamDeclarations": {
+      "Custom-BitSightCompanyDetails_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "GUID", "type": "string" },
+          { "name": "Name", "type": "string" },
+          { "name": "CompanyData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightCompanyRatings_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "Category", "type": "string" },
+          { "name": "RatingData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightBreaches_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "GUID", "type": "string" },
+          { "name": "CompanyGUID", "type": "string" },
+          { "name": "BreachData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightFindings_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "TemporaryId", "type": "string" },
+          { "name": "RiskCategory", "type": "string" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "FindingsData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightFindingsSummary_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "Id", "type": "string" },
+          { "name": "Company", "type": "string" },
+          { "name": "SummaryData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightAlerts_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "GUID", "type": "string" },
+          { "name": "CompanyGUID", "type": "string" },
+          { "name": "AlertData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightGraphData_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RatingDate", "type": "string" },
+          { "name": "GraphData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightDiligenceStatistics_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "StatisticsData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightIndustrialStatistics_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "StatisticsData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightObservationStatistics_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "RiskVector", "type": "string" },
+          { "name": "StatisticsData", "type": "dynamic" }
+        ]
+      },
+      "Custom-BitSightDiligenceHistoricalStatistics_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "CompanyName", "type": "string" },
+          { "name": "Category", "type": "string" },
+          { "name": "StatisticsData", "type": "dynamic" }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": ["Custom-BitSightCompanyDetails_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightCompanyDetails_CL",
+        "transformKql": "source | extend TimeGenerated = now(), GUID = tostring(CompanyData.guid), Name = tostring(CompanyData.name) | project TimeGenerated, GUID, Name, CompanyData"
+      },
+      {
+        "streams": ["Custom-BitSightCompanyRatings_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightCompanyRatings_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(RatingData.Company_name), Category = tostring(RatingData.category) | project TimeGenerated, CompanyName, Category, RatingData"
+      },
+      {
+        "streams": ["Custom-BitSightBreaches_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightBreaches_CL",
+        "transformKql": "source | extend TimeGenerated = now(), GUID = tostring(BreachData.guid), CompanyGUID = tostring(BreachData.company_guid) | project TimeGenerated, GUID, CompanyGUID, BreachData"
+      },
+      {
+        "streams": ["Custom-BitSightFindings_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightFindings_CL",
+        "transformKql": "source | extend TimeGenerated = now(), TemporaryId = tostring(FindingsData.temporary_id), RiskCategory = tostring(FindingsData.risk_category), CompanyName = tostring(FindingsData.company_name) | project TimeGenerated, TemporaryId, RiskCategory, CompanyName, FindingsData"
+      },
+      {
+        "streams": ["Custom-BitSightFindingsSummary_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightFindingsSummary_CL",
+        "transformKql": "source | extend TimeGenerated = now(), Id = tostring(SummaryData.id), Company = tostring(SummaryData.Company) | project TimeGenerated, Id, Company, SummaryData"
+      },
+      {
+        "streams": ["Custom-BitSightAlerts_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightAlerts_CL",
+        "transformKql": "source | extend TimeGenerated = now(), GUID = tostring(AlertData.guid), CompanyGUID = tostring(AlertData.company_guid) | project TimeGenerated, GUID, CompanyGUID, AlertData"
+      },
+      {
+        "streams": ["Custom-BitSightGraphData_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightGraphData_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(GraphData.Company_name), RatingDate = tostring(GraphData.Rating_Date) | project TimeGenerated, CompanyName, RatingDate, GraphData"
+      },
+      {
+        "streams": ["Custom-BitSightDiligenceStatistics_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightDiligenceStatistics_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(StatisticsData.Company_name), RiskVector = tostring(StatisticsData.risk_vector) | project TimeGenerated, CompanyName, RiskVector, StatisticsData"
+      },
+      {
+        "streams": ["Custom-BitSightIndustrialStatistics_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightIndustrialStatistics_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(StatisticsData.Company_name), RiskVector = tostring(StatisticsData.risk_vector) | project TimeGenerated, CompanyName, RiskVector, StatisticsData"
+      },
+      {
+        "streams": ["Custom-BitSightObservationStatistics_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightObservationStatistics_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(StatisticsData.Company_name), RiskVector = tostring(StatisticsData.risk_vector) | project TimeGenerated, CompanyName, RiskVector, StatisticsData"
+      },
+      {
+        "streams": ["Custom-BitSightDiligenceHistoricalStatistics_CL"],
+        "destinations": ["la1"],
+        "outputStream": "Custom-BitSightDiligenceHistoricalStatistics_CL",
+        "transformKql": "source | extend TimeGenerated = now(), CompanyName = tostring(StatisticsData.company_name), Category = tostring(StatisticsData.category) | project TimeGenerated, CompanyName, Category, StatisticsData"
+      }
+    ]
+  }
+}
