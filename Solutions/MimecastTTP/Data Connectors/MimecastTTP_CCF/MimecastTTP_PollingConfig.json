@@ -1,0 +1,152 @@
+[
+  {
+    "name": "MimecastTTPAttachmentPoller",
+    "apiVersion": "2023-04-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "MimecastTTPDefinition",
+      "dataType": "MimecastTTPAttachment_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-MimecastTTPAttachment_CL"
+      },
+      "auth": {
+        "type": "OAuth2",
+        "ClientId": "{{MimecastClientId}}",
+        "ClientSecret": "{{MimecastClientSecret}}",
+        "GrantType": "client_credentials",
+        "TokenEndpoint": "{{BaseURL}}/oauth/token"
+      },
+      "request": {
+        "apiEndpoint": "{{BaseURL}}/api/ttp/attachment/get-logs",
+        "httpMethod": "POST",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "queryWindowInMin": 15,
+        "rateLimitQPS": 1,
+        "isPostPayloadJson": true,
+        "queryParametersTemplate": "{\"meta\":{\"pagination\":{\"pageSize\":500}},\"data\":[{\"from\":\"{_QueryWindowStartTime}\",\"to\":\"{_QueryWindowEndTime}\",\"oldestFirst\":true,\"route\":\"all\",\"result\":\"all\"}]}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "paging": {
+        "pagingType": "NextPageToken",
+        "nextPageTokenJsonPath": "$.meta.pagination.next",
+        "NextPageParaName": "pageToken",
+        "pageSize": 500,
+        "pageSizeParameterName": "pageSize"
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.data[0].attachmentLogs"
+        ],
+        "format": "json"
+      }
+    }
+  },
+  {
+    "name": "MimecastTTPImpersonationPoller",
+    "apiVersion": "2023-04-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "MimecastTTPDefinition",
+      "dataType": "MimecastTTPImpersonation_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-MimecastTTPImpersonation_CL"
+      },
+      "auth": {
+        "type": "OAuth2",
+        "ClientId": "{{MimecastClientId}}",
+        "ClientSecret": "{{MimecastClientSecret}}",
+        "GrantType": "client_credentials",
+        "TokenEndpoint": "{{BaseURL}}/oauth/token"
+      },
+      "request": {
+        "apiEndpoint": "{{BaseURL}}/api/ttp/impersonation/get-logs",
+        "httpMethod": "POST",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "queryWindowInMin": 15,
+        "rateLimitQPS": 1,
+        "isPostPayloadJson": true,
+        "queryParametersTemplate": "{\"meta\":{\"pagination\":{\"pageSize\":500}},\"data\":[{\"from\":\"{_QueryWindowStartTime}\",\"to\":\"{_QueryWindowEndTime}\",\"oldestFirst\":true}]}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "paging": {
+        "pagingType": "NextPageToken",
+        "nextPageTokenJsonPath": "$.meta.pagination.next",
+        "NextPageParaName": "pageToken",
+        "pageSize": 500,
+        "pageSizeParameterName": "pageSize"
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.data[0].impersonationLogs"
+        ],
+        "format": "json"
+      }
+    }
+  },
+  {
+    "name": "MimecastTTPUrlPoller",
+    "apiVersion": "2023-04-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "MimecastTTPDefinition",
+      "dataType": "MimecastTTPUrl_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-MimecastTTPUrl_CL"
+      },
+      "auth": {
+        "type": "OAuth2",
+        "ClientId": "{{MimecastClientId}}",
+        "ClientSecret": "{{MimecastClientSecret}}",
+        "GrantType": "client_credentials",
+        "TokenEndpoint": "{{BaseURL}}/oauth/token"
+      },
+      "request": {
+        "apiEndpoint": "{{BaseURL}}/api/ttp/url/get-logs",
+        "httpMethod": "POST",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "queryWindowInMin": 15,
+        "rateLimitQPS": 1,
+        "isPostPayloadJson": true,
+        "queryParametersTemplate": "{\"meta\":{\"pagination\":{\"pageSize\":500}},\"data\":[{\"from\":\"{_QueryWindowStartTime}\",\"to\":\"{_QueryWindowEndTime}\",\"oldestFirst\":true,\"route\":\"all\",\"scanResult\":\"all\"}]}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "paging": {
+        "pagingType": "NextPageToken",
+        "nextPageTokenJsonPath": "$.meta.pagination.next",
+        "NextPageParaName": "pageToken",
+        "pageSize": 500,
+        "pageSizeParameterName": "pageSize"
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.data[0].clickLogs"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]

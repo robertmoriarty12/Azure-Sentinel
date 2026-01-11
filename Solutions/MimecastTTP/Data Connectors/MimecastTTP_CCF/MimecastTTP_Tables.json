@@ -1,0 +1,101 @@
+[
+  {
+    "name": "MimecastTTPAttachment_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "MimecastTTPAttachment_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "date",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "MimecastTTPImpersonation_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "MimecastTTPImpersonation_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "eventTime",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "MimecastTTPUrl_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "MimecastTTPUrl_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "date",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  }
+]

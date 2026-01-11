@@ -1,0 +1,112 @@
+{
+  "name": "MimecastTTPDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for Mimecast TTP connector",
+    "streamDeclarations": {
+      "Custom-MimecastTTPAttachment_CL": {
+        "columns": [
+          {
+            "name": "date",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      },
+      "Custom-MimecastTTPImpersonation_CL": {
+        "columns": [
+          {
+            "name": "eventTime",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      },
+      "Custom-MimecastTTPUrl_CL": {
+        "columns": [
+          {
+            "name": "date",
+            "type": "datetime"
+          },
+          {
+            "name": "mimecastEventId",
+            "type": "string"
+          },
+          {
+            "name": "mimecastEventCategory",
+            "type": "string"
+          },
+          {
+            "name": "time_generated",
+            "type": "datetime"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-MimecastTTPAttachment_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-MimecastTTPAttachment_CL",
+        "transformKql": "source | extend TimeGenerated = now(), date = todatetime(date), mimecastEventId = tostring(mimecastEventId), mimecastEventCategory = tostring(mimecastEventCategory), time_generated = todatetime(time_generated) | project TimeGenerated, date, mimecastEventId, mimecastEventCategory, time_generated"
+      },
+      {
+        "streams": [
+          "Custom-MimecastTTPImpersonation_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-MimecastTTPImpersonation_CL",
+        "transformKql": "source | extend TimeGenerated = now(), eventTime = todatetime(eventTime), mimecastEventId = tostring(mimecastEventId), mimecastEventCategory = tostring(mimecastEventCategory), time_generated = todatetime(time_generated) | project TimeGenerated, eventTime, mimecastEventId, mimecastEventCategory, time_generated"
+      },
+      {
+        "streams": [
+          "Custom-MimecastTTPUrl_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-MimecastTTPUrl_CL",
+        "transformKql": "source | extend TimeGenerated = now(), date = todatetime(date), mimecastEventId = tostring(mimecastEventId), mimecastEventCategory = tostring(mimecastEventCategory), time_generated = todatetime(time_generated) | project TimeGenerated, date, mimecastEventId, mimecastEventCategory, time_generated"
+      }
+    ]
+  }
+}

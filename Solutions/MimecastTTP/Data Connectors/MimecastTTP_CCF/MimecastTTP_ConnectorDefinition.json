@@ -1,0 +1,141 @@
+{
+  "name": "MimecastTTPDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "MimecastTTPDefinition",
+      "title": "Mimecast Targeted Threat Protection (Serverless)",
+      "publisher": "Mimecast",
+      "descriptionMarkdown": "The Mimecast Targeted Threat Protection (TTP) data connector provides the capability to ingest Mimecast TTP logs into Microsoft Sentinel. This includes TTP URL click logs, TTP Attachment protection logs, and TTP Impersonation protection logs.",
+      "graphQueriesTableName": "MimecastTTPUrl_CL",
+      "graphQueries": [
+        {
+          "metricName": "TTP URL Logs",
+          "legend": "MimecastTTPUrl_CL",
+          "baseQuery": "MimecastTTPUrl_CL"
+        },
+        {
+          "metricName": "TTP Attachment Logs",
+          "legend": "MimecastTTPAttachment_CL",
+          "baseQuery": "MimecastTTPAttachment_CL"
+        },
+        {
+          "metricName": "TTP Impersonation Logs",
+          "legend": "MimecastTTPImpersonation_CL",
+          "baseQuery": "MimecastTTPImpersonation_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "Get all TTP URL clicks from the last 24 hours",
+          "query": "MimecastTTPUrl_CL | where TimeGenerated > ago(24h) | take 100"
+        },
+        {
+          "description": "Get all TTP Attachment protection events from the last 7 days",
+          "query": "MimecastTTPAttachment_CL | where TimeGenerated > ago(7d) | take 100"
+        },
+        {
+          "description": "Get all TTP Impersonation protection events",
+          "query": "MimecastTTPImpersonation_CL | where TimeGenerated > ago(24h) | take 100"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "MimecastTTPUrl_CL",
+          "lastDataReceivedQuery": "MimecastTTPUrl_CL | where TimeGenerated > ago(7d) | summarize Time=max(TimeGenerated) | where isnotempty(Time)"
+        },
+        {
+          "name": "MimecastTTPAttachment_CL",
+          "lastDataReceivedQuery": "MimecastTTPAttachment_CL | where TimeGenerated > ago(7d) | summarize Time=max(TimeGenerated) | where isnotempty(Time)"
+        },
+        {
+          "name": "MimecastTTPImpersonation_CL",
+          "lastDataReceivedQuery": "MimecastTTPImpersonation_CL | where TimeGenerated > ago(7d) | summarize Time=max(TimeGenerated) | where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": false
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "Mimecast TTP API Credentials",
+            "description": "You need Mimecast OAuth2 application credentials (Client ID and Client Secret) with TTP API permissions."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "Configure Mimecast API Application",
+          "description": "To integrate with Mimecast TTP, you need to create an API application in your Mimecast account:\n\n1. Log in to your Mimecast Administration Console\n2. Navigate to **Administration** > **Services** > **API and Platform Integrations**\n3. Click **Add API Application**\n4. Provide a name and description for the application (e.g., 'Microsoft Sentinel TTP Integration')\n5. Select **Client Credentials** as the authentication type\n6. Grant the following API permissions:\n   - **TTP URL Logs**: Read permission\n   - **TTP Attachment Protection Logs**: Read permission\n   - **TTP Impersonation Protection Logs**: Read permission\n7. Copy the **Client ID** and **Client Secret** for use in the next step\n8. Note your Mimecast regional API base URL (e.g., https://api.services.mimecast.com for US region)",
+          "instructions": [
+            {
+              "type": "InfoMessage",
+              "parameters": {
+                "text": "Ensure you have admin access to your Mimecast account to create API applications and grant necessary permissions."
+              }
+            }
+          ]
+        },
+        {
+          "title": "Connect Mimecast TTP to Microsoft Sentinel",
+          "description": "Provide your Mimecast API credentials and regional base URL to establish the connection.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Mimecast Base URL",
+                "placeholder": "https://api.services.mimecast.com",
+                "type": "text",
+                "name": "BaseURL"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Mimecast Client ID",
+                "placeholder": "Enter your Mimecast OAuth2 Client ID",
+                "type": "text",
+                "name": "MimecastClientId"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Mimecast Client Secret",
+                "placeholder": "Enter your Mimecast OAuth2 Client Secret",
+                "type": "password",
+                "name": "MimecastClientSecret"
+              }
+            },
+            {
+              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "Connect",
+                "name": "connect"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
