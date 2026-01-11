@@ -1,0 +1,124 @@
+{
+  "name": "ArmisAlertsDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "ArmisAlertsDefinition",
+      "title": "Armis Alerts (Serverless)",
+      "publisher": "Armis",
+      "descriptionMarkdown": "The [Armis](https://www.armis.com/) Alerts connector provides the capability to ingest Armis security alerts into Microsoft Sentinel through the Armis REST API. This serverless connector uses the Codeless Connector Platform (CCF) to poll the Armis API and ingest alert data. Refer to the API documentation: `https://<YourArmisInstance>.armis.com/api/v1/docs` for more information.\n\n**Note:** This connector ingests Alerts only. For Activities data, use the legacy Azure Function-based connector or contact Armis support for guidance.",
+      "graphQueriesTableName": "ArmisAlerts_CL",
+      "graphQueries": [
+        {
+          "metricName": "Total Alerts received",
+          "legend": "ArmisAlerts_CL",
+          "baseQuery": "ArmisAlerts_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All Armis Alerts",
+          "query": "ArmisAlerts_CL\n | sort by TimeGenerated desc"
+        },
+        {
+          "description": "High and Critical Severity Alerts",
+          "query": "ArmisAlerts_CL\n | where Severity in ('High', 'Critical')\n | sort by TimeGenerated desc"
+        },
+        {
+          "description": "Alerts by Severity",
+          "query": "ArmisAlerts_CL\n | summarize Count=count() by Severity\n | sort by Count desc"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "ArmisAlerts_CL",
+          "lastDataReceivedQuery": "ArmisAlerts_CL\n | summarize Time = max(TimeGenerated)\n | where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": true
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": false
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "Armis API Access Token",
+            "description": "An Armis API access token is required. Follow these steps to obtain it:\n1. Log into your Armis instance\n2. Navigate to Settings -> API Management\n3. Create or retrieve your API secret key\n4. Use the secret key to generate an access token via the API endpoint: `POST https://<YourArmisInstance>.armis.com/api/v1/access_token/` with the secret key in the request body\n5. The access token is valid for 30 days and must be manually refreshed\n\nRefer to the Armis API documentation at `https://<YourArmisInstance>.armis.com/api/v1/docs` for more details."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "1. Obtain Armis API Access Token",
+          "description": "Follow these instructions to generate an Armis API access token:\n\n1. Log into your Armis instance\n2. Navigate to **Settings** -> **API Management**\n3. If the secret key has not been created, click **Create** to generate it\n4. Click **Show** to view the secret key\n5. Use the secret key to generate an access token:\n\n```bash\ncurl -X POST https://<YourArmisInstance>.armis.com/api/v1/access_token/ \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"secret_key\": \"<your-secret-key>\"}'\n```\n\n6. Copy the `access_token` value from the response\n7. **Important:** Access tokens expire after 30 days and must be manually refreshed"
+        },
+        {
+          "title": "2. Configure Armis Alerts Data Connector",
+          "description": "Provide the required configuration parameters to connect to the Armis API.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Armis URL",
+                "placeholder": "https://<your-instance>.armis.com/api/v1",
+                "type": "text",
+                "name": "ArmisURL"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Armis Access Token",
+                "placeholder": "Enter your Armis API access token",
+                "type": "password",
+                "name": "ArmisAccessToken"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Alert Severity Filter",
+                "placeholder": "Low,Medium,High,Critical",
+                "type": "text",
+                "name": "Severity"
+              }
+            },
+            {
+              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "Connect",
+                "disconnectLabel": "Disconnect",
+                "name": "connect"
+              }
+            }
+          ]
+        },
+        {
+          "title": "3. Important Notes",
+          "description": "**Token Expiration:** Armis access tokens expire after 30 days. You will need to:\n- Generate a new access token using your secret key\n- Update the connector configuration with the new token\n- Reconnect the data connector\n\n**Data Limitations:** This connector ingests Alerts only. For Activities data, use the legacy Azure Function-based connector (ArmisAlertsActivities).\n\n**Severity Filtering:** Specify comma-separated severity levels (e.g., `High,Critical` or `Low,Medium,High,Critical`). Leave blank to ingest all severities."
+        }
+      ]
+    }
+  }
+}

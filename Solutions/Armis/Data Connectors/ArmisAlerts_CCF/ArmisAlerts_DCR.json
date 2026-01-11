@@ -1,0 +1,72 @@
+{
+  "name": "ArmisAlertsDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for Armis Alerts connector",
+    "streamDeclarations": {
+      "Custom-ArmisAlerts_CL": {
+        "columns": [
+          {
+            "name": "alertId",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "severity",
+            "type": "string"
+          },
+          {
+            "name": "time",
+            "type": "datetime"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "deviceIds",
+            "type": "dynamic"
+          },
+          {
+            "name": "activityUUIDs",
+            "type": "dynamic"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-ArmisAlerts_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-ArmisAlerts_CL",
+        "transformKql": "source | extend TimeGenerated = todatetime(time), AlertId = tostring(alertId), AlertType = tostring(type), Title = tostring(title), Description = tostring(description), Severity = tostring(severity), Status = tostring(status), DeviceIds = deviceIds, ActivityUUIDs = activityUUIDs | project TimeGenerated, AlertId, AlertType, Title, Description, Severity, Status, DeviceIds, ActivityUUIDs"
+      }
+    ]
+  }
+}

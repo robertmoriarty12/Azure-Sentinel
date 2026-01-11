@@ -1,0 +1,51 @@
+[
+  {
+    "name": "ArmisAlerts_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "ArmisAlerts_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "AlertId",
+            "type": "string"
+          },
+          {
+            "name": "AlertType",
+            "type": "string"
+          },
+          {
+            "name": "Title",
+            "type": "string"
+          },
+          {
+            "name": "Description",
+            "type": "string"
+          },
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "Status",
+            "type": "string"
+          },
+          {
+            "name": "DeviceIds",
+            "type": "dynamic"
+          },
+          {
+            "name": "ActivityUUIDs",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  }
+]

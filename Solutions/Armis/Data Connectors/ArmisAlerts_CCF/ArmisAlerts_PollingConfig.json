@@ -1,0 +1,51 @@
+[
+  {
+    "name": "ArmisAlerts",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "ArmisAlertsDefinition",
+      "dataType": "ArmisAlerts_CL",
+      "dcrConfig": {
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}",
+        "streamName": "Custom-ArmisAlerts_CL"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ArmisAccessToken}}",
+        "Password": ""
+      },
+      "request": {
+        "apiEndpoint": "{{ArmisURL}}/search/",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "after",
+        "queryWindowInMin": 5,
+        "queryParameters": {
+          "aql": "in:alerts severity:{{Severity}}",
+          "orderBy": "time",
+          "length": "1000",
+          "fields": "alertId,type,title,description,severity,time,status,deviceIds,activityUUIDs"
+        },
+        "rateLimitQPS": 1,
+        "retryCount": 3,
+        "timeoutInSeconds": 180
+      },
+      "paging": {
+        "pagingType": "NextPageToken",
+        "nextPageTokenJsonPath": "$.data.next",
+        "NextPageParaName": "from",
+        "pageSize": 1000
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.data.results"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]
