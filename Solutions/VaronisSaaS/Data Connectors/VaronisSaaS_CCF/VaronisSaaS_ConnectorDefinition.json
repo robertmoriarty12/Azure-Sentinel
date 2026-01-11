@@ -1,0 +1,139 @@
+{
+  "name": "VaronisSaaSDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "VaronisSaaSDefinition",
+      "title": "Varonis SaaS (Serverless - CCF)",
+      "publisher": "Varonis",
+      "descriptionMarkdown": "**IMPORTANT: This is an experimental CCF connector that requires Varonis API modifications to function properly.**\n\nVaronis SaaS provides the capability to ingest [Varonis Alerts](https://www.varonis.com/products/datalert) into Microsoft Sentinel using the Codeless Connector Framework.\n\n**Known Limitations:**\n- Requires Varonis API to support standard OAuth2 client_credentials flow\n- Multi-step search API pattern not fully supported in CCF\n- Async polling with retry logic (304/206 status codes) not natively supported\n- Search ID parameter must be pre-configured\n\n**Current Implementation:**\nThis connector uses a simplified approach that assumes a pre-configured search. For full functionality, Varonis API modifications are required.\n\nVaronis prioritizes deep data visibility, classification capabilities, and automated remediation for data access. Varonis builds a single prioritized view of risk for your data, so you can proactively and systematically eliminate risk from insider threats and cyberattacks.",
+      "graphQueriesTableName": "VaronisAlerts_CL",
+      "graphQueries": [
+        {
+          "metricName": "Total Varonis Alerts",
+          "legend": "Varonis Alerts",
+          "baseQuery": "VaronisAlerts_CL"
+        },
+        {
+          "metricName": "High Severity Alerts",
+          "legend": "High Severity",
+          "baseQuery": "VaronisAlerts_CL | where AlertSeverity == \"High\""
+        },
+        {
+          "metricName": "Medium Severity Alerts",
+          "legend": "Medium Severity",
+          "baseQuery": "VaronisAlerts_CL | where AlertSeverity == \"Medium\""
+        },
+        {
+          "metricName": "Low Severity Alerts",
+          "legend": "Low Severity",
+          "baseQuery": "VaronisAlerts_CL | where AlertSeverity == \"Low\""
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All Varonis Alerts",
+          "query": "VaronisAlerts_CL\n| sort by TimeGenerated desc"
+        },
+        {
+          "description": "High Severity Alerts",
+          "query": "VaronisAlerts_CL\n| where AlertSeverity == \"High\"\n| sort by TimeGenerated desc"
+        },
+        {
+          "description": "Alerts with Malicious External IPs",
+          "query": "VaronisAlerts_CL\n| where ContainsMaliciousExternalIPs == true\n| sort by TimeGenerated desc"
+        },
+        {
+          "description": "Alerts by Threat Detection Policy",
+          "query": "VaronisAlerts_CL\n| summarize count() by ThreatDetectionPolicyName\n| sort by count_ desc"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "VaronisAlerts_CL",
+          "lastDataReceivedQuery": "VaronisAlerts_CL\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": true
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "write": true,
+              "read": true,
+              "delete": true
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "Varonis DatAlert API Key",
+            "description": "A Varonis DatAlert API key with read permissions for alerts is required. [See Varonis documentation](https://help.varonis.com/s/document-item?bundleId=ami1661784208197&topicId=emp1703144742927.html&_LANG=enus) for instructions on generating API keys."
+          },
+          {
+            "name": "Varonis API Compatibility",
+            "description": "**CRITICAL**: This connector requires Varonis API modifications to support standard OAuth2 authentication and direct alert retrieval endpoints. Contact Varonis support to request CCF-compatible API endpoints."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "Important Notice",
+          "description": "⚠️ **This is an experimental connector** that demonstrates the intended CCF implementation for Varonis SaaS. It requires Varonis API modifications to function properly.\n\n**Required Varonis API Changes:**\n1. Support for standard OAuth2 client_credentials flow\n2. Direct alert retrieval endpoint (bypassing multi-step search)\n3. Standard bearer token authentication for all API calls\n\nPlease contact Varonis support to request these API enhancements."
+        },
+        {
+          "title": "Step 1: Obtain Varonis API Credentials",
+          "description": "To generate the API key:\n1. Launch the Varonis Web Interface\n2. Navigate to **Configuration → API Keys**\n3. Click **Create API Key**\n4. Fill in the name and description\n5. Click **Generate Key**\n6. Copy the API key secret and save it securely\n\n[See Varonis Documentation](https://help.varonis.com/s/document-item?bundleId=ami1661784208197&topicId=emp1703144742927.html&_LANG=enus)"
+        },
+        {
+          "title": "Step 2: Configure Connector Parameters",
+          "description": "Enter the following information to configure the Varonis SaaS connector. **Note**: This connection requires Varonis API modifications to function properly.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Varonis Base URL",
+                "placeholder": "https://your-varonis-instance.com",
+                "type": "text",
+                "name": "BaseUrl"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Varonis API Key",
+                "placeholder": "Enter your Varonis API Key",
+                "type": "password",
+                "name": "ApiKey"
+              }
+            },
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Search ID",
+                "placeholder": "Enter pre-configured search ID",
+                "type": "text",
+                "name": "SearchId"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

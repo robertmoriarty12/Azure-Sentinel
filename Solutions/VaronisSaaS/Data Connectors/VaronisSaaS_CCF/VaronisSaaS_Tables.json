@@ -1,0 +1,147 @@
+[
+  {
+    "name": "VaronisAlerts_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "VaronisAlerts_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "AlertId",
+            "type": "guid"
+          },
+          {
+            "name": "ThreatDetectionPolicyName",
+            "type": "string"
+          },
+          {
+            "name": "AlertTime",
+            "type": "datetime"
+          },
+          {
+            "name": "AlertSeverity",
+            "type": "string"
+          },
+          {
+            "name": "AlertCategory",
+            "type": "string"
+          },
+          {
+            "name": "Countries",
+            "type": "dynamic"
+          },
+          {
+            "name": "States",
+            "type": "dynamic"
+          },
+          {
+            "name": "Status",
+            "type": "string"
+          },
+          {
+            "name": "CloseReason",
+            "type": "string"
+          },
+          {
+            "name": "BlacklistedLocation",
+            "type": "boolean"
+          },
+          {
+            "name": "AbnormalLocations",
+            "type": "dynamic"
+          },
+          {
+            "name": "EventsCount",
+            "type": "int"
+          },
+          {
+            "name": "PrivilegedAccountType",
+            "type": "dynamic"
+          },
+          {
+            "name": "UserNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "UserSamAccountNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "ContainsMaliciousExternalIPs",
+            "type": "boolean"
+          },
+          {
+            "name": "AggregatedExternalIPThreatTypes",
+            "type": "dynamic"
+          },
+          {
+            "name": "Assets",
+            "type": "dynamic"
+          },
+          {
+            "name": "FlaggedDataExposed",
+            "type": "dynamic"
+          },
+          {
+            "name": "SensitiveDataExposed",
+            "type": "dynamic"
+          },
+          {
+            "name": "DataSourceTypes",
+            "type": "dynamic"
+          },
+          {
+            "name": "DataSources",
+            "type": "dynamic"
+          },
+          {
+            "name": "DeviceNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "InitialEventTimeUTC",
+            "type": "datetime"
+          },
+          {
+            "name": "AccountsHaveFollowUpIndicators",
+            "type": "dynamic"
+          },
+          {
+            "name": "AlertTimeUTC",
+            "type": "datetime"
+          },
+          {
+            "name": "InitialEventTime",
+            "type": "datetime"
+          },
+          {
+            "name": "AssignedtoVaronis",
+            "type": "boolean"
+          },
+          {
+            "name": "EscalationType",
+            "type": "string"
+          },
+          {
+            "name": "MitreTacticName",
+            "type": "string"
+          },
+          {
+            "name": "ClosedBy",
+            "type": "string"
+          },
+          {
+            "name": "IngestTime",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  }
+]

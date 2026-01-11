@@ -1,0 +1,163 @@
+{
+  "name": "VaronisSaaSDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "streamDeclarations": {
+      "Custom-VaronisAlerts_CL": {
+        "columns": [
+          {
+            "name": "AlertId",
+            "type": "string"
+          },
+          {
+            "name": "ThreatDetectionPolicyName",
+            "type": "string"
+          },
+          {
+            "name": "AlertTime",
+            "type": "string"
+          },
+          {
+            "name": "AlertSeverity",
+            "type": "string"
+          },
+          {
+            "name": "AlertCategory",
+            "type": "string"
+          },
+          {
+            "name": "Countries",
+            "type": "dynamic"
+          },
+          {
+            "name": "States",
+            "type": "dynamic"
+          },
+          {
+            "name": "Status",
+            "type": "string"
+          },
+          {
+            "name": "CloseReason",
+            "type": "string"
+          },
+          {
+            "name": "BlacklistedLocation",
+            "type": "boolean"
+          },
+          {
+            "name": "AbnormalLocations",
+            "type": "dynamic"
+          },
+          {
+            "name": "EventsCount",
+            "type": "int"
+          },
+          {
+            "name": "PrivilegedAccountType",
+            "type": "dynamic"
+          },
+          {
+            "name": "UserNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "UserSamAccountNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "ContainsMaliciousExternalIPs",
+            "type": "boolean"
+          },
+          {
+            "name": "AggregatedExternalIPThreatTypes",
+            "type": "dynamic"
+          },
+          {
+            "name": "Assets",
+            "type": "dynamic"
+          },
+          {
+            "name": "FlaggedDataExposed",
+            "type": "dynamic"
+          },
+          {
+            "name": "SensitiveDataExposed",
+            "type": "dynamic"
+          },
+          {
+            "name": "DataSourceTypes",
+            "type": "dynamic"
+          },
+          {
+            "name": "DataSources",
+            "type": "dynamic"
+          },
+          {
+            "name": "DeviceNames",
+            "type": "dynamic"
+          },
+          {
+            "name": "InitialEventTimeUTC",
+            "type": "string"
+          },
+          {
+            "name": "AccountsHaveFollowUpIndicators",
+            "type": "dynamic"
+          },
+          {
+            "name": "AlertTimeUTC",
+            "type": "string"
+          },
+          {
+            "name": "InitialEventTime",
+            "type": "string"
+          },
+          {
+            "name": "AssignedtoVaronis",
+            "type": "boolean"
+          },
+          {
+            "name": "EscalationType",
+            "type": "string"
+          },
+          {
+            "name": "MitreTacticName",
+            "type": "string"
+          },
+          {
+            "name": "ClosedBy",
+            "type": "string"
+          },
+          {
+            "name": "IngestTime",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "laWorkspace"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-VaronisAlerts_CL"
+        ],
+        "destinations": [
+          "laWorkspace"
+        ],
+        "transformKql": "source | extend TimeGenerated = now(), AlertId = toguid(AlertId), AlertTime = todatetime(AlertTime), EventsCount = toint(EventsCount), InitialEventTimeUTC = todatetime(InitialEventTimeUTC), AlertTimeUTC = todatetime(AlertTimeUTC), InitialEventTime = todatetime(InitialEventTime), IngestTime = todatetime(IngestTime) | project TimeGenerated, AlertId, ThreatDetectionPolicyName, AlertTime, AlertSeverity, AlertCategory, Countries, States, Status, CloseReason, BlacklistedLocation, AbnormalLocations, EventsCount, PrivilegedAccountType, UserNames, UserSamAccountNames, ContainsMaliciousExternalIPs, AggregatedExternalIPThreatTypes, Assets, FlaggedDataExposed, SensitiveDataExposed, DataSourceTypes, DataSources, DeviceNames, InitialEventTimeUTC, AccountsHaveFollowUpIndicators, AlertTimeUTC, InitialEventTime, AssignedtoVaronis, EscalationType, MitreTacticName, ClosedBy, IngestTime",
+        "outputStream": "Custom-VaronisAlerts_CL"
+      }
+    ]
+  }
+}

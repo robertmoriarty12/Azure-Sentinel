@@ -1,0 +1,52 @@
+[
+  {
+    "name": "VaronisSaaSPoller",
+    "apiVersion": "2023-04-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "VaronisSaaSDefinition",
+      "dataType": "VaronisAlerts_CL",
+      "dcrConfig": {
+        "streamName": "Custom-VaronisAlerts_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "OAuth2",
+        "ClientId": "sentinel-integration",
+        "ClientSecret": "{{ApiKey}}",
+        "GrantType": "client_credentials",
+        "TokenEndpoint": "{{BaseUrl}}/api/authentication/api_keys/token",
+        "TokenEndpointHeaders": {
+          "x-api-key": "{{ApiKey}}",
+          "varonis-integration": "Microsoft Sentinel"
+        }
+      },
+      "request": {
+        "apiEndpoint": "{{BaseUrl}}/app/dataquery/api/search/{{SearchId}}",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss",
+        "startTimeAttributeName": "IngestTime",
+        "queryWindowInMin": 10080,
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 60,
+        "retryCount": 6,
+        "headers": {
+          "varonis-integration": "Microsoft Sentinel"
+        },
+        "queryParameters": {
+          "from": "0",
+          "to": "1000"
+        }
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.Data"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]
