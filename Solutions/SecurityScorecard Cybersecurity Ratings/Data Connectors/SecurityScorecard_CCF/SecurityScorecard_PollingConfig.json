@@ -1,0 +1,134 @@
+[
+  {
+    "name": "SecurityScorecardRatingsPoller",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardDefinition",
+      "dataType": "SecurityScorecardRatings_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardRatings_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ApiKey}}",
+        "Password": ""
+      },
+      "request": {
+        "apiEndpoint": "{{BaseUrl}}/companies/{{Domain}}/history/score",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-dd",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "queryWindowInMin": 1440,
+        "headers": {
+          "Accept": "application/json; charset=utf-8",
+          "X-SSC-Application-Name": "Microsoft Sentinel",
+          "X-SSC-Application-Version": "2.0"
+        },
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.entries"
+        ],
+        "format": "json"
+      }
+    }
+  },
+  {
+    "name": "SecurityScorecardFactorPoller",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardDefinition",
+      "dataType": "SecurityScorecardFactor_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardFactor_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ApiKey}}",
+        "Password": ""
+      },
+      "request": {
+        "apiEndpoint": "{{BaseUrl}}/companies/{{Domain}}/history/factors/score",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-dd",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "queryWindowInMin": 1440,
+        "queryParameters": {
+          "timing": "daily"
+        },
+        "headers": {
+          "Accept": "application/json; charset=utf-8",
+          "X-SSC-Application-Name": "Microsoft Sentinel",
+          "X-SSC-Application-Version": "2.0"
+        },
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.entries"
+        ],
+        "format": "json"
+      }
+    }
+  },
+  {
+    "name": "SecurityScorecardIssuePoller",
+    "apiVersion": "2023-02-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardDefinition",
+      "dataType": "SecurityScorecardIssues_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardIssues_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "Basic",
+        "UserName": "{{ApiKey}}",
+        "Password": ""
+      },
+      "request": {
+        "apiEndpoint": "{{BaseUrl}}/companies/{{Domain}}/history/events",
+        "httpMethod": "GET",
+        "queryTimeFormat": "yyyy-MM-dd'T'00:00:00'Z'",
+        "startTimeAttributeName": "date_from",
+        "endTimeAttributeName": "date_to",
+        "queryWindowInMin": 1440,
+        "headers": {
+          "Accept": "application/json; charset=utf-8",
+          "X-SSC-Application-Name": "Microsoft Sentinel",
+          "X-SSC-Application-Version": "2.0"
+        },
+        "rateLimitQPS": 1,
+        "timeoutInSeconds": 30,
+        "retryCount": 3
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.entries"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]

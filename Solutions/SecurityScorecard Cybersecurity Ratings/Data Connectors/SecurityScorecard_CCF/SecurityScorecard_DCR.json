@@ -1,0 +1,116 @@
+{
+  "name": "SecurityScorecardDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for SecurityScorecard Cybersecurity Ratings connector",
+    "streamDeclarations": {
+      "Custom-SecurityScorecardRatings_CL": {
+        "columns": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "int"
+          }
+        ]
+      },
+      "Custom-SecurityScorecardFactor_CL": {
+        "columns": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "factors",
+            "type": "dynamic"
+          }
+        ]
+      },
+      "Custom-SecurityScorecardIssues_CL": {
+        "columns": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "factor",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "issue_type",
+            "type": "string"
+          },
+          {
+            "name": "issue_count",
+            "type": "string"
+          },
+          {
+            "name": "group_status",
+            "type": "string"
+          },
+          {
+            "name": "total_score_impact",
+            "type": "real"
+          },
+          {
+            "name": "severity",
+            "type": "string"
+          },
+          {
+            "name": "detail_url",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-SecurityScorecardRatings_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-SecurityScorecardRatings_CL",
+        "transformKql": "source | extend TimeGenerated = now(), Body = 'OverAll', Src = 'OverallScore', Subject = '', DateYesterday = tostring(date), DateToday = tostring(date), ScoreYesterday = toint(score), ScoreToday = toint(score), ScoreChange = 0, Industry = '', Severity = '', PortfolioId = '', PortfolioName = '' | project TimeGenerated, Body, Src, Subject, DateYesterday, DateToday, ScoreYesterday, ScoreToday, ScoreChange, Industry, Severity, PortfolioId, PortfolioName"
+      },
+      {
+        "streams": [
+          "Custom-SecurityScorecardFactor_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-SecurityScorecardFactor_CL",
+        "transformKql": "source | extend TimeGenerated = now(), Body = 'Factor', Factor = '', FactorName = '', Subject = '', DateYesterday = tostring(date), DateToday = tostring(date), ScoreYesterday = 0, ScoreToday = 0, ScoreChange = 0, FactorDescription = '', Industry = '', Severity = '', PortfolioId = '', PortfolioName = '' | project TimeGenerated, Body, Factor, FactorName, Subject, DateYesterday, DateToday, ScoreYesterday, ScoreToday, ScoreChange, FactorDescription, Industry, Severity, PortfolioId, PortfolioName"
+      },
+      {
+        "streams": [
+          "Custom-SecurityScorecardIssues_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-SecurityScorecardIssues_CL",
+        "transformKql": "source | extend TimeGenerated = now(), Body = 'Issue', Factor = tostring(factor), EventId = tostring(id), Subject = '', Date = tostring(date), IssueType = tostring(issue_type), FindingsCount = tostring(issue_count), GroupStatus = tostring(group_status), IssueName = '', TotalScoreImpact = todouble(total_score_impact), SeverityValue = tostring(severity), DetailUrl = tostring(detail_url), Industry = '', Severity = '', PortfolioId = '', PortfolioName = '' | project TimeGenerated, Body, Factor, EventId, Subject, Date, IssueType, FindingsCount, GroupStatus, IssueName, TotalScoreImpact, SeverityValue, DetailUrl, Industry, Severity, PortfolioId, PortfolioName"
+      }
+    ]
+  }
+}

@@ -1,0 +1,221 @@
+[
+  {
+    "name": "SecurityScorecardRatings_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "SecurityScorecardRatings_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "Body",
+            "type": "string"
+          },
+          {
+            "name": "Src",
+            "type": "string"
+          },
+          {
+            "name": "Subject",
+            "type": "string"
+          },
+          {
+            "name": "DateYesterday",
+            "type": "string"
+          },
+          {
+            "name": "DateToday",
+            "type": "string"
+          },
+          {
+            "name": "ScoreYesterday",
+            "type": "int"
+          },
+          {
+            "name": "ScoreToday",
+            "type": "int"
+          },
+          {
+            "name": "ScoreChange",
+            "type": "int"
+          },
+          {
+            "name": "Industry",
+            "type": "string"
+          },
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioId",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioName",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "SecurityScorecardFactor_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "SecurityScorecardFactor_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "Body",
+            "type": "string"
+          },
+          {
+            "name": "Factor",
+            "type": "string"
+          },
+          {
+            "name": "FactorName",
+            "type": "string"
+          },
+          {
+            "name": "Subject",
+            "type": "string"
+          },
+          {
+            "name": "DateYesterday",
+            "type": "string"
+          },
+          {
+            "name": "DateToday",
+            "type": "string"
+          },
+          {
+            "name": "ScoreYesterday",
+            "type": "int"
+          },
+          {
+            "name": "ScoreToday",
+            "type": "int"
+          },
+          {
+            "name": "ScoreChange",
+            "type": "int"
+          },
+          {
+            "name": "FactorDescription",
+            "type": "string"
+          },
+          {
+            "name": "Industry",
+            "type": "string"
+          },
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioId",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioName",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "SecurityScorecardIssues_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "SecurityScorecardIssues_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "Body",
+            "type": "string"
+          },
+          {
+            "name": "Factor",
+            "type": "string"
+          },
+          {
+            "name": "EventId",
+            "type": "string"
+          },
+          {
+            "name": "Subject",
+            "type": "string"
+          },
+          {
+            "name": "Date",
+            "type": "string"
+          },
+          {
+            "name": "IssueType",
+            "type": "string"
+          },
+          {
+            "name": "FindingsCount",
+            "type": "string"
+          },
+          {
+            "name": "GroupStatus",
+            "type": "string"
+          },
+          {
+            "name": "IssueName",
+            "type": "string"
+          },
+          {
+            "name": "TotalScoreImpact",
+            "type": "real"
+          },
+          {
+            "name": "SeverityValue",
+            "type": "string"
+          },
+          {
+            "name": "DetailUrl",
+            "type": "string"
+          },
+          {
+            "name": "Industry",
+            "type": "string"
+          },
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioId",
+            "type": "string"
+          },
+          {
+            "name": "PortfolioName",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  }
+]
