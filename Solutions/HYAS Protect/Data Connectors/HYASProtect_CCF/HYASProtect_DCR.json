@@ -1,0 +1,196 @@
+{
+  "name": "HYASProtectDCR",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2021-09-01-preview",
+  "location": "{{location}}",
+  "properties": {
+    "description": "Data collection rule for HYAS Protect DNS Security Logs connector",
+    "streamDeclarations": {
+      "Custom-HYASProtectDnsSecurityLogs_CL": {
+        "columns": [
+          {
+            "name": "reputation",
+            "type": "string"
+          },
+          {
+            "name": "datetime",
+            "type": "string"
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "devicename",
+            "type": "string"
+          },
+          {
+            "name": "processname",
+            "type": "string"
+          },
+          {
+            "name": "nameserver",
+            "type": "string"
+          },
+          {
+            "name": "verdict",
+            "type": "string"
+          },
+          {
+            "name": "verdictSource",
+            "type": "string"
+          },
+          {
+            "name": "verdictStatus",
+            "type": "string"
+          },
+          {
+            "name": "registrar",
+            "type": "string"
+          },
+          {
+            "name": "policy",
+            "type": "dynamic"
+          },
+          {
+            "name": "markup",
+            "type": "dynamic"
+          },
+          {
+            "name": "ttl",
+            "type": "int"
+          },
+          {
+            "name": "tags",
+            "type": "dynamic"
+          },
+          {
+            "name": "log_id",
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "type": "string"
+          },
+          {
+            "name": "client_name",
+            "type": "string"
+          },
+          {
+            "name": "client_ip",
+            "type": "string"
+          },
+          {
+            "name": "domain_2tld",
+            "type": "string"
+          },
+          {
+            "name": "domain_tld",
+            "type": "string"
+          },
+          {
+            "name": "nameserver_2tld",
+            "type": "string"
+          },
+          {
+            "name": "nameserver_tld",
+            "type": "string"
+          },
+          {
+            "name": "nameserver_ip",
+            "type": "dynamic"
+          },
+          {
+            "name": "a_record",
+            "type": "dynamic"
+          },
+          {
+            "name": "aaaa_record",
+            "type": "dynamic"
+          },
+          {
+            "name": "c_name",
+            "type": "dynamic"
+          },
+          {
+            "name": "c_name_2tld",
+            "type": "dynamic"
+          },
+          {
+            "name": "c_name_tld",
+            "type": "dynamic"
+          },
+          {
+            "name": "threat_level",
+            "type": "string"
+          },
+          {
+            "name": "query_type",
+            "type": "string"
+          },
+          {
+            "name": "response_code",
+            "type": "int"
+          },
+          {
+            "name": "response_name",
+            "type": "string"
+          },
+          {
+            "name": "response_description",
+            "type": "string"
+          },
+          {
+            "name": "resolver_mode",
+            "type": "string"
+          },
+          {
+            "name": "reason",
+            "type": "dynamic"
+          },
+          {
+            "name": "domain_age",
+            "type": "int"
+          },
+          {
+            "name": "domain_category",
+            "type": "dynamic"
+          },
+          {
+            "name": "domain_creation_date",
+            "type": "string"
+          },
+          {
+            "name": "domain_expires_date",
+            "type": "string"
+          },
+          {
+            "name": "domain_updated_date",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "workspaceId": "{{workspaceId}}",
+          "name": "la1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-HYASProtectDnsSecurityLogs_CL"
+        ],
+        "destinations": [
+          "la1"
+        ],
+        "outputStream": "Custom-HYASProtectDnsSecurityLogs_CL",
+        "transformKql": "source | extend TimeGenerated = now(), Reputation = tostring(reputation), DateTime = tostring(datetime), Domain = tostring(domain), DeviceName = tostring(devicename), ProcessName = tostring(processname), Nameserver = tostring(nameserver), Verdict = tostring(verdict), VerdictSource = tostring(verdictSource), VerdictStatus = tostring(verdictStatus), Registrar = tostring(registrar), PolicyName = tostring(policy.name), PolicyID = toint(policy.id), RegistrarVerdict = tostring(markup.registrar.verdict), FQDNVerdict = tostring(markup.fqdn.verdict), DomainVerdict = tostring(markup.domain.verdict), IPVerdict = tostring(markup.ip.verdict), CNameVerdict = tostring(markup.cname.verdict), NameserverIPVerdict = tostring(markup.nameserver_ip.verdict), NameserverVerdict = tostring(markup.nameserver.verdict), TLDVerdict = tostring(markup.tld.verdict), TTL = toint(ttl), Tags = tostring(tags), LogID = tostring(log_id), ClientID = tostring(client_id), ClientName = tostring(client_name), ClientIP = tostring(client_ip), Domain2TLD = tostring(domain_2tld), DomainTLD = tostring(domain_tld), Nameserver2TLD = tostring(nameserver_2tld), NameserverTLD = tostring(nameserver_tld), NameserverIP = tostring(nameserver_ip.ip), NameserverCountryISOCode = tostring(nameserver_ip.country_iso_code), NameserverCountryName = tostring(nameserver_ip.country_name), ARecordIP = tostring(a_record), ARecordCountryISOCode = '', ARecordCountryName = '', AAAARecordIP = tostring(aaaa_record), AAAARecordCountryISOCode = '', AAAARecordCountryName = '', CName = tostring(c_name), CName2TLD = tostring(c_name_2tld), CNameTLD = tostring(c_name_tld), ThreatLevel = tostring(threat_level), QueryType = tostring(query_type), ResponseCode = toint(response_code), ResponseName = tostring(response_name), ResponseDescription = tostring(response_description), ResolverMode = tostring(resolver_mode), ReasonListsName = tostring(reason.lists), ReasonListsDatatype = '', ReasonType = tostring(reason.type), DomainAge = toint(domain_age), DomainCategory = tostring(domain_category), DomainCreationDate = tostring(domain_creation_date), DomainExpiresDate = tostring(domain_expires_date), DomainUpdatedDate = tostring(domain_updated_date), RawData = pack_all() | project TimeGenerated, Reputation, DateTime, Domain, DeviceName, ProcessName, Nameserver, Verdict, VerdictSource, VerdictStatus, Registrar, PolicyName, PolicyID, RegistrarVerdict, FQDNVerdict, DomainVerdict, IPVerdict, CNameVerdict, NameserverIPVerdict, NameserverVerdict, TLDVerdict, TTL, Tags, LogID, ClientID, ClientName, ClientIP, Domain2TLD, DomainTLD, Nameserver2TLD, NameserverTLD, NameserverIP, NameserverCountryISOCode, NameserverCountryName, ARecordIP, ARecordCountryISOCode, ARecordCountryName, AAAARecordIP, AAAARecordCountryISOCode, AAAARecordCountryName, CName, CName2TLD, CNameTLD, ThreatLevel, QueryType, ResponseCode, ResponseName, ResponseDescription, ResolverMode, ReasonListsName, ReasonListsDatatype, ReasonType, DomainAge, DomainCategory, DomainCreationDate, DomainExpiresDate, DomainUpdatedDate, RawData"
+      }
+    ]
+  }
+}

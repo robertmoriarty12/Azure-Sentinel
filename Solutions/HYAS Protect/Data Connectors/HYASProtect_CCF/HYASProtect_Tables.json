@@ -1,0 +1,247 @@
+[
+  {
+    "name": "HYASProtectDnsSecurityLogs_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-12-01-preview",
+    "location": "{{location}}",
+    "properties": {
+      "schema": {
+        "name": "HYASProtectDnsSecurityLogs_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "Reputation",
+            "type": "string"
+          },
+          {
+            "name": "DateTime",
+            "type": "string"
+          },
+          {
+            "name": "Domain",
+            "type": "string"
+          },
+          {
+            "name": "DeviceName",
+            "type": "string"
+          },
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "Nameserver",
+            "type": "string"
+          },
+          {
+            "name": "Verdict",
+            "type": "string"
+          },
+          {
+            "name": "VerdictSource",
+            "type": "string"
+          },
+          {
+            "name": "VerdictStatus",
+            "type": "string"
+          },
+          {
+            "name": "Registrar",
+            "type": "string"
+          },
+          {
+            "name": "PolicyName",
+            "type": "string"
+          },
+          {
+            "name": "PolicyID",
+            "type": "int"
+          },
+          {
+            "name": "RegistrarVerdict",
+            "type": "string"
+          },
+          {
+            "name": "FQDNVerdict",
+            "type": "string"
+          },
+          {
+            "name": "DomainVerdict",
+            "type": "string"
+          },
+          {
+            "name": "IPVerdict",
+            "type": "string"
+          },
+          {
+            "name": "CNameVerdict",
+            "type": "string"
+          },
+          {
+            "name": "NameserverIPVerdict",
+            "type": "string"
+          },
+          {
+            "name": "NameserverVerdict",
+            "type": "string"
+          },
+          {
+            "name": "TLDVerdict",
+            "type": "string"
+          },
+          {
+            "name": "TTL",
+            "type": "int"
+          },
+          {
+            "name": "Tags",
+            "type": "string"
+          },
+          {
+            "name": "LogID",
+            "type": "string"
+          },
+          {
+            "name": "ClientID",
+            "type": "string"
+          },
+          {
+            "name": "ClientName",
+            "type": "string"
+          },
+          {
+            "name": "ClientIP",
+            "type": "string"
+          },
+          {
+            "name": "Domain2TLD",
+            "type": "string"
+          },
+          {
+            "name": "DomainTLD",
+            "type": "string"
+          },
+          {
+            "name": "Nameserver2TLD",
+            "type": "string"
+          },
+          {
+            "name": "NameserverTLD",
+            "type": "string"
+          },
+          {
+            "name": "NameserverIP",
+            "type": "string"
+          },
+          {
+            "name": "NameserverCountryISOCode",
+            "type": "string"
+          },
+          {
+            "name": "NameserverCountryName",
+            "type": "string"
+          },
+          {
+            "name": "ARecordIP",
+            "type": "string"
+          },
+          {
+            "name": "ARecordCountryISOCode",
+            "type": "string"
+          },
+          {
+            "name": "ARecordCountryName",
+            "type": "string"
+          },
+          {
+            "name": "AAAARecordIP",
+            "type": "string"
+          },
+          {
+            "name": "AAAARecordCountryISOCode",
+            "type": "string"
+          },
+          {
+            "name": "AAAARecordCountryName",
+            "type": "string"
+          },
+          {
+            "name": "CName",
+            "type": "string"
+          },
+          {
+            "name": "CName2TLD",
+            "type": "string"
+          },
+          {
+            "name": "CNameTLD",
+            "type": "string"
+          },
+          {
+            "name": "ThreatLevel",
+            "type": "string"
+          },
+          {
+            "name": "QueryType",
+            "type": "string"
+          },
+          {
+            "name": "ResponseCode",
+            "type": "int"
+          },
+          {
+            "name": "ResponseName",
+            "type": "string"
+          },
+          {
+            "name": "ResponseDescription",
+            "type": "string"
+          },
+          {
+            "name": "ResolverMode",
+            "type": "string"
+          },
+          {
+            "name": "ReasonListsName",
+            "type": "string"
+          },
+          {
+            "name": "ReasonListsDatatype",
+            "type": "string"
+          },
+          {
+            "name": "ReasonType",
+            "type": "string"
+          },
+          {
+            "name": "DomainAge",
+            "type": "int"
+          },
+          {
+            "name": "DomainCategory",
+            "type": "string"
+          },
+          {
+            "name": "DomainCreationDate",
+            "type": "string"
+          },
+          {
+            "name": "DomainExpiresDate",
+            "type": "string"
+          },
+          {
+            "name": "DomainUpdatedDate",
+            "type": "string"
+          },
+          {
+            "name": "RawData",
+            "type": "dynamic"
+          }
+        ]
+      }
+    }
+  }
+]

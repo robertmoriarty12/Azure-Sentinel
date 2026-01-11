@@ -1,0 +1,115 @@
+{
+  "name": "HYASProtectDefinition",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "HYASProtectDefinition",
+      "title": "HYAS Protect (Codeless)",
+      "publisher": "HYAS",
+      "descriptionMarkdown": "The HYAS Protect connector allows you to ingest DNS security logs from HYAS Protect into Microsoft Sentinel. The connector provides visibility into DNS queries filtered by reputation including blocked, malicious, suspicious, and permitted domains.\n\n**Important Notes:**\n- This is a Codeless Connector (CCF) that uses REST API polling\n- **Pagination Limitation:** Due to API constraints, this connector is limited to 1000 records per 5-minute polling interval\n- For high-volume environments exceeding 1000 events per 5 minutes, contact HYAS about API endpoint updates\n- Logs are ingested into the HYASProtectDnsSecurityLogs_CL table",
+      "graphQueriesTableName": "HYASProtectDnsSecurityLogs_CL",
+      "graphQueries": [
+        {
+          "metricName": "Total logs received",
+          "legend": "HYAS Protect DNS Security Logs",
+          "baseQuery": "HYASProtectDnsSecurityLogs_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All HYAS Protect logs",
+          "query": "HYASProtectDnsSecurityLogs_CL\n| take 100"
+        },
+        {
+          "description": "Blocked domains",
+          "query": "HYASProtectDnsSecurityLogs_CL\n| where Reputation == 'blocked'\n| summarize count() by Domain\n| order by count_ desc"
+        },
+        {
+          "description": "Malicious domains",
+          "query": "HYASProtectDnsSecurityLogs_CL\n| where Reputation == 'malicious'\n| summarize count() by Domain, ThreatLevel\n| order by count_ desc"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "HYASProtectDnsSecurityLogs_CL",
+          "lastDataReceivedQuery": "HYASProtectDnsSecurityLogs_CL\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": false
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "write": true,
+              "read": true,
+              "delete": true
+            }
+          },
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces/sharedKeys",
+            "permissionsDisplayText": "Read permissions to shared keys for the workspace are required.",
+            "providerDisplayName": "Keys",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "action": true
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "HYAS API Key",
+            "description": "A HYAS API Key with access to the DNS Log Report v2 API is required. Contact HYAS support to obtain an API key."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "Important Information",
+          "description": "**Pagination Limitation Notice**\n\nThis connector is limited to ingesting 1000 DNS log records per 5-minute polling interval due to HYAS API constraints. If your environment generates more than 1000 events per 5 minutes, some events may not be ingested.\n\n**For high-volume environments:**\n- Contact HYAS about API endpoint updates that support pagination\n- Monitor the connector to ensure adequate data coverage\n- Consider adjusting reputation filters to focus on critical event types\n\n**Data Collection:**\n- The connector polls the HYAS Protect API every 5 minutes\n- All reputation types (blocked, suspicious, malicious, permitted) are collected\n- Events are stored in the HYASProtectDnsSecurityLogs_CL table"
+        },
+        {
+          "title": "Step 1: Obtain HYAS API Key",
+          "description": "You need a valid HYAS API Key to connect to the HYAS Protect API.\n\n1. Contact HYAS support to request API access\n2. Ensure your API key has permissions for the DNS Log Report v2 API\n3. Keep your API key secure and never share it publicly"
+        },
+        {
+          "title": "Step 2: Configure the Data Connector",
+          "description": "Complete the configuration below to establish connection to HYAS Protect API.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "HYAS API Key",
+                "placeholder": "Enter your HYAS API Key",
+                "type": "password",
+                "name": "apiKey"
+              }
+            },
+            {
+              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "Connect",
+                "disconnectLabel": "Disconnect",
+                "name": "connect"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

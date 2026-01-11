@@ -1,0 +1,46 @@
+[
+  {
+    "name": "HYASProtectDnsLogs",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "apiVersion": "2023-02-01-preview",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "HYASProtectDefinition",
+      "dataType": "HYASProtectDnsSecurityLogs_CL",
+      "dcrConfig": {
+        "streamName": "Custom-HYASProtectDnsSecurityLogs_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "APIKey",
+        "apiKeyName": "X-API-Key",
+        "apiKey": "{{apiKey}}",
+        "apiKeyIdentifier": "header"
+      },
+      "request": {
+        "apiEndpoint": "https://api.hyas.com/dns-log-report/v2/logs",
+        "rateLimitQPS": 1,
+        "queryWindowInMin": 5,
+        "httpMethod": "POST",
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ss.fffZ",
+        "startTimeAttributeName": "start",
+        "endTimeAttributeName": "end",
+        "isPostPayloadJson": true,
+        "queryParameters": {
+          "postPayload": "{\"applied_filters\":[{\"id\":\"datetime\",\"isRange\":true,\"rangeValue\":{\"start\":\"{_QueryWindowStartTime}\",\"end\":\"{_QueryWindowEndTime}\",\"timeType\":\"range\"}},{\"id\":\"reputation\",\"value\":\"blocked\"},{\"id\":\"reputation\",\"value\":\"suspicious\"},{\"id\":\"reputation\",\"value\":\"malicious\"},{\"id\":\"reputation\",\"value\":\"permitted\"}],\"paging\":{\"order\":\"desc\",\"page_number\":0,\"page_size\":1000,\"page_type\":\"standard\",\"sort\":\"datetime\"}}"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.logs"
+        ],
+        "format": "json"
+      }
+    }
+  }
+]
