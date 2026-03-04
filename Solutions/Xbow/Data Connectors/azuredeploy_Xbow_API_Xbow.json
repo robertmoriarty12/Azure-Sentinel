@@ -227,7 +227,8 @@
             "scope": "[resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))]",
             "properties": {
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('monitoringMetricsPublisherRoleId'))]",
-                "principalId": "[parameters('AzureClientObjectId')]"
+                "principalId": "[parameters('AzureClientObjectId')]",
+                "principalType": "ServicePrincipal"
             }
         },
         {
