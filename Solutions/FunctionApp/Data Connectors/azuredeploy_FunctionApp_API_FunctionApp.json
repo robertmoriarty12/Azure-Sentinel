@@ -237,8 +237,8 @@
             "name": "[variables('FunctionName')]",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "B1",
-                "tier": "Basic"
+                "name": "Y1",
+                "tier": "Dynamic"
             },
             "kind": "linux",
             "properties": {
