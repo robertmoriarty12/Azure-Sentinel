@@ -1,0 +1,30 @@
+[
+  {
+    "name": "CiscoETD_CL",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "apiVersion": "2021-03-01-privatepreview",
+    "properties": {
+      "schema": {
+        "name": "CiscoETD_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "Datetime",
+            "isDefaultDisplay": true,
+            "description": "The timestamp (UTC) reflecting the time in which the event was generated."
+          },
+          {
+            "name": "downloadLink",
+            "type": "string",
+            "description": "The URL from which message data was downloaded"
+          },
+          {
+            "name": "message",
+            "type": "dynamic",
+            "description": "The JSONL message data from the download"
+          }
+        ]
+      }
+    }
+  }
+]

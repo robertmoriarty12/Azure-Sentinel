@@ -1,0 +1,21 @@
+{
+  "Name": "CiscoETDv5",
+  "Author": "Cisco",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/cisco-logo-transparent.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "The Cisco Email Threat Defense (ETD) solution for Microsoft Sentinel enables you to ingest message events and threat data from Cisco ETD into Microsoft Sentinel using the Log Export API with nested polling.",
+  "Workbooks": [],
+  "Analytic Rules": [],
+  "Playbooks": [],
+  "Parsers": [],
+  "Hunting Queries": [],
+  "Data Connectors": [
+    "Data Connectors/CiscoETD_ccp/CiscoETD_connectorDefinition.json"
+  ],
+  "Watchlists": [],
+  "dependentDomainSolutionIds": [],
+  "BasePath": "C:\\GitHub\\Azure-Sentinel\\Solutions\\CiscoETDv5",
+  "Version": "1.0.0",
+  "Metadata": "SolutionMetadata.json",
+  "TemplateSpec": true,
+  "StaticDataConnectorIds": []
+}
