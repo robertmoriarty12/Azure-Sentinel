@@ -289,7 +289,7 @@
                         "DCE_ENDPOINT": "[reference(resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))).logsIngestion.endpoint]",
                         "DCR_ID": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))).immutableId]",
                         "STREAM_NAME": "[variables('streamName')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-FunctionAppSample-functionapp"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://raw.githubusercontent.com/robertmoriarty12/Azure-Sentinel/master/Solutions/FunctionApp/Data%20Connectors/FunctionAppSample.zip"
                     }
                 }
             ]
