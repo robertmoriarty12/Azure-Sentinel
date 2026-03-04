@@ -1,0 +1,438 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "author": "Microsoft - support@microsoft.com",
+    "comments": "Solution template for FunctionApp"
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Not used, but needed to pass arm-ttk test `Location-Should-Not-Be-Hardcoded`.  We instead use the `workspace-location` which is derived from the LA workspace"
+      }
+    },
+    "workspace-location": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "[concat('Region to deploy solution resources -- separate from location selection',parameters('location'))]"
+      }
+    },
+    "workspace": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Workspace name for Log Analytics where Microsoft Sentinel is setup"
+      }
+    }
+  },
+  "variables": {
+    "email": "support@microsoft.com",
+    "_email": "[variables('email')]",
+    "_solutionName": "FunctionApp",
+    "_solutionVersion": "3.0.0",
+    "solutionId": "Microsoft.functionapp-sentinel-sample",
+    "_solutionId": "[variables('solutionId')]",
+    "uiConfigId1": "FunctionAppSample",
+    "_uiConfigId1": "[variables('uiConfigId1')]",
+    "dataConnectorContentId1": "FunctionAppSample",
+    "_dataConnectorContentId1": "[variables('dataConnectorContentId1')]",
+    "dataConnectorId1": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentId1'))]",
+    "_dataConnectorId1": "[variables('dataConnectorId1')]",
+    "dataConnectorTemplateSpecName1": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentId1'))))]",
+    "dataConnectorVersion1": "1.0.0",
+    "_dataConnectorcontentProductId1": "[concat(take(variables('_solutionId'),50),'-','dc','-', uniqueString(concat(variables('_solutionId'),'-','DataConnector','-',variables('_dataConnectorContentId1'),'-', variables('dataConnectorVersion1'))))]",
+    "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[variables('dataConnectorTemplateSpecName1')]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "description": "FunctionApp data connector with template version 3.0.0",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorVersion1')]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentId1'))]",
+              "apiVersion": "2021-03-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+              "location": "[parameters('workspace-location')]",
+              "kind": "GenericUI",
+              "properties": {
+                "connectorUiConfig": {
+                  "id": "[variables('_uiConfigId1')]",
+                  "title": "Function App Sample (Ingestion API)",
+                  "publisher": "Microsoft",
+                  "descriptionMarkdown": "The **Function App Sample** data connector demonstrates how to ingest custom JSON events into a Microsoft Sentinel custom table using an Azure Function and the [Azure Monitor Ingestion API](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview) (DCE/DCR). Use this as a starting template for building your own Azure Function–based connectors.",
+                  "graphQueries": [
+                    {
+                      "metricName": "FunctionApp Sample events",
+                      "legend": "FunctionAppSample_CL",
+                      "baseQuery": "FunctionAppSample_CL"
+                    }
+                  ],
+                  "sampleQueries": [
+                    {
+                      "description": "All FunctionApp Sample events",
+                      "query": "FunctionAppSample_CL\n| sort by TimeGenerated desc"
+                    },
+                    {
+                      "description": "FunctionApp Sample – alerts only",
+                      "query": "FunctionAppSample_CL\n| where EventType == \"Alert\"\n| sort by TimeGenerated desc"
+                    }
+                  ],
+                  "dataTypes": [
+                    {
+                      "name": "FunctionAppSample_CL",
+                      "lastDataReceivedQuery": "FunctionAppSample_CL\n            | summarize Time = max(TimeGenerated)\n            | where isnotempty(Time)"
+                    }
+                  ],
+                  "connectivityCriterias": [
+                    {
+                      "type": "IsConnectedQuery",
+                      "value": [
+                        "FunctionAppSample_CL\n            | summarize LastLogReceived = max(TimeGenerated)\n            | project IsConnected = LastLogReceived > ago(1d)"
+                      ]
+                    }
+                  ],
+                  "availability": {
+                    "status": 1,
+                    "isPreview": false
+                  },
+                  "permissions": {
+                    "resourceProvider": [
+                      {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "Read and write permissions on the workspace are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                          "write": true,
+                          "read": true,
+                          "delete": true
+                        }
+                      }
+                    ],
+                    "customs": [
+                      {
+                        "name": "Microsoft.Web/sites permissions",
+                        "description": "Read and write permissions to Azure Functions to create a Function App is required. [See the documentation to learn more about Azure Functions](https://docs.microsoft.com/azure/azure-functions/)."
+                      },
+                      {
+                        "name": "Azure AD App Registration",
+                        "description": "An Azure AD App Registration (service principal) with the **Monitoring Metrics Publisher** role assigned on the Data Collection Rule (DCR) is required. [Learn more](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview#authentication)."
+                      },
+                      {
+                        "name": "Data Collection Endpoint (DCE)",
+                        "description": "A Data Collection Endpoint must be created in Azure Monitor. [Learn how to create a DCE](https://learn.microsoft.com/azure/azure-monitor/essentials/data-collection-endpoint-overview)."
+                      },
+                      {
+                        "name": "Data Collection Rule (DCR)",
+                        "description": "A Data Collection Rule that targets a custom Log Analytics table (e.g. FunctionAppSample_CL) must be created and associated with the DCE. [Learn how to create a DCR for custom logs](https://learn.microsoft.com/azure/azure-monitor/logs/tutorial-logs-ingestion-portal)."
+                      }
+                    ]
+                  },
+                  "instructionSteps": [
+                    {
+                      "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
+                    },
+                    {
+                      "description": ">**(Optional Step)** Securely store your App Registration credentials in Azure Key Vault. [Follow these instructions](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) to use Azure Key Vault references with an Azure Function App."
+                    },
+                    {
+                      "description": "1. In the [Azure Portal](https://portal.azure.com), navigate to **Azure Active Directory > App registrations > New registration**.\n2. Provide a name (e.g. `FunctionApp-Sentinel-Connector`) and register.\n3. Under **Certificates & secrets**, create a new client secret and note the **Tenant ID**, **Client ID**, and **Client Secret**.",
+                      "title": "STEP 1 – Create an Azure AD App Registration"
+                    },
+                    {
+                      "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Endpoints > Create**.\n2. Select your Subscription, Resource Group, and Region.\n3. After creation, note the **Logs Ingestion** endpoint URL.",
+                      "title": "STEP 2 – Create a Data Collection Endpoint (DCE)"
+                    },
+                    {
+                      "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Rules > Create**.\n2. On the **Basics** tab, select your Subscription, Resource Group, Region, and select **Data Collection Endpoint** created in Step 2.\n3. On the **Data sources** tab, add a custom JSON data source. Define the schema to match the sample connector fields (TimeGenerated, EventType, Message, Severity, Source, Category, SrcIpAddr, DstIpAddr, SrcPort, DstPort, Action, CustomField1, CustomField2).\n4. On the **Destination** tab, select **Azure Monitor Logs** and choose your Microsoft Sentinel workspace. Set the table to `FunctionAppSample_CL`.\n5. After creation, note the DCR **immutableId** (format: `dcr-xxxxxxxx`) and the **stream name** (e.g. `Custom-FunctionAppSample_CL`).\n6. Assign the **Monitoring Metrics Publisher** role to your App Registration on this DCR.",
+                      "title": "STEP 3 – Create a Custom Table and Data Collection Rule (DCR)"
+                    },
+                    {
+                      "description": "**Option A – ARM Template (recommended)**\n\nClick the **Deploy to Azure** button and fill in the parameters:\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FAzure-Sentinel%2Fmaster%2FSolutions%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Option B – Manual Deployment**\n\n1. Download or clone the Function App source from the solution package.\n2. Follow the [Function App manual deployment instructions](https://github.com/Azure/Azure-Sentinel/blob/master/DataConnectors/AzureFunctionsManualDeployment.md) to deploy using Visual Studio Code.\n3. After deployment, configure the Application Settings as described in Step 5.",
+                      "instructions": [
+                        {
+                          "parameters": {
+                            "fillWith": [
+                              "WorkspaceId"
+                            ],
+                            "label": "Workspace ID"
+                          },
+                          "type": "CopyableLabel"
+                        }
+                      ],
+                      "title": "STEP 4 – Deploy the Azure Function App"
+                    },
+                    {
+                      "description": "In the Function App, navigate to **Configuration > Application settings** and add the following settings:\n\n| Setting | Value |\n|---|---|\n| `TENANT_ID` | Your Azure AD Tenant ID |\n| `CLIENT_ID` | Your App Registration Client ID |\n| `CLIENT_SECRET` | Your App Registration Client Secret |\n| `DCE_ENDPOINT` | Your Data Collection Endpoint URL |\n| `DCR_ID` | Your DCR immutableId (e.g. `dcr-xxxxxxxx`) |\n| `STREAM_NAME` | Stream name from DCR (e.g. `Custom-FunctionAppSample_CL`) |",
+                      "title": "STEP 5 – Configure the Function App Application Settings"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "apiVersion": "2023-04-01-preview",
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', last(split(variables('_dataConnectorId1'),'/'))))]",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentId1'))]",
+                "contentId": "[variables('_dataConnectorContentId1')]",
+                "kind": "DataConnector",
+                "version": "[variables('dataConnectorVersion1')]",
+                "source": {
+                  "kind": "Solution",
+                  "name": "FunctionApp",
+                  "sourceId": "[variables('_solutionId')]"
+                },
+                "author": {
+                  "name": "Microsoft",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "Microsoft",
+                  "email": "support@microsoft.com",
+                  "tier": "Microsoft",
+                  "link": "https://support.microsoft.com"
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "contentId": "[variables('_dataConnectorContentId1')]",
+        "contentKind": "DataConnector",
+        "displayName": "Function App Sample (Ingestion API)",
+        "contentProductId": "[variables('_dataConnectorcontentProductId1')]",
+        "id": "[variables('_dataConnectorcontentProductId1')]",
+        "version": "[variables('dataConnectorVersion1')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', last(split(variables('_dataConnectorId1'),'/'))))]",
+      "dependsOn": [
+        "[variables('_dataConnectorId1')]"
+      ],
+      "location": "[parameters('workspace-location')]",
+      "properties": {
+        "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentId1'))]",
+        "contentId": "[variables('_dataConnectorContentId1')]",
+        "kind": "DataConnector",
+        "version": "[variables('dataConnectorVersion1')]",
+        "source": {
+          "kind": "Solution",
+          "name": "FunctionApp",
+          "sourceId": "[variables('_solutionId')]"
+        },
+        "author": {
+          "name": "Microsoft",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "Microsoft",
+          "email": "support@microsoft.com",
+          "tier": "Microsoft",
+          "link": "https://support.microsoft.com"
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentId1'))]",
+      "apiVersion": "2021-03-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+      "location": "[parameters('workspace-location')]",
+      "kind": "GenericUI",
+      "properties": {
+        "connectorUiConfig": {
+          "title": "Function App Sample (Ingestion API)",
+          "publisher": "Microsoft",
+          "descriptionMarkdown": "The **Function App Sample** data connector demonstrates how to ingest custom JSON events into a Microsoft Sentinel custom table using an Azure Function and the [Azure Monitor Ingestion API](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview) (DCE/DCR). Use this as a starting template for building your own Azure Function–based connectors.",
+          "graphQueries": [
+            {
+              "metricName": "FunctionApp Sample events",
+              "legend": "FunctionAppSample_CL",
+              "baseQuery": "FunctionAppSample_CL"
+            }
+          ],
+          "dataTypes": [
+            {
+              "name": "FunctionAppSample_CL",
+              "lastDataReceivedQuery": "FunctionAppSample_CL\n            | summarize Time = max(TimeGenerated)\n            | where isnotempty(Time)"
+            }
+          ],
+          "connectivityCriterias": [
+            {
+              "type": "IsConnectedQuery",
+              "value": [
+                "FunctionAppSample_CL\n            | summarize LastLogReceived = max(TimeGenerated)\n            | project IsConnected = LastLogReceived > ago(1d)"
+              ]
+            }
+          ],
+          "sampleQueries": [
+            {
+              "description": "All FunctionApp Sample events",
+              "query": "FunctionAppSample_CL\n| sort by TimeGenerated desc"
+            },
+            {
+              "description": "FunctionApp Sample – alerts only",
+              "query": "FunctionAppSample_CL\n| where EventType == \"Alert\"\n| sort by TimeGenerated desc"
+            }
+          ],
+          "availability": {
+            "status": 1,
+            "isPreview": false
+          },
+          "permissions": {
+            "resourceProvider": [
+              {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "Read and write permissions on the workspace are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                  "write": true,
+                  "read": true,
+                  "delete": true
+                }
+              }
+            ],
+            "customs": [
+              {
+                "name": "Microsoft.Web/sites permissions",
+                "description": "Read and write permissions to Azure Functions to create a Function App is required. [See the documentation to learn more about Azure Functions](https://docs.microsoft.com/azure/azure-functions/)."
+              },
+              {
+                "name": "Azure AD App Registration",
+                "description": "An Azure AD App Registration (service principal) with the **Monitoring Metrics Publisher** role assigned on the Data Collection Rule (DCR) is required. [Learn more](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview#authentication)."
+              },
+              {
+                "name": "Data Collection Endpoint (DCE)",
+                "description": "A Data Collection Endpoint must be created in Azure Monitor. [Learn how to create a DCE](https://learn.microsoft.com/azure/azure-monitor/essentials/data-collection-endpoint-overview)."
+              },
+              {
+                "name": "Data Collection Rule (DCR)",
+                "description": "A Data Collection Rule that targets a custom Log Analytics table (e.g. FunctionAppSample_CL) must be created and associated with the DCE. [Learn how to create a DCR for custom logs](https://learn.microsoft.com/azure/azure-monitor/logs/tutorial-logs-ingestion-portal)."
+              }
+            ]
+          },
+          "instructionSteps": [
+            {
+              "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
+            },
+            {
+              "description": ">**(Optional Step)** Securely store your App Registration credentials in Azure Key Vault. [Follow these instructions](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) to use Azure Key Vault references with an Azure Function App."
+            },
+            {
+              "description": "1. In the [Azure Portal](https://portal.azure.com), navigate to **Azure Active Directory > App registrations > New registration**.\n2. Provide a name (e.g. `FunctionApp-Sentinel-Connector`) and register.\n3. Under **Certificates & secrets**, create a new client secret and note the **Tenant ID**, **Client ID**, and **Client Secret**.",
+              "title": "STEP 1 – Create an Azure AD App Registration"
+            },
+            {
+              "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Endpoints > Create**.\n2. Select your Subscription, Resource Group, and Region.\n3. After creation, note the **Logs Ingestion** endpoint URL.",
+              "title": "STEP 2 – Create a Data Collection Endpoint (DCE)"
+            },
+            {
+              "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Rules > Create**.\n2. On the **Basics** tab, select your Subscription, Resource Group, Region, and select **Data Collection Endpoint** created in Step 2.\n3. On the **Data sources** tab, add a custom JSON data source. Define the schema to match the sample connector fields (TimeGenerated, EventType, Message, Severity, Source, Category, SrcIpAddr, DstIpAddr, SrcPort, DstPort, Action, CustomField1, CustomField2).\n4. On the **Destination** tab, select **Azure Monitor Logs** and choose your Microsoft Sentinel workspace. Set the table to `FunctionAppSample_CL`.\n5. After creation, note the DCR **immutableId** (format: `dcr-xxxxxxxx`) and the **stream name** (e.g. `Custom-FunctionAppSample_CL`).\n6. Assign the **Monitoring Metrics Publisher** role to your App Registration on this DCR.",
+              "title": "STEP 3 – Create a Custom Table and Data Collection Rule (DCR)"
+            },
+            {
+              "description": "**Option A – ARM Template (recommended)**\n\nClick the **Deploy to Azure** button and fill in the parameters:\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FAzure-Sentinel%2Fmaster%2FSolutions%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Option B – Manual Deployment**\n\n1. Download or clone the Function App source from the solution package.\n2. Follow the [Function App manual deployment instructions](https://github.com/Azure/Azure-Sentinel/blob/master/DataConnectors/AzureFunctionsManualDeployment.md) to deploy using Visual Studio Code.\n3. After deployment, configure the Application Settings as described in Step 5.",
+              "instructions": [
+                {
+                  "parameters": {
+                    "fillWith": [
+                      "WorkspaceId"
+                    ],
+                    "label": "Workspace ID"
+                  },
+                  "type": "CopyableLabel"
+                }
+              ],
+              "title": "STEP 4 – Deploy the Azure Function App"
+            },
+            {
+              "description": "In the Function App, navigate to **Configuration > Application settings** and add the following settings:\n\n| Setting | Value |\n|---|---|\n| `TENANT_ID` | Your Azure AD Tenant ID |\n| `CLIENT_ID` | Your App Registration Client ID |\n| `CLIENT_SECRET` | Your App Registration Client Secret |\n| `DCE_ENDPOINT` | Your Data Collection Endpoint URL |\n| `DCR_ID` | Your DCR immutableId (e.g. `dcr-xxxxxxxx`) |\n| `STREAM_NAME` | Stream name from DCR (e.g. `Custom-FunctionAppSample_CL`) |",
+              "title": "STEP 5 – Configure the Function App Application Settings"
+            }
+          ],
+          "id": "[variables('_uiConfigId1')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentPackages",
+      "apiVersion": "2023-04-01-preview",
+      "location": "[parameters('workspace-location')]",
+      "properties": {
+        "version": "3.0.0",
+        "kind": "Solution",
+        "contentSchemaVersion": "3.0.0",
+        "displayName": "FunctionApp",
+        "publisherDisplayName": "Microsoft Sentinel, Microsoft",
+        "descriptionHtml": "<p><strong>Note:</strong> Please refer to the following before installing the solution:</p>\n<p>• Review the solution <a href=\"https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/FunctionApp/ReleaseNotes.md\">Release Notes</a></p>\n<p>• There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</p>\n<p>The <strong>Function App Sample</strong> solution demonstrates how to ingest custom JSON events into a Microsoft Sentinel custom table using an Azure Function and the <a href=\"https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview\">Azure Monitor Ingestion API</a> (DCE/DCR). Use this as a starting template for building your own Azure Function–based data connectors.</p>\n<p><strong>Underlying Microsoft Technologies used:</strong></p>\n<p>This solution takes a dependency on the following technologies, and some of these dependencies either may be in <a href=\"https://azure.microsoft.com/support/legal/preview-supplemental-terms/\">Preview</a> state or might result in additional ingestion or operational costs:</p>\n<ol type=\"a\">\n<li><p><a href=\"https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview\">Azure Monitor Ingestion API (DCE/DCR)</a></p>\n</li>\n<li><p><a href=\"https://azure.microsoft.com/services/functions/#overview\">Azure Functions</a></p>\n</li>\n</ol>\n<p><strong>Data Connectors:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
+        "contentKind": "Solution",
+        "contentProductId": "[variables('_solutioncontentProductId')]",
+        "id": "[variables('_solutioncontentProductId')]",
+        "icon": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+        "contentId": "[variables('_solutionId')]",
+        "parentId": "[variables('_solutionId')]",
+        "source": {
+          "kind": "Solution",
+          "name": "FunctionApp",
+          "sourceId": "[variables('_solutionId')]"
+        },
+        "author": {
+          "name": "Microsoft",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "Microsoft",
+          "email": "support@microsoft.com",
+          "tier": "Microsoft",
+          "link": "https://support.microsoft.com"
+        },
+        "dependencies": {
+          "operator": "AND",
+          "criteria": [
+            {
+              "kind": "DataConnector",
+              "contentId": "[variables('_dataConnectorContentId1')]",
+              "version": "[variables('dataConnectorVersion1')]"
+            }
+          ]
+        },
+        "firstPublishDate": "2026-03-03",
+        "providers": [
+          "Microsoft"
+        ],
+        "categories": {
+          "domains": [
+            "Security - Others"
+          ]
+        }
+      },
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('_solutionId'))]"
+    }
+  ],
+  "outputs": {}
+}
