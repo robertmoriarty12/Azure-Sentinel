@@ -59,22 +59,14 @@
             },
             {
                 "name": "Azure AD App Registration",
-                "description": "An Azure AD App Registration (service principal) with the **Monitoring Metrics Publisher** role assigned on the Data Collection Rule (DCR) is required. [Learn more](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview#authentication)."
-            },
-            {
-                "name": "Data Collection Endpoint (DCE)",
-                "description": "A Data Collection Endpoint must be created in Azure Monitor. [Learn how to create a DCE](https://learn.microsoft.com/azure/azure-monitor/essentials/data-collection-endpoint-overview)."
-            },
-            {
-                "name": "Data Collection Rule (DCR)",
-                "description": "A Data Collection Rule that targets a custom Log Analytics table (e.g. FunctionAppSample_CL) must be created and associated with the DCE. [Learn how to create a DCR for custom logs](https://learn.microsoft.com/azure/azure-monitor/logs/tutorial-logs-ingestion-portal)."
+                "description": "An Azure AD App Registration (service principal) is required. The ARM template will automatically assign the **Monitoring Metrics Publisher** role on the Data Collection Rule (DCR) to the App Registration using its Object ID. [Learn more about registering an application](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app)."
             }
         ]
     },
     "instructionSteps": [
         {
             "title": "",
-            "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
+            "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. The ARM template automatically creates the Data Collection Endpoint, custom log table (`FunctionAppSample_CL`), Data Collection Rule, and role assignment — no manual Azure Monitor configuration is required. This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
         },
         {
             "title": "",
@@ -82,19 +74,11 @@
         },
         {
             "title": "STEP 1 – Create an Azure AD App Registration",
-            "description": "1. In the [Azure Portal](https://portal.azure.com), navigate to **Azure Active Directory > App registrations > New registration**.\n2. Provide a name (e.g. `FunctionApp-Sentinel-Connector`) and register.\n3. Under **Certificates & secrets**, create a new client secret and note the **Tenant ID**, **Client ID**, and **Client Secret**."
+            "description": "1. In the [Azure Portal](https://portal.azure.com), navigate to **Azure Active Directory > App registrations > New registration**.\n2. Provide a name (e.g. `FunctionApp-Sentinel-Connector`) and register.\n3. Under **Certificates & secrets**, create a new client secret. Note the **Tenant ID**, **Client ID**, and **Client Secret**.\n4. On the **Overview** page, also note the **Object ID** — this is required by the ARM template to assign the Monitoring Metrics Publisher role on the Data Collection Rule."
         },
         {
-            "title": "STEP 2 – Create a Data Collection Endpoint (DCE)",
-            "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Endpoints > Create**.\n2. Select your Subscription, Resource Group, and Region.\n3. After creation, note the **Logs Ingestion** endpoint URL."
-        },
-        {
-            "title": "STEP 3 – Create a Custom Table and Data Collection Rule (DCR)",
-            "description": "1. In the Azure Portal, navigate to **Monitor > Data Collection Rules > Create**.\n2. On the **Basics** tab, select your Subscription, Resource Group, Region, and select **Data Collection Endpoint** created in Step 2.\n3. On the **Data sources** tab, add a custom JSON data source. Define the schema to match the sample connector fields (TimeGenerated, EventType, Message, Severity, Source, Category, SrcIpAddr, DstIpAddr, SrcPort, DstPort, Action, CustomField1, CustomField2).\n4. On the **Destination** tab, select **Azure Monitor Logs** and choose your Microsoft Sentinel workspace. Set the table to `FunctionAppSample_CL`.\n5. After creation, note the DCR **immutableId** (format: `dcr-xxxxxxxx`) and the **stream name** (e.g. `Custom-FunctionAppSample_CL`).\n6. Assign the **Monitoring Metrics Publisher** role to your App Registration on this DCR."
-        },
-        {
-            "title": "STEP 4 – Deploy the Azure Function App",
-            "description": "**Option A – ARM Template (recommended)**\n\nClick the **Deploy to Azure** button and fill in the parameters:\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FAzure-Sentinel%2Fmaster%2FSolutions%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Option B – Manual Deployment**\n\n1. Download or clone the Function App source from the solution package.\n2. Follow the [Function App manual deployment instructions](https://github.com/Azure/Azure-Sentinel/blob/master/DataConnectors/AzureFunctionsManualDeployment.md) to deploy using Visual Studio Code.\n3. After deployment, configure the Application Settings as described in Step 5.",
+            "title": "STEP 2 – Deploy the Azure Function App",
+            "description": "Click **Deploy to Azure** and fill in the parameters. The template will automatically create the Data Collection Endpoint, `FunctionAppSample_CL` table, Data Collection Rule, role assignment, and Function App.\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FAzure-Sentinel%2Fmaster%2FSolutions%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Parameters to fill in:**\n\n| Parameter | Description |\n|---|---|\n| `WorkspaceName` | Name of your Log Analytics / Sentinel workspace |\n| `TenantId` | Azure AD Tenant ID from Step 1 |\n| `ClientId` | App Registration Client ID from Step 1 |\n| `ClientSecret` | App Registration Client Secret from Step 1 |\n| `AzureClientObjectId` | App Registration **Object ID** from Step 1 |\n| `AppInsightsWorkspaceResourceID` | Full Resource ID of the Log Analytics workspace (from **Log Analytics workspace > Properties**) |",
             "instructions": [
                 {
                     "parameters": {
@@ -104,10 +88,6 @@
                     "type": "CopyableLabel"
                 }
             ]
-        },
-        {
-            "title": "STEP 5 – Configure the Function App Application Settings",
-            "description": "In the Function App, navigate to **Configuration > Application settings** and add the following settings:\n\n| Setting | Value |\n|---|---|\n| `TENANT_ID` | Your Azure AD Tenant ID |\n| `CLIENT_ID` | Your App Registration Client ID |\n| `CLIENT_SECRET` | Your App Registration Client Secret |\n| `DCE_ENDPOINT` | Your Data Collection Endpoint URL |\n| `DCR_ID` | Your DCR immutableId (e.g. `dcr-xxxxxxxx`) |\n| `STREAM_NAME` | Stream name from DCR (e.g. `Custom-FunctionAppSample_CL`) |"
         }
     ]
 }

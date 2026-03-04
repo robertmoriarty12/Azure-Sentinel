@@ -3,13 +3,12 @@ Azure Function App – Sample Microsoft Sentinel Data Connector
 Uses the Azure Monitor Ingestion API (DCE/DCR) to push sample JSON events
 into a Microsoft Sentinel custom table on a timer schedule.
 
-Required Application Settings (set in the Function App Configuration blade):
+Application Settings (automatically configured by the ARM template deployment):
     TENANT_ID       – Azure AD Tenant ID
     CLIENT_ID       – App Registration (Service Principal) Client ID
     CLIENT_SECRET   – App Registration Client Secret
-    DCE_ENDPOINT    – Data Collection Endpoint URL
-                      e.g. https://my-dce-abcd.eastus-1.ingest.monitor.azure.com
-    DCR_ID          – Data Collection Rule immutableId  (dcr-xxxxxxxxxxxxx)
+    DCE_ENDPOINT    – Data Collection Endpoint logs-ingestion URL (set from DCE resource)
+    DCR_ID          – Data Collection Rule immutableId (set from DCR resource)
     STREAM_NAME     – Stream name defined in the DCR  (e.g. Custom-FunctionAppSample_CL)
 """
 
@@ -20,17 +19,22 @@ from datetime import datetime, timezone
 import azure.functions as func
 from azure.identity import ClientSecretCredential
 from azure.monitor.ingestion import LogsIngestionClient
-from azure.core.exceptions import HttpResponseError
+from azure.core.exceptions import HttpResponseError, ClientAuthenticationError
 
 # ---------------------------------------------------------------------------
-# Read configuration from Application Settings
+# Read configuration from Application Settings at module level.
+# os.environ.get() is used so the module loads cleanly even if a setting is
+# temporarily absent; missing values will surface as errors at invocation time.
 # ---------------------------------------------------------------------------
-TENANT_ID     = os.environ["TENANT_ID"]
-CLIENT_ID     = os.environ["CLIENT_ID"]
-CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-DCE_ENDPOINT  = os.environ["DCE_ENDPOINT"]
-DCR_ID        = os.environ["DCR_ID"]
-STREAM_NAME   = os.environ["STREAM_NAME"]
+TENANT_ID     = os.environ.get("TENANT_ID")
+CLIENT_ID     = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+DCE_ENDPOINT  = os.environ.get("DCE_ENDPOINT")
+DCR_ID        = os.environ.get("DCR_ID")
+STREAM_NAME   = os.environ.get("STREAM_NAME")
+
+logs_starts_with = "FunctionAppSample"
+function_name    = "main"
 
 
 def build_sample_events() -> list[dict]:
@@ -93,47 +97,54 @@ def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     if mytimer.past_due:
-        logging.warning("Timer is running late!")
+        logging.warning(f"{logs_starts_with} {function_name}: Timer is running late!")
 
-    logging.info("FunctionApp Sentinel connector starting at %s", utc_timestamp)
+    logging.info(f"{logs_starts_with} {function_name}: Connector starting at {utc_timestamp}")
 
-    # 1. Authenticate
+    # 1. Build sample events
+    events = build_sample_events()
+    logging.info(f"{logs_starts_with} {function_name}: Prepared {len(events)} sample event(s) for ingestion.")
+
+    # 2. Create credential and ingestion client per-invocation (Tenable pattern).
+    #    This ensures fresh tokens on each run and clean error handling.
     try:
-        credential = ClientSecretCredential(
+        creds = ClientSecretCredential(
             tenant_id=TENANT_ID,
             client_id=CLIENT_ID,
             client_secret=CLIENT_SECRET,
         )
-        logging.info("Authentication credential created successfully.")
+        ingestion_client = LogsIngestionClient(endpoint=DCE_ENDPOINT, credential=creds)
     except Exception as exc:
-        logging.error("Failed to create Azure credential: %s", exc)
+        logging.error(
+            f"{logs_starts_with} {function_name}: Failed to create Azure credential or client. "
+            f"Check TENANT_ID, CLIENT_ID, CLIENT_SECRET, DCE_ENDPOINT. Error: {exc}"
+        )
         raise
 
-    # 2. Create ingestion client
-    client = LogsIngestionClient(endpoint=DCE_ENDPOINT, credential=credential)
-
-    # 3. Build sample events
-    events = build_sample_events()
-    logging.info("Prepared %d sample event(s) for ingestion.", len(events))
-
-    # 4. Upload to Sentinel via DCE/DCR
+    # 3. Upload to Sentinel via DCE/DCR
     try:
-        client.upload(rule_id=DCR_ID, stream_name=STREAM_NAME, logs=events)
+        ingestion_client.upload(rule_id=DCR_ID, stream_name=STREAM_NAME, logs=events)
         logging.info(
-            "Successfully ingested %d event(s) into stream '%s'.",
-            len(events),
-            STREAM_NAME,
+            f"{logs_starts_with} {function_name}: Successfully ingested {len(events)} event(s) "
+            f"into stream '{STREAM_NAME}'."
         )
+    except ClientAuthenticationError as exc:
+        logging.error(
+            f"{logs_starts_with} {function_name}: Authentication failed — check that CLIENT_ID / "
+            f"CLIENT_SECRET / TENANT_ID are correct and the App Registration has the "
+            f"'Monitoring Metrics Publisher' role on the DCR. Error: {exc}"
+        )
+        raise
     except HttpResponseError as exc:
         logging.error(
-            "Azure Monitor Ingestion API error: %s\n"
-            "Check that the App Registration has the 'Monitoring Metrics Publisher' "
-            "role on the DCR, and that DCE_ENDPOINT / DCR_ID / STREAM_NAME are correct.",
-            exc,
+            f"{logs_starts_with} {function_name}: HTTP error from Azure Monitor Ingestion API. "
+            f"Check DCE_ENDPOINT, DCR_ID, and STREAM_NAME. Error: {exc}"
         )
         raise
     except Exception as exc:
-        logging.error("Unexpected error during ingestion: %s", exc)
+        logging.error(
+            f"{logs_starts_with} {function_name}: Unexpected error during ingestion. Error: {exc}"
+        )
         raise
 
-    logging.info("FunctionApp Sentinel connector finished at %s", utc_timestamp)
+    logging.info(f"{logs_starts_with} {function_name}: Connector finished at {utc_timestamp}")

@@ -11,60 +11,160 @@
                 "description": "Name prefix for the Azure Function App and related resources."
             }
         },
+        "WorkspaceName": {
+            "type": "string",
+            "minLength": 1,
+            "metadata": {
+                "description": "Name of the Log Analytics workspace where Microsoft Sentinel is deployed."
+            }
+        },
         "TenantId": {
             "type": "string",
-            "defaultValue": "",
+            "minLength": 1,
             "metadata": {
                 "description": "Azure Active Directory Tenant ID."
             }
         },
         "ClientId": {
             "type": "string",
-            "defaultValue": "",
+            "minLength": 1,
             "metadata": {
                 "description": "App Registration (Service Principal) Client ID."
             }
         },
         "ClientSecret": {
             "type": "securestring",
-            "defaultValue": "",
+            "minLength": 1,
             "metadata": {
                 "description": "App Registration Client Secret."
             }
         },
-        "DceEndpoint": {
+        "AzureClientObjectId": {
             "type": "string",
-            "defaultValue": "",
+            "minLength": 1,
             "metadata": {
-                "description": "Data Collection Endpoint (DCE) logs ingestion URL, e.g. https://my-dce.eastus-1.ingest.monitor.azure.com"
-            }
-        },
-        "DcrId": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Data Collection Rule immutableId, e.g. dcr-xxxxxxxxxxxxxxxx"
-            }
-        },
-        "StreamName": {
-            "type": "string",
-            "defaultValue": "Custom-FunctionAppSample_CL",
-            "metadata": {
-                "description": "Stream name defined in the DCR, e.g. Custom-FunctionAppSample_CL"
+                "description": "Object ID of the App Registration service principal. Used to assign the Monitoring Metrics Publisher role on the DCR. Find it in Azure AD -> App Registrations -> your app -> Overview -> Object ID."
             }
         },
         "AppInsightsWorkspaceResourceID": {
             "type": "string",
             "metadata": {
-                "description": "Resource ID of the Log Analytics workspace used by Application Insights. Format: /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.OperationalInsights/workspaces/{name}"
+                "description": "Migrate Classic Application Insights to Log Analytic Workspace which is retiring by 29 February 2024. Use 'Log Analytic Workspace-->Properties' blade having 'Resource ID' property value. This is a fully qualified resourceId which is in format '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}'"
             }
         }
     },
     "variables": {
         "FunctionName": "[concat(toLower(parameters('FunctionName')), uniqueString(resourceGroup().id))]",
-        "StorageSuffix": "[environment().suffixes.storage]"
+        "StorageSuffix": "[environment().suffixes.storage]",
+        "suffix": "[concat('A', uniqueString(resourceGroup().id))]",
+        "endpointName": "[concat(toLower(parameters('FunctionName')), 'LogsEndpoint', variables('suffix'))]",
+        "mainRuleName": "[concat(toLower(parameters('FunctionName')), 'CollectionRule', variables('suffix'))]",
+        "tableName": "FunctionAppSample_CL",
+        "streamName": "Custom-FunctionAppSample_CL",
+        "logWsResId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('WorkspaceName'))]",
+        "monitoringMetricsPublisherRoleId": "3913510d-42f4-4e42-8a64-420c390055eb"
     },
     "resources": [
+        {
+            "type": "Microsoft.Insights/dataCollectionEndpoints",
+            "apiVersion": "2022-06-01",
+            "name": "[variables('endpointName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "Linux",
+            "properties": {
+                "description": "Data Collection Endpoint for FunctionApp sample connector",
+                "networkAcls": {
+                    "publicNetworkAccess": "Enabled"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/tables",
+            "apiVersion": "2022-10-01",
+            "name": "[concat(parameters('WorkspaceName'), '/', variables('tableName'))]",
+            "properties": {
+                "plan": "Analytics",
+                "schema": {
+                    "name": "[variables('tableName')]",
+                    "columns": [
+                        { "name": "TimeGenerated", "type": "datetime" },
+                        { "name": "EventType",     "type": "string" },
+                        { "name": "Message",       "type": "string" },
+                        { "name": "Severity",      "type": "string" },
+                        { "name": "Source",        "type": "string" },
+                        { "name": "Category",      "type": "string" },
+                        { "name": "SrcIpAddr",     "type": "string" },
+                        { "name": "DstIpAddr",     "type": "string" },
+                        { "name": "SrcPort",       "type": "int" },
+                        { "name": "DstPort",       "type": "int" },
+                        { "name": "Action",        "type": "string" },
+                        { "name": "CustomField1",  "type": "string" },
+                        { "name": "CustomField2",  "type": "string" }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Insights/dataCollectionRules",
+            "apiVersion": "2022-06-01",
+            "name": "[variables('mainRuleName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))]",
+                "[resourceId('Microsoft.OperationalInsights/workspaces/tables', parameters('WorkspaceName'), variables('tableName'))]"
+            ],
+            "properties": {
+                "dataCollectionEndpointId": "[resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))]",
+                "streamDeclarations": {
+                    "[variables('streamName')]": {
+                        "columns": [
+                            { "name": "TimeGenerated", "type": "datetime" },
+                            { "name": "EventType",     "type": "string" },
+                            { "name": "Message",       "type": "string" },
+                            { "name": "Severity",      "type": "string" },
+                            { "name": "Source",        "type": "string" },
+                            { "name": "Category",      "type": "string" },
+                            { "name": "SrcIpAddr",     "type": "string" },
+                            { "name": "DstIpAddr",     "type": "string" },
+                            { "name": "SrcPort",       "type": "int" },
+                            { "name": "DstPort",       "type": "int" },
+                            { "name": "Action",        "type": "string" },
+                            { "name": "CustomField1",  "type": "string" },
+                            { "name": "CustomField2",  "type": "string" }
+                        ]
+                    }
+                },
+                "destinations": {
+                    "logAnalytics": [
+                        {
+                            "workspaceResourceId": "[variables('logWsResId')]",
+                            "name": "FunctionAppSampleWorkspace"
+                        }
+                    ]
+                },
+                "dataFlows": [
+                    {
+                        "streams": [ "[variables('streamName')]" ],
+                        "destinations": [ "FunctionAppSampleWorkspace" ],
+                        "transformKql": "source",
+                        "outputStream": "[variables('streamName')]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "name": "[guid(resourceGroup().id, concat('FunctionAppSample DCR role ', variables('FunctionName')))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))]"
+            ],
+            "scope": "[resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('monitoringMetricsPublisherRoleId'))]",
+                "principalId": "[parameters('AzureClientObjectId')]"
+            }
+        },
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02",
@@ -97,17 +197,37 @@
                 "supportsHttpsTrafficOnly": true,
                 "encryption": {
                     "services": {
-                        "file": {
-                            "keyType": "Account",
-                            "enabled": true
-                        },
-                        "blob": {
-                            "keyType": "Account",
-                            "enabled": true
-                        }
+                        "file": { "keyType": "Account", "enabled": true },
+                        "blob": { "keyType": "Account", "enabled": true }
                     },
                     "keySource": "Microsoft.Storage"
-                }
+                },
+                "minimumTlsVersion": "TLS1_2"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName')))]"
+            ],
+            "sku": { "name": "Standard_LRS", "tier": "Standard" },
+            "properties": {
+                "cors": { "corsRules": [] },
+                "deleteRetentionPolicy": { "enabled": false }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName')))]"
+            ],
+            "sku": { "name": "Standard_LRS", "tier": "Standard" },
+            "properties": {
+                "cors": { "corsRules": [] }
             }
         },
         {
@@ -119,12 +239,10 @@
                 "name": "Y1",
                 "tier": "Dynamic"
             },
-            "kind": "functionapp",
+            "kind": "linux",
             "properties": {
                 "name": "[variables('FunctionName')]",
-                "workerSize": "0",
-                "workerSizeId": "0",
-                "numberOfWorkers": "1"
+                "reserved": true
             }
         },
         {
@@ -133,14 +251,13 @@
             "name": "[variables('FunctionName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName')))]",
                 "[resourceId('Microsoft.Web/serverfarms', variables('FunctionName'))]",
-                "[resourceId('Microsoft.Insights/components', variables('FunctionName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName')))]",
+                "[resourceId('Microsoft.Insights/components', variables('FunctionName'))]",
+                "[resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))]",
+                "[resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))]"
             ],
             "kind": "functionapp,linux",
-            "identity": {
-                "type": "SystemAssigned"
-            },
             "properties": {
                 "name": "[variables('FunctionName')]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('FunctionName'))]",
@@ -148,69 +265,77 @@
                 "clientAffinityEnabled": true,
                 "reserved": true,
                 "siteConfig": {
-                    "linuxFxVersion": "Python|3.11",
-                    "appSettings": [
-                        {
-                            "name": "FUNCTIONS_EXTENSION_VERSION",
-                            "value": "~4"
-                        },
-                        {
-                            "name": "FUNCTIONS_WORKER_RUNTIME",
-                            "value": "python"
-                        },
-                        {
-                            "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', tolower(variables('FunctionName')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=', variables('StorageSuffix'))]"
-                        },
-                        {
-                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', tolower(variables('FunctionName')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=', variables('StorageSuffix'))]"
-                        },
-                        {
-                            "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[toLower(variables('FunctionName'))]"
-                        },
-                        {
-                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('FunctionName')), '2020-02-02').InstrumentationKey]"
-                        },
-                        {
-                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('FunctionName')), '2020-02-02').ConnectionString]"
-                        },
-                        {
-                            "name": "TENANT_ID",
-                            "value": "[parameters('TenantId')]"
-                        },
-                        {
-                            "name": "CLIENT_ID",
-                            "value": "[parameters('ClientId')]"
-                        },
-                        {
-                            "name": "CLIENT_SECRET",
-                            "value": "[parameters('ClientSecret')]"
-                        },
-                        {
-                            "name": "DCE_ENDPOINT",
-                            "value": "[parameters('DceEndpoint')]"
-                        },
-                        {
-                            "name": "DCR_ID",
-                            "value": "[parameters('DcrId')]"
-                        },
-                        {
-                            "name": "STREAM_NAME",
-                            "value": "[parameters('StreamName')]"
-                        }
-                    ]
+                    "linuxFxVersion": "python|3.11"
                 }
-            }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2018-11-01",
+                    "type": "config",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[concat('Microsoft.Web/sites/', variables('FunctionName'))]"
+                    ],
+                    "properties": {
+                        "FUNCTIONS_EXTENSION_VERSION": "~4",
+                        "FUNCTIONS_WORKER_RUNTIME": "python",
+                        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('FunctionName')), '2015-05-01').InstrumentationKey]",
+                        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Insights/components', variables('FunctionName')), '2015-05-01').ConnectionString]",
+                        "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', toLower(variables('FunctionName')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower(variables('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=', toLower(variables('StorageSuffix')))]",
+                        "TENANT_ID": "[parameters('TenantId')]",
+                        "CLIENT_ID": "[parameters('ClientId')]",
+                        "CLIENT_SECRET": "[parameters('ClientSecret')]",
+                        "DCE_ENDPOINT": "[reference(resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))).logsIngestion.endpoint]",
+                        "DCR_ID": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))).immutableId]",
+                        "STREAM_NAME": "[variables('streamName')]",
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-FunctionAppSample-functionapp"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionName'), '/default/azure-webjobs-hosts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('FunctionName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionName'))]"
+            ],
+            "properties": { "publicAccess": "None" }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionName'), '/default/azure-webjobs-secrets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('FunctionName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionName'))]"
+            ],
+            "properties": { "publicAccess": "None" }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionName'), '/default/', toLower(variables('FunctionName')))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('FunctionName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionName'))]"
+            ],
+            "properties": { "shareQuota": 5120 }
         }
     ],
     "outputs": {
-        "FunctionAppName": {
+        "DceEndpoint": {
             "type": "string",
-            "value": "[variables('FunctionName')]"
+            "value": "[reference(resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))).logsIngestion.endpoint]"
+        },
+        "DcrImmutableId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))).immutableId]"
+        },
+        "StreamName": {
+            "type": "string",
+            "value": "[variables('streamName')]"
         }
     }
 }
