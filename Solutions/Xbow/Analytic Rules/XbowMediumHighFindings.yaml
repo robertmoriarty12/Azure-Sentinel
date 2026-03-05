@@ -1,0 +1,43 @@
+id: "bb31ea64-c9ec-44d4-8c95-8f7727d90a0a"
+name: "XBOW - Medium/High Severity Findings"
+description: |
+  Creates incidents for medium and high severity XBOW findings.
+severity: Medium
+status: Available
+requiredDataConnectors:
+  - connectorId: XbowSecurityConnector
+    dataTypes:
+      - XbowFindings_CL
+queryFrequency: 5m
+queryPeriod: 5m
+triggerOperator: GreaterThan
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1190
+query: |
+  XbowFindings_CL
+  | where tolower(Severity) in ("critical", "high")
+  | where isempty(State) or tolower(State) == "open"
+incidentConfiguration:
+  createIncident: true
+  groupingConfiguration:
+    enabled: true
+    reopenClosedIncident: false
+    lookbackDuration: 5m
+    matchingMethod: AnyAlert
+eventGroupingSettings:
+  aggregationKind: AlertPerResult
+alertDetailsOverride:
+  alertDisplayNameFormat: "XBOW {{Severity}} finding: {{FindingName}}"
+  alertDescriptionFormat: "XBOW finding {{FindingId}} on asset {{AssetName}} is {{Severity}} severity and {{State}}."
+customDetails:
+  FindingId: FindingId
+  FindingName: FindingName
+  Severity: Severity
+  State: State
+  AssetId: AssetId
+  AssetName: AssetName
+version: 1.0.0
+kind: Scheduled
