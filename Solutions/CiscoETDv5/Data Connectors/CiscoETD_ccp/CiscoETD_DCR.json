@@ -36,7 +36,7 @@
           "destinations": [
             "clv2ws1"
           ],
-          "transformKql": "source | extend TimeGenerated = now()",
+          "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, message",
           "outputStream": "Custom-CiscoETD_CL"
         }
       ]

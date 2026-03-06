@@ -48,6 +48,13 @@
     "_solutionVersion": "3.0.0",
     "solutionId": "cisco.azure-sentinel-solution-cisco-etd",
     "_solutionId": "[variables('solutionId')]",
+    "parserObject1": {
+      "_parserName1": "[concat(parameters('workspace'),'/','CiscoETDMessages')]",
+      "_parserId1": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), 'CiscoETDMessages')]",
+      "parserTemplateSpecName1": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-pr-',uniquestring('CiscoETDMessages-Parser')))]",
+      "parserVersion1": "1.0.0",
+      "parserContentId1": "CiscoETDMessages-Parser"
+    },
     "workspaceResourceId": "[resourceId('microsoft.OperationalInsights/Workspaces', parameters('workspace'))]",
     "dataConnectorCCPVersion": "1.0.0",
     "_dataConnectorContentIdConnectorDefinition1": "CiscoETDConnectorDefinition",
@@ -59,6 +66,136 @@
     "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]"
   },
   "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[variables('parserObject1').parserTemplateSpecName1]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "description": "CiscoETDMessages Data Parser with template version 3.0.0",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('parserObject1').parserVersion1]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[variables('parserObject1')._parserName1]",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/savedSearches",
+              "location": "[parameters('workspace-location')]",
+              "properties": {
+                "eTag": "*",
+                "displayName": "Parser for Cisco ETD Messages",
+                "category": "Microsoft Sentinel Parser",
+                "functionAlias": "CiscoETDMessages",
+                "query": "CiscoETD_CL\n| extend downloadLink = tostring(downloadLink)\n| extend _messageEnvelope = todynamic(message)\n| extend _messageArray = case(\n    gettype(_messageEnvelope) == \"array\", _messageEnvelope,\n    gettype(_messageEnvelope[\"message\"]) == \"array\", _messageEnvelope[\"message\"],\n    isnotnull(_messageEnvelope[\"message\"]), pack_array(_messageEnvelope[\"message\"]),\n    pack_array(_messageEnvelope)\n  )\n| mv-expand messageItem = _messageArray\n| extend message = todynamic(messageItem)\n| extend EventTime = coalesce(\n    todatetime(message[\"timestamp\"]),\n    todatetime(message[\"time\"]),\n    todatetime(message[\"eventTime\"]),\n    TimeGenerated\n  )\n| extend MessageId = tostring(coalesce(message[\"messageId\"], message[\"id\"], message[\"mid\"]))\n| extend Verdict = tostring(coalesce(message[\"verdict\"][\"verdict\"], message[\"verdict\"][\"category\"], message[\"verdict\"], message[\"disposition\"], message[\"action\"][\"action\"], message[\"action\"]))\n| extend Sender = tostring(coalesce(message[\"sender\"], message[\"from\"], message[\"senderAddress\"], message[\"fromAddresses\"], message[\"returnPath\"]))\n| extend Recipient = tostring(coalesce(message[\"recipient\"], message[\"to\"], message[\"recipientAddress\"], message[\"toAddresses\"][0], message[\"envelopeTo\"][0]))\n| extend Subject = tostring(message[\"subject\"])\n| project TimeGenerated, EventTime, downloadLink, MessageId, Verdict, Sender, Recipient, Subject, message\n",
+                "functionParameters": "",
+                "version": 2,
+                "tags": [
+                  {
+                    "name": "description",
+                    "value": ""
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "apiVersion": "2022-01-01-preview",
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('Parser-', last(split(variables('parserObject1')._parserId1,'/'))))]",
+              "dependsOn": [
+                "[variables('parserObject1')._parserId1]"
+              ],
+              "properties": {
+                "parentId": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), 'CiscoETDMessages')]",
+                "contentId": "[variables('parserObject1').parserContentId1]",
+                "kind": "Parser",
+                "version": "[variables('parserObject1').parserVersion1]",
+                "source": {
+                  "name": "CiscoETDv5",
+                  "kind": "Solution",
+                  "sourceId": "[variables('_solutionId')]"
+                },
+                "author": {
+                  "name": "Cisco"
+                },
+                "support": {
+                  "name": "Cisco",
+                  "email": "support@cisco.com",
+                  "tier": "Partner",
+                  "link": "https://www.cisco.com/c/en/us/support/index.html"
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "contentId": "[variables('parserObject1').parserContentId1]",
+        "contentKind": "Parser",
+        "displayName": "Parser for Cisco ETD Messages",
+        "contentProductId": "[concat(take(variables('_solutionId'),50),'-','pr','-', uniqueString(concat(variables('_solutionId'),'-','Parser','-',variables('parserObject1').parserContentId1,'-', '1.0.0')))]",
+        "id": "[concat(take(variables('_solutionId'),50),'-','pr','-', uniqueString(concat(variables('_solutionId'),'-','Parser','-',variables('parserObject1').parserContentId1,'-', '1.0.0')))]",
+        "version": "[variables('parserObject1').parserVersion1]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/savedSearches",
+      "apiVersion": "2022-10-01",
+      "name": "[variables('parserObject1')._parserName1]",
+      "location": "[parameters('workspace-location')]",
+      "properties": {
+        "eTag": "*",
+        "displayName": "Parser for Cisco ETD Messages",
+        "category": "Microsoft Sentinel Parser",
+        "functionAlias": "CiscoETDMessages",
+        "query": "CiscoETD_CL\n| extend downloadLink = tostring(downloadLink)\n| extend _messageEnvelope = todynamic(message)\n| extend _messageArray = case(\n    gettype(_messageEnvelope) == \"array\", _messageEnvelope,\n    gettype(_messageEnvelope[\"message\"]) == \"array\", _messageEnvelope[\"message\"],\n    isnotnull(_messageEnvelope[\"message\"]), pack_array(_messageEnvelope[\"message\"]),\n    pack_array(_messageEnvelope)\n  )\n| mv-expand messageItem = _messageArray\n| extend message = todynamic(messageItem)\n| extend EventTime = coalesce(\n    todatetime(message[\"timestamp\"]),\n    todatetime(message[\"time\"]),\n    todatetime(message[\"eventTime\"]),\n    TimeGenerated\n  )\n| extend MessageId = tostring(coalesce(message[\"messageId\"], message[\"id\"], message[\"mid\"]))\n| extend Verdict = tostring(coalesce(message[\"verdict\"][\"verdict\"], message[\"verdict\"][\"category\"], message[\"verdict\"], message[\"disposition\"], message[\"action\"][\"action\"], message[\"action\"]))\n| extend Sender = tostring(coalesce(message[\"sender\"], message[\"from\"], message[\"senderAddress\"], message[\"fromAddresses\"], message[\"returnPath\"]))\n| extend Recipient = tostring(coalesce(message[\"recipient\"], message[\"to\"], message[\"recipientAddress\"], message[\"toAddresses\"][0], message[\"envelopeTo\"][0]))\n| extend Subject = tostring(message[\"subject\"])\n| project TimeGenerated, EventTime, downloadLink, MessageId, Verdict, Sender, Recipient, Subject, message\n",
+        "functionParameters": "",
+        "version": 2,
+        "tags": [
+          {
+            "name": "description",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "apiVersion": "2022-01-01-preview",
+      "location": "[parameters('workspace-location')]",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('Parser-', last(split(variables('parserObject1')._parserId1,'/'))))]",
+      "dependsOn": [
+        "[variables('parserObject1')._parserId1]"
+      ],
+      "properties": {
+        "parentId": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), 'CiscoETDMessages')]",
+        "contentId": "[variables('parserObject1').parserContentId1]",
+        "kind": "Parser",
+        "version": "[variables('parserObject1').parserVersion1]",
+        "source": {
+          "kind": "Solution",
+          "name": "CiscoETDv5",
+          "sourceId": "[variables('_solutionId')]"
+        },
+        "author": {
+          "name": "Cisco"
+        },
+        "support": {
+          "name": "Cisco",
+          "email": "support@cisco.com",
+          "tier": "Partner",
+          "link": "https://www.cisco.com/c/en/us/support/index.html"
+        }
+      }
+    },
     {
       "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
       "apiVersion": "2023-04-01-preview",
@@ -291,7 +428,7 @@
                     "destinations": [
                       "clv2ws1"
                     ],
-                    "transformKql": "source | extend TimeGenerated = now()",
+                    "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, message",
                     "outputStream": "Custom-CiscoETD_CL"
                   }
                 ]
@@ -676,6 +813,9 @@
                   "fetchMessageData": {
                     "shouldJoinNestedData": true,
                     "joinedDataStepName": "message",
+                    "auth": {
+                      "AuthType": "None"
+                    },
                     "request": {
                       "httpMethod": "GET",
                       "apiEndpoint": "$downloadUrl$",
@@ -687,7 +827,7 @@
                       "eventsJsonPaths": [
                         "$"
                       ],
-                      "format": "json"
+                      "format": "json-line"
                     }
                   }
                 }
@@ -714,7 +854,7 @@
         "contentSchemaVersion": "3.0.0",
         "displayName": "CiscoETDv5",
         "publisherDisplayName": "Cisco",
-        "descriptionHtml": "<p><strong>Note:</strong> Please refer to the following before installing the solution:</p>\n<p>• Review the solution <a href=\"https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/CiscoETDv5/ReleaseNotes.md\">Release Notes</a></p>\n<p>• There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</p>\n<p>The Cisco Email Threat Defense (ETD) solution for Microsoft Sentinel enables you to ingest message events and threat data from Cisco ETD into Microsoft Sentinel using the Log Export API with nested polling.</p>\n<p><strong>Data Connectors:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
+        "descriptionHtml": "<p><strong>Note:</strong> Please refer to the following before installing the solution:</p>\n<p>• Review the solution <a href=\"https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/CiscoETDv5/ReleaseNotes.md\">Release Notes</a></p>\n<p>• There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</p>\n<p>The Cisco Email Threat Defense (ETD) solution for Microsoft Sentinel enables you to ingest message events and threat data from Cisco ETD into Microsoft Sentinel using the Log Export API with nested polling.</p>\n<p><strong>Data Connectors:</strong> 1, <strong>Parsers:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
         "contentKind": "Solution",
         "contentProductId": "[variables('_solutioncontentProductId')]",
         "id": "[variables('_solutioncontentProductId')]",
@@ -738,6 +878,11 @@
         "dependencies": {
           "operator": "AND",
           "criteria": [
+            {
+              "kind": "Parser",
+              "contentId": "[variables('parserObject1').parserContentId1]",
+              "version": "[variables('parserObject1').parserVersion1]"
+            },
             {
               "kind": "DataConnector",
               "contentId": "[variables('_dataConnectorContentIdConnections1')]",

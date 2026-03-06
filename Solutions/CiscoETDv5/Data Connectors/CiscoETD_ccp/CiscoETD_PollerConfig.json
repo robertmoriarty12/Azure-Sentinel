@@ -71,6 +71,9 @@
         "fetchMessageData": {
           "shouldJoinNestedData": true,
           "joinedDataStepName": "message",
+          "auth": {
+            "AuthType": "None"
+          },
           "request": {
             "httpMethod": "GET",
             "apiEndpoint": "$downloadUrl$",
@@ -82,7 +85,7 @@
             "eventsJsonPaths": [
               "$"
             ],
-            "format": "json"
+            "format": "json-line"
           }
         }
       }
