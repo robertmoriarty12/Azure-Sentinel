@@ -1,0 +1,20 @@
+{
+	"publisherId": "cisco",
+	"offerId": "azure-sentinel-solution-cisco-etd",
+	"firstPublishDate": "2026-02-04",
+	"providers": ["Cisco"],
+	"categories": {
+		"domains" : [
+            "Security - Threat Protection",
+            "Security - Threat Intelligence",
+            "IT Operations"
+        ],
+		"verticals": []
+	},
+	"support": {
+		"name": "Cisco",
+		"email": "support@cisco.com",
+		"tier": "Partner",
+		"link": "https://www.cisco.com/c/en/us/support/index.html"
+	}
+}   
