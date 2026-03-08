@@ -1,167 +1,199 @@
-# Microsoft Sentinel – Function App Sample Data Connector
+# Microsoft Sentinel – Function App Data Connector Accelerator
 
-This solution demonstrates how to build a Microsoft Sentinel data connector using an **Azure Function** and the **Azure Monitor Ingestion API** (DCE/DCR). Use it as a starting template for ingesting custom JSON events from any source into a Sentinel custom log table.
+This repository is an **ISV accelerator** for building and publishing a Microsoft Sentinel data connector using an **Azure Function** and the **Azure Monitor Ingestion API** (DCE/DCR). It provides a fully working end-to-end template — including the ARM deployment, Python function code, and Sentinel connector UI definition — that you can deploy as-is to validate the pattern, then adapt for your own data source.
 
 ---
 
-## Deployment Flow Overview
+## Overview
 
-This solution uses the **standard two-ARM-template pattern** for Microsoft Sentinel solutions:
+The accelerator follows the **standard two-ARM-template pattern** used by all Microsoft Sentinel solutions:
 
-```
-Step 1: Microsoft Sentinel + Log Analytics Workspace (LAW)
-        │
-        └── Step 2: Deploy mainTemplate.json
-                    → installs the connector card in Sentinel Data Connectors
-                        │
-                        └── Step 3: Open connector in Sentinel → create App Registration
-                                    → click Deploy to Azure inside the connector
-                                        → deploys Function App + DCE + DCR + table
-                                            │
-                                            └── Function App running every 10 min
-                                                → data flows into FunctionAppSample_CL
-```
-
-| Step | What you deploy | Template used |
+| Deployment | What it does | Template |
 |---|---|---|
-| 1 | Microsoft Sentinel + Log Analytics Workspace | Azure Portal (built-in) |
-| 2 | Sentinel connector UI definition (connector card) | `Package/mainTemplate.json` |
-| 3 | Azure Function App + DCE + DCR + custom table | `Data Connectors/azuredeploy_FunctionApp_API_FunctionApp.json` |
+| **1 – Connector card** | Installs your connector UI into Sentinel Data Connectors | `FunctionApp/Package/mainTemplate.json` |
+| **2 – Function App** | Deploys the Function App, DCE, DCR, Key Vault, and custom log table | `FunctionApp/Data Connectors/azuredeploy_FunctionApp_API_FunctionApp.json` |
+
+```
+Log Analytics Workspace + Microsoft Sentinel
+    │
+    └── Deploy mainTemplate.json  →  connector card appears in Data Connectors
+            │
+            └── Open connector → Deploy to Azure  →  Function App + DCE + DCR + Key Vault
+                    │
+                    └── Assign Monitoring Metrics Publisher on DCR
+                            │
+                            └── Function App runs every 10 min → data lands in FunctionAppSample_CL
+```
 
 ---
 
-## Step 1 – Deploy Microsoft Sentinel with a Log Analytics Workspace
+## Scenario 1 – Test As-Is (No Code Changes)
 
-If you don't already have a Sentinel workspace, create one:
+Follow these steps to deploy the accelerator exactly as-is to verify the full ingestion pipeline end-to-end before customizing it for your data source.
+
+---
+
+### Prerequisites
+
+- An Azure subscription with permission to create resource groups, register applications in Microsoft Entra ID, and assign RBAC roles
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (optional, for CLI-based deployments)
+- [Git](https://git-scm.com/)
+
+---
+
+### Step 1 – Clone the Repositories
+
+You need both the Azure Sentinel repository (for the packaging toolchain) and this accelerator.
+
+```powershell
+git clone https://github.com/Azure/Azure-Sentinel.git
+git clone https://github.com/robertmoriarty12/Sentinel-Ingestion-Accelerator-Function-App.git
+```
+
+Copy the accelerator solution folder into the Azure Sentinel solutions directory:
+
+```powershell
+Copy-Item "Sentinel-Ingestion-Accelerator-Function-App\FunctionApp" `
+          "Azure-Sentinel\Solutions\FunctionApp" -Recurse -Force
+```
+
+> **Note:** This copy step places your solution where the Sentinel packaging tools expect it. If you are submitting a PR to the official Azure Sentinel repository, this is where your solution folder will live permanently.
+
+---
+
+### Step 2 – Deploy a Log Analytics Workspace and Enable Microsoft Sentinel
+
+If you do not already have a Sentinel workspace:
 
 1. In the [Azure Portal](https://portal.azure.com), search for **Microsoft Sentinel** and click **Create**
-2. Click **Create a new workspace**, fill in the workspace name, resource group, and region
-3. Click **Add** to enable Microsoft Sentinel on the workspace
+2. Click **Create a new workspace**, fill in workspace name, resource group, and region, then click **Review + Create**
+3. Once the workspace is created, click **Add** to enable Microsoft Sentinel on it
 
-Note down:
-- **Workspace name** — needed in Step 2
-- **Workspace Resource ID** — go to **Log Analytics workspace → Properties → Resource ID** — needed in Step 3
-- **Region** — all subsequent resources should be in the same region
+Note the following — you will need them later:
 
-> **Region note:** Deploy to **Central US** if your subscription has limited quota. East US commonly blocks Consumption-plan Function App deployments (`SubscriptionIsOverQuotaForSku`).
+| Value | Where to find it |
+|---|---|
+| **Workspace name** | Log Analytics workspace → Overview |
+| **Workspace Resource ID** | Log Analytics workspace → Properties → Resource ID |
+| **Region** | Log Analytics workspace → Overview |
+
+> **Region tip:** Deploy all resources to the same region. If you hit `SubscriptionIsOverQuotaForSku` errors in East US, try **Central US**.
 
 ---
 
-## Step 2 – Deploy the Sentinel Connector Solution (mainTemplate.json)
+### Step 3 – Deploy the Connector (mainTemplate.json)
 
-This step installs the **connector card** into your Sentinel workspace so it appears under **Data Connectors**. It does not deploy the Function App itself — that happens in Step 3.
+This step installs the **"Function App Sample"** connector card into your Sentinel **Data Connectors** gallery. It does not deploy the Function App itself.
 
-### Option A – Azure Portal (Custom Deployment)
+#### Option A – Azure Portal
 
-1. Go to **Azure Portal → search "Deploy a custom template" → Build your own template in the editor**
-2. Paste the contents of [`Package/mainTemplate.json`](Package/mainTemplate.json) and click **Save**
-3. Fill in the parameters:
+1. In the Azure Portal, search for **"Deploy a custom template"** and select it
+2. Click **Build your own template in the editor**
+3. Paste the contents of [`FunctionApp/Package/mainTemplate.json`](FunctionApp/Package/mainTemplate.json) and click **Save**
+4. Fill in the parameters:
 
-| Parameter | Description |
+| Parameter | Value |
 |---|---|
-| `workspace` | Name of your Log Analytics / Sentinel workspace from Step 1 |
-| `workspace-location` | Azure region of the workspace (e.g. `centralus`) |
+| `workspace` | Your Log Analytics workspace name from Step 2 |
+| `workspace-location` | Azure region of your workspace (e.g. `centralus`) |
 
-4. Deploy to the **same resource group** as your Sentinel workspace
+5. Deploy to the **same resource group** as your Sentinel workspace
 
-### Option B – Azure CLI
+#### Option B – Azure CLI
 
 ```powershell
 az deployment group create `
   --resource-group <your-sentinel-rg> `
-  --template-file "Package/mainTemplate.json" `
+  --template-file "Azure-Sentinel\Solutions\FunctionApp\Package\mainTemplate.json" `
   --parameters workspace="<your-workspace-name>" "workspace-location"="centralus"
 ```
 
-### Verify
+#### Verify
 
-After deployment, go to **Microsoft Sentinel → Data Connectors** and search for **"Function App Sample"**. The connector card should appear. If it does not, wait 1-2 minutes and refresh.
+Go to **Microsoft Sentinel → Data Connectors** and search for **"Function App Sample (Ingestion API)"**. The connector card should appear within 1–2 minutes.
 
 ---
 
-## Step 3 – Enable the Connector and Deploy the Function App
+### Step 4 – Create an Azure AD App Registration
 
-This step deploys the actual Azure Function and all Azure Monitor infrastructure (DCE, DCR, custom table, role assignment).
-
-### 3a – Create an Azure AD App Registration
-
-The Function App authenticates to Azure Monitor using a service principal.
+The Function App uses a service principal to authenticate to Azure Monitor and push data into Sentinel.
 
 1. In the Azure Portal, go to **Microsoft Entra ID → App registrations → New registration**
-2. Name it (e.g. `FunctionApp-Sentinel-Connector`) and click **Register**
-3. Under **Certificates & secrets**, create a new client secret — note the **value** (shown once only)
-4. On the App Registration **Overview** page, note:
-   - **Application (client) ID** → `ClientId`
-   - **Directory (tenant) ID** → `TenantId`
-   - **Object ID** → `AzureClientObjectId`
+2. Enter a name (e.g. `FunctionApp-Sentinel-Connector`) and click **Register**
+3. Under **Certificates & secrets → Client secrets → New client secret**, create a secret — copy the **Value** immediately (it is only shown once)
+4. From the App Registration **Overview** page, note:
 
-> The **Object ID** on the App Registration overview is used by the ARM template to assign the **Monitoring Metrics Publisher** role on the DCR. Do not use the Enterprise Application Object ID.
+| Value | ARM parameter |
+|---|---|
+| Directory (tenant) ID | `TenantId` |
+| Application (client) ID | `ClientId` |
+| Client secret value | `ClientSecret` |
 
-### 3b – Open the Connector in Sentinel and Deploy
+---
 
-1. In **Microsoft Sentinel → Data Connectors**, find **"Function App Sample (Ingestion API)"** and open it
-2. Click **Open connector page**
-3. Follow **STEP 1** in the connector page (App Registration — done above)
-4. Under **STEP 2 – Deploy the Azure Function App**, click **Deploy to Azure**
-5. Fill in the parameters:
+### Step 5 – Assign Key Vault Secrets Officer to the Deploying User
+
+The Function App ARM template creates an Azure Key Vault and writes the `ClientSecret` into it. The deploying user or service principal must have the **Key Vault Secrets Officer** role (or **Key Vault Administrator**) on the target resource group or subscription **before** deployment — without it the deployment will fail with an authorization error when writing the secret.
+
+1. In the Azure Portal, navigate to the **resource group** you plan to deploy into
+2. Go to **Access control (IAM) → Add role assignment**
+3. Select **Key Vault Secrets Officer**
+4. Under **Members**, select the user or service principal that will run the deployment
+5. Click **Review + assign**
+
+---
+
+### Step 6 – Deploy the Function App via the Connector Card
+
+1. In **Microsoft Sentinel → Data Connectors**, find **"Function App Sample (Ingestion API)"** and click **Open connector page**
+2. Follow **STEP 1** (already done in Step 4 above)
+3. Under **STEP 2 – Deploy the Azure Function App**, click **Deploy to Azure**
+4. Fill in the parameters:
 
 | Parameter | Description |
 |---|---|
-| `FunctionName` | Prefix for all resources created (e.g. `FunctionAppSample`, max 18 chars) |
-| `WorkspaceName` | Your Log Analytics workspace name from Step 1 |
-| `TenantId` | Tenant ID from Step 3a |
-| `ClientId` | Client ID from Step 3a |
-| `ClientSecret` | Client secret value from Step 3a |
-| `AzureClientObjectId` | Object ID from Step 3a |
-| `AppInsightsWorkspaceResourceID` | Full Resource ID of the Log Analytics workspace (from workspace **Properties → Resource ID**) |
+| `WorkspaceName` | Log Analytics workspace name from Step 2 |
+| `TenantId` | Tenant ID from Step 4 |
+| `ClientId` | Client ID from Step 4 |
+| `ClientSecret` | Client secret value from Step 4 |
+| `AppInsightsWorkspaceResourceID` | Full Resource ID from Step 2 |
+| `FunctionAppLocation` | Azure region (e.g. `centralus`). Can differ from RG location. |
 
-6. Deploy to the **same region** as your Sentinel workspace
-
-### What the Function App ARM template creates automatically
-
-| Resource | Purpose |
-|---|---|
-| Data Collection Endpoint (DCE) | Receives HTTP POST from the Function App |
-| `FunctionAppSample_CL` table | Custom log table in your Sentinel workspace |
-| Data Collection Rule (DCR) | Maps the incoming stream to the table columns |
-| Role assignment | Grants the App Registration `Monitoring Metrics Publisher` on the DCR |
-| Application Insights | Function App monitoring, linked to your workspace |
-| Storage Account | Required by the Azure Functions runtime |
-| App Service Plan (Y1/Consumption) | Serverless — no cost when not running |
-| Function App | Timer-triggered Python function (fires every 10 minutes) |
+5. Click **Review + create** and wait for deployment to complete (~3–5 minutes)
 
 ---
 
-## Step 4 – Verify the Deployment
+### Step 7 – Assign Monitoring Metrics Publisher on the Data Collection Rule
 
-### Check the function loaded
+After the Function App deployment completes, grant the App Registration permission to ingest data into Sentinel.
 
-Go to your Function App in the Azure Portal → **Functions**. You should see `AzureFunctionFunctionApp` listed. If no functions appear, check **Log stream** for startup errors.
+1. In the Azure Portal, navigate to the **Data Collection Rule** created by the deployment (search by name in the resource group from Step 6, or find it in the deployment outputs)
+2. Go to **Access control (IAM) → Add role assignment**
+3. Select **Monitoring Metrics Publisher**
+4. Under **Members**, choose **User, group, or service principal** and select the App Registration from Step 4
+5. Click **Review + assign**
 
-### Manually trigger the function
+> **Critical:** This role must be assigned **directly on the Data Collection Rule resource** — assigning it at the resource group or subscription scope will **not work** and will result in a `403 Forbidden` error when the Function App attempts to ingest data. Wait **5–10 minutes** for RBAC propagation before testing.
 
-The function runs automatically every 10 minutes. To trigger immediately:
+---
 
-**Portal:**
+### Step 8 – Verify Data Ingestion
+
+The Function App runs automatically on a timer every 10 minutes. To verify data is flowing:
+
+#### Check the function loaded
+
+In the Azure Portal, go to your **Function App → Functions**. You should see `AzureFunctionFunctionApp` listed.
+
+#### Manually trigger the function (optional)
+
 1. Function App → **Functions** → `AzureFunctionFunctionApp`
-2. Click **Test/Run** → **Run**
-3. Watch the **Logs** tab — look for `Successfully ingested 3 event(s)` within a few seconds
+2. Click **Test/Run → Run**
+3. Watch the **Logs** tab — look for `Successfully ingested N event(s)`
 
-**PowerShell:**
-```powershell
-$key = az functionapp keys list --name <function-app-name> --resource-group <rg> --query masterKey -o tsv
-Invoke-WebRequest `
-  -Uri "https://<function-app-name>.azurewebsites.net/admin/functions/AzureFunctionFunctionApp" `
-  -Method Post `
-  -Headers @{"x-functions-key" = $key} `
-  -ContentType "application/json" `
-  -Body "{}" `
-  -UseBasicParsing
-```
+#### Query Sentinel Logs
 
-### Verify data in Sentinel
-
-In **Microsoft Sentinel → Logs**, run (allow ~5 minutes for ingestion lag):
+In **Microsoft Sentinel → Logs**, run:
 
 ```kql
 FunctionAppSample_CL
@@ -169,166 +201,69 @@ FunctionAppSample_CL
 | take 10
 ```
 
-The connector status card in Sentinel will also flip to **Connected** once data has been received within the last 24 hours.
+Allow **5–10 minutes** for ingestion lag after the function runs. Once data appears the connector status card in Sentinel will flip to **Connected**.
 
 ---
 
-## Architecture – How It Works
+## Scenario 2 – Customize for Your Data Source
+
+> Coming soon — covers modifying `main.py`, updating the table schema, rebuilding the zip, and adapting the connector UI for your product.
+
+---
+
+## Repository Structure
+
+```
+FunctionApp/
+├── Data/
+│   └── Solution_FunctionApp.json          # Solution metadata for Sentinel packaging tool
+├── Data Connectors/
+│   ├── FunctionApp_API_FunctionApp.json   # Connector UI definition (source — edit this)
+│   ├── azuredeploy_FunctionApp_API_FunctionApp.json  # Function App ARM template
+│   ├── AzureFunctionFunctionApp/
+│   │   ├── main.py                        # Python function — replace with your API logic
+│   │   └── function.json                  # Timer trigger config (every 10 min)
+│   ├── FunctionAppSample.zip              # Pre-built deployment package
+│   ├── host.json
+│   ├── requirements.txt
+│   └── proxies.json
+├── Package/
+│   ├── mainTemplate.json                  # Generated by packaging tool — do not edit directly
+│   ├── 3.0.0.zip                          # Solution package
+│   ├── createUiDefinition.json
+│   └── testParameters.json
+├── SolutionMetadata.json
+├── README.md
+└── ReleaseNotes.md
+```
+
+> **Important:** Never edit `Package/mainTemplate.json` directly. Always edit `Data Connectors/FunctionApp_API_FunctionApp.json` and re-run the packaging tool.
+
+---
+
+## Architecture
 
 ```
 Azure Function (Timer, every 10 min)
     │
-    ├── ClientSecretCredential (Tenant/Client/Secret from App Settings)
+    ├── Reads CLIENT_SECRET via Key Vault reference (no plain-text secrets)
+    ├── ClientSecretCredential → token for https://monitor.azure.com
     ├── LogsIngestionClient.upload() → POST to DCE endpoint
-    │       Response: HTTP 204
+    │       HTTP 204 (success)
     │
     └── DCE → DCR (stream mapping) → FunctionAppSample_CL
                                             │
                                             └── Microsoft Sentinel Logs
 ```
 
-### Key App Settings (set automatically by the Function App ARM template)
+### Key App Settings (set automatically by ARM template)
 
-| Setting | Value source |
+| Setting | Source |
 |---|---|
 | `TENANT_ID` | ARM parameter |
 | `CLIENT_ID` | ARM parameter |
-| `CLIENT_SECRET` | ARM parameter |
-| `DCE_ENDPOINT` | Auto-resolved from DCE resource at deploy time via `reference()` |
-| `DCR_ID` | Auto-resolved from DCR `immutableId` at deploy time via `reference()` |
+| `CLIENT_SECRET` | Key Vault reference — resolved at runtime by managed identity |
+| `DCE_ENDPOINT` | Auto-resolved from DCE resource via ARM `reference()` |
+| `DCR_ID` | Auto-resolved from DCR `immutableId` via ARM `reference()` |
 | `STREAM_NAME` | `Custom-FunctionAppSample_CL` |
-| `WEBSITE_RUN_FROM_PACKAGE` | URL to pre-built function zip on GitHub |
 
----
-
-## Adapting This Template for Your Own Connector
-
-1. **Modify `main.py`** — replace `build_sample_events()` with your actual data source API calls
-2. **Update the table schema** in `azuredeploy_FunctionApp_API_FunctionApp.json` (`Microsoft.OperationalInsights/workspaces/tables`) to match your event fields
-3. **Update `tableName` and `streamName`** variables in that ARM template
-4. **Update the DCR `dataFlow`** column mappings to match your schema
-5. **Update `requirements.txt`** with any extra Python packages your API client needs
-6. **Rebuild the zip** (see below) and push to your GitHub fork
-7. **Update `WEBSITE_RUN_FROM_PACKAGE`** in the ARM template to point to your new zip URL
-
-### Rebuilding the zip
-
-```powershell
-$src     = "path\to\Data Connectors"
-$staging = "$env:TEMP\fnapp_staging"
-$pkgDir  = "$staging\.python_packages\lib\site-packages"
-
-Remove-Item $staging -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Path $pkgDir -Force
-
-# Install packages
-python -m pip install azure-functions==1.21.3 azure-identity==1.19.0 `
-  azure-monitor-ingestion==1.0.4 azure-core==1.32.0 `
-  --target $pkgDir --no-user
-
-# Replace cryptography/cffi with Linux manylinux wheels (required — Function App runs Linux)
-$wheelDir = "$env:TEMP\fnapp_wheels"
-New-Item -ItemType Directory -Path $wheelDir -Force
-Remove-Item "$pkgDir\cryptography*","$pkgDir\cffi*","$pkgDir\_cffi_backend*" -Recurse -Force -ErrorAction SilentlyContinue
-python -m pip download cryptography cffi `
-  --dest $wheelDir `
-  --platform manylinux2014_x86_64 --python-version 311 `
-  --implementation cp --only-binary=:all:
-Get-ChildItem $wheelDir -Filter "*.whl" | ForEach-Object {
-    Expand-Archive -Path $_.FullName -DestinationPath $pkgDir -Force
-}
-
-# Copy function files and zip
-Copy-Item "$src\host.json","$src\requirements.txt","$src\proxies.json" $staging -Force
-Copy-Item "$src\AzureFunctionFunctionApp" "$staging\AzureFunctionFunctionApp" -Recurse -Force
-Push-Location $staging
-Compress-Archive -Path ".\*" -DestinationPath "$src\FunctionAppSample.zip" -Force
-Pop-Location
-```
-
-Push the updated zip and restart the Function App:
-```powershell
-git add "Data Connectors/FunctionAppSample.zip"
-git commit -m "Update function zip"
-git push
-az functionapp restart --name <function-app-name> --resource-group <rg>
-```
-
-> **Critical packaging rules:**
-> - All Python packages must be pre-bundled inside the zip under `.python_packages/lib/site-packages/` — they are NOT auto-installed from `requirements.txt` when using `WEBSITE_RUN_FROM_PACKAGE` from a URL
-> - `cryptography` and `cffi` **must** use Linux manylinux wheels — Windows `.pyd` builds will fail on the Linux runtime with an `ImportError`
-
----
-
-## File Structure
-
-```
-Solutions/FunctionApp/
-├── Package/
-│   ├── mainTemplate.json          ← Step 2: Deploy this to install connector card in Sentinel
-│   └── createUiDefinition.json
-├── Data Connectors/
-│   ├── azuredeploy_FunctionApp_API_FunctionApp.json  ← Step 3: Deployed via "Deploy to Azure" in connector UI
-│   ├── FunctionApp_API_FunctionApp.json              ← Standalone connector UI definition
-│   ├── FunctionAppSample.zip                         ← Pre-built function code + Linux packages
-│   ├── host.json                                     ← Azure Functions host config
-│   ├── requirements.txt                              ← Python dependencies
-│   ├── proxies.json
-│   ├── .funcignore
-│   └── AzureFunctionFunctionApp/
-│       ├── main.py                ← Timer trigger + DCE/DCR ingestion logic
-│       └── function.json          ← Schedule: every 10 minutes
-├── Data/
-│   └── Solution_FunctionApp.json
-├── ReleaseNotes.md
-└── README.md
-```
-
----
-
-## Troubleshooting
-
-### Connector card not appearing in Sentinel after Step 2
-- Verify `mainTemplate.json` deployed without errors
-- Confirm the `workspace` parameter matched your workspace name exactly (case-sensitive)
-- Wait 1-2 minutes and refresh the Data Connectors blade
-
-### Functions not showing in Function App after Step 3
-- Check `WEBSITE_RUN_FROM_PACKAGE` in App Settings points to a publicly accessible URL
-- Go to **Function App → Log stream** for startup errors
-
-### `ModuleNotFoundError: No module named 'azure.identity'`
-Python packages are not bundled in the zip. All packages must be pre-bundled under `.python_packages/lib/site-packages/` inside the zip. See [Rebuilding the zip](#rebuilding-the-zip).
-
-### `ImportError: cannot import name 'x509' from cryptography`
-`cryptography` was compiled for Windows but the runtime is Linux. Use Linux manylinux wheels. See [Rebuilding the zip](#rebuilding-the-zip).
-
-### `SubscriptionIsOverQuotaForSku` on Function App deployment
-No Consumption plan quota in the selected region. Deploy the resource group to **Central US**:
-```powershell
-az group create --name <rg> --location centralus
-```
-
-### Authentication errors from the Function App
-- Verify `TENANT_ID`, `CLIENT_ID`, `CLIENT_SECRET` App Settings are correct
-- Confirm the `Monitoring Metrics Publisher` role is assigned on the DCR to the App Registration Object ID:
-```powershell
-$dcrId = az monitor data-collection rule list -g <rg> --query "[0].id" -o tsv
-az role assignment list --scope $dcrId --query "[].{role:roleDefinitionName,principal:principalId}" -o table
-```
-
-### Data not appearing in `FunctionAppSample_CL`
-- Allow up to 5 minutes for ingestion lag after a successful function run
-- Check the function **Invocations** tab for success/failure
-- Confirm the function log shows `Successfully ingested 3 event(s) into stream 'Custom-FunctionAppSample_CL'`
-
----
-
-## Resources
-
-- [Azure Monitor Ingestion API](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview)
-- [Data Collection Rules overview](https://learn.microsoft.com/azure/azure-monitor/essentials/data-collection-rule-overview)
-- [Azure Functions Python developer guide](https://learn.microsoft.com/azure/azure-functions/functions-reference-python)
-- [Microsoft Sentinel – Create custom data connectors](https://learn.microsoft.com/azure/sentinel/create-custom-connector)
-- [Azure Functions pricing](https://azure.microsoft.com/pricing/details/functions/)
-- [Azure Monitor pricing](https://azure.microsoft.com/pricing/details/monitor/)

@@ -60,8 +60,8 @@
         "suffix": "[concat('A', uniqueString(resourceGroup().id))]",
         "endpointName": "[concat(toLower(parameters('FunctionName')), 'LogsEndpoint', variables('suffix'))]",
         "mainRuleName": "[concat(toLower(parameters('FunctionName')), 'CollectionRule', variables('suffix'))]",
-        "tableName": "FunctionAppSample_CL",
-        "streamName": "Custom-FunctionAppSample_CL",
+        "tableName": "ISVSecurity_CL",
+        "streamName": "Custom-ISVSecurity_CL",
         "logWsResId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('WorkspaceName'))]",
         "KeyVaultName": "[concat('kv', take(variables('FunctionName'), 22))]"
     },
@@ -100,7 +100,9 @@
                         { "name": "DstPort",       "type": "int" },
                         { "name": "Action",        "type": "string" },
                         { "name": "CustomField1",  "type": "string" },
-                        { "name": "CustomField2",  "type": "string" }
+                        { "name": "CustomField2",  "type": "string" },
+                        { "name": "UserName",      "type": "string" },
+                        { "name": "RiskScore",     "type": "int" }
                     ]
                 }
             }
@@ -131,7 +133,9 @@
                             { "name": "DstPort",       "type": "int" },
                             { "name": "Action",        "type": "string" },
                             { "name": "CustomField1",  "type": "string" },
-                            { "name": "CustomField2",  "type": "string" }
+                            { "name": "CustomField2",  "type": "string" },
+                            { "name": "UserName",      "type": "string" },
+                            { "name": "RiskScore",     "type": "int" }
                         ]
                     }
                 },
@@ -277,7 +281,7 @@
                         "DCE_ENDPOINT": "[reference(resourceId('Microsoft.Insights/dataCollectionEndpoints', variables('endpointName'))).logsIngestion.endpoint]",
                         "DCR_ID": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', variables('mainRuleName'))).immutableId]",
                         "STREAM_NAME": "[variables('streamName')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://raw.githubusercontent.com/robertmoriarty12/Sentinel-Ingestion-Accelerator-Function-App/main/FunctionApp/Data%20Connectors/FunctionAppSample.zip"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://raw.githubusercontent.com/robertmoriarty12/Azure-Sentinel/main/Solutions/FunctionApp/Data%20Connectors/FunctionAppSample.zip"
                     }
                 }
             ]

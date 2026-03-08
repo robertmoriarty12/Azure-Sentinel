@@ -6,31 +6,31 @@
     "graphQueries": [
         {
             "metricName": "FunctionApp Sample events",
-            "legend": "FunctionAppSample_CL",
-            "baseQuery": "FunctionAppSample_CL"
+            "legend": "ISVSecurity_CL",
+            "baseQuery": "ISVSecurity_CL"
         }
     ],
     "sampleQueries": [
         {
             "description": "All FunctionApp Sample events",
-            "query": "FunctionAppSample_CL\n| sort by TimeGenerated desc"
+            "query": "ISVSecurity_CL\n| sort by TimeGenerated desc"
         },
         {
             "description": "FunctionApp Sample – alerts only",
-            "query": "FunctionAppSample_CL\n| where EventType == \"Alert\"\n| sort by TimeGenerated desc"
+            "query": "ISVSecurity_CL\n| where EventType == \"Alert\"\n| sort by TimeGenerated desc"
         }
     ],
     "dataTypes": [
         {
-            "name": "FunctionAppSample_CL",
-            "lastDataReceivedQuery": "FunctionAppSample_CL\n            | summarize Time = max(TimeGenerated)\n            | where isnotempty(Time)"
+            "name": "ISVSecurity_CL",
+            "lastDataReceivedQuery": "ISVSecurity_CL\n            | summarize Time = max(TimeGenerated)\n            | where isnotempty(Time)"
         }
     ],
     "connectivityCriterias": [
         {
             "type": "IsConnectedQuery",
             "value": [
-                "FunctionAppSample_CL\n            | summarize LastLogReceived = max(TimeGenerated)\n            | project IsConnected = LastLogReceived > ago(1d)"
+                "ISVSecurity_CL\n            | summarize LastLogReceived = max(TimeGenerated)\n            | project IsConnected = LastLogReceived > ago(1d)"
             ]
         }
     ],
@@ -66,7 +66,7 @@
     "instructionSteps": [
         {
             "title": "",
-            "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. The ARM template creates the Data Collection Endpoint, custom log table (`FunctionAppSample_CL`), Data Collection Rule, Azure Key Vault, and Function App. Credentials are stored in Azure Key Vault by the deployment — the Function App reads them via Key Vault references with no plain-text secrets in application settings. **Two manual steps are required after deployment:** (1) assign **Monitoring Metrics Publisher** on the DCR (Step 3), and (2) ensure the deploying user has **Key Vault Secrets Officer** before deploying (Step 2). This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
+            "description": ">**NOTE:** This connector uses Azure Functions and the Azure Monitor Ingestion API (DCE/DCR) to push sample events into Microsoft Sentinel. The ARM template creates the Data Collection Endpoint, custom log table (`ISVSecurity_CL`), Data Collection Rule, Azure Key Vault, and Function App. Credentials are stored in Azure Key Vault by the deployment — the Function App reads them via Key Vault references with no plain-text secrets in application settings. **Two manual steps are required after deployment:** (1) assign **Monitoring Metrics Publisher** on the DCR (Step 3), and (2) ensure the deploying user has **Key Vault Secrets Officer** before deploying (Step 2). This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) and [Azure Monitor pricing page](https://azure.microsoft.com/pricing/details/monitor/) for details."
         },
         {
             "title": "STEP 1 – Create an Azure AD App Registration",
@@ -74,7 +74,7 @@
         },
         {
             "title": "STEP 2 – Deploy the Azure Function App",
-            "description": ">**PREREQUISITE:** Before clicking Deploy, the account performing the deployment must have the **Key Vault Secrets Officer** role (or **Key Vault Administrator**) on the target resource group or subscription. This is required because the ARM template creates an Azure Key Vault and writes the `ClientSecret` into it as a secret. Without this role the deployment will fail with an authorization error on the Key Vault secret write.\n\nClick **Deploy to Azure** and fill in the parameters. The template will create the Data Collection Endpoint, `FunctionAppSample_CL` table, Data Collection Rule, Azure Key Vault, and Function App.\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FSentinel-Ingestion-Accelerator-Function-App%2Fmain%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Parameters to fill in:**\n\n| Parameter | Description |\n|---|---|\n| `WorkspaceName` | Name of your Log Analytics / Sentinel workspace |\n| `TenantId` | Azure AD Tenant ID from Step 1 |\n| `ClientId` | App Registration Client ID from Step 1 |\n| `ClientSecret` | App Registration Client Secret from Step 1 — stored in Azure Key Vault by the deployment |\n| `AppInsightsWorkspaceResourceID` | Full Resource ID of the Log Analytics workspace (from **Log Analytics workspace > Properties > Resource ID**) |\n| `FunctionAppLocation` | Azure region for the Function App and related resources. Can differ from the Resource Group location (e.g. set `centralus` even if your RG is in `westus`). Defaults to the Resource Group location if left blank. |",
+            "description": ">**PREREQUISITE:** Before clicking Deploy, the account performing the deployment must have the **Key Vault Secrets Officer** role (or **Key Vault Administrator**) on the target resource group or subscription. This is required because the ARM template creates an Azure Key Vault and writes the `ClientSecret` into it as a secret. Without this role the deployment will fail with an authorization error on the Key Vault secret write.\n\nClick **Deploy to Azure** and fill in the parameters. The template will create the Data Collection Endpoint, `ISVSecurity_CL` table, Data Collection Rule, Azure Key Vault, and Function App.\n\n[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frobertmoriarty12%2FAzure-Sentinel%2Fmain%2FSolutions%2FFunctionApp%2FData%2520Connectors%2Fazuredeploy_FunctionApp_API_FunctionApp.json)\n\n**Parameters to fill in:**\n\n| Parameter | Description |\n|---|---|\n| `WorkspaceName` | Name of your Log Analytics / Sentinel workspace |\n| `TenantId` | Azure AD Tenant ID from Step 1 |\n| `ClientId` | App Registration Client ID from Step 1 |\n| `ClientSecret` | App Registration Client Secret from Step 1 — stored in Azure Key Vault by the deployment |\n| `AppInsightsWorkspaceResourceID` | Full Resource ID of the Log Analytics workspace (from **Log Analytics workspace > Properties > Resource ID**) |\n| `FunctionAppLocation` | Azure region for the Function App and related resources. Can differ from the Resource Group location (e.g. set `centralus` even if your RG is in `westus`). Defaults to the Resource Group location if left blank. |",
             "instructions": [
                 {
                     "parameters": {
