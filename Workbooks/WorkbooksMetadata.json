@@ -10243,9 +10243,7 @@
       "SentinelBehaviorInfo",
       "SentinelBehaviorEntities"
     ],
-    "dataConnectorsDependencies": [
-      
-    ],
+    "dataConnectorsDependencies": [],
     "previewImagesFileNames": [
       "UEBABehaviorsAnalysisWorkbookBlack1.png",
       "UEBABehaviorsAnalysisWorkbookBlack2.png",
@@ -10261,22 +10259,40 @@
     "provider": "Microsoft"
   },
   {
-        "workbookKey": "VTIFeedDashboard",
-        "logoFileName": "Visa_VTI_Logo.svg",
-        "description": "Visa Threat Intelligence Feed Dashboard",
-        "dataTypesDependencies": [ "VisaThreatIntelligenceIOC_CL" ],
-        "dataConnectorsDependencies": [
-            "VisaThreatIntelligence"
-        ],
-        "previewImagesFileNames": [
-            "VTIOverview_black.png",
-            "VTIOverview_white.png"
-        ],
-        "version": "1.0",
-        "title": "Visa Threat Intelligence Feed Overview",
-        "templateRelativePath": "VTI_IOC_Feed.json",
-        "subtitle": "",
-        "provider": "Visa"
+    "workbookKey": "VTIFeedDashboard",
+    "logoFileName": "Visa_VTI_Logo.svg",
+    "description": "Visa Threat Intelligence Feed Dashboard",
+    "dataTypesDependencies": [
+      "VisaThreatIntelligenceIOC_CL"
+    ],
+    "dataConnectorsDependencies": [
+      "VisaThreatIntelligence"
+    ],
+    "previewImagesFileNames": [
+      "VTIOverview_black.png",
+      "VTIOverview_white.png"
+    ],
+    "version": "1.0",
+    "title": "Visa Threat Intelligence Feed Overview",
+    "templateRelativePath": "VTI_IOC_Feed.json",
+    "subtitle": "",
+    "provider": "Visa"
+  },
+  {
+    "workbookKey": "CiscoETDMessagesWorkbook",
+    "logoFileName": "cisco-logo-transparent.svg",
+    "description": "Analyze email threat data from Cisco ETD, visualizing verdicts, detection techniques, senders, recipients, attachments, and URLs to identify and investigate email-based threats.",
+    "dataTypesDependencies": [
+      "CiscoETD_CL"
+    ],
+    "dataConnectorsDependencies": [
+      "CiscoETDConnectorDefinition"
+    ],
+    "previewImagesFileNames": [],
+    "version": "1.0",
+    "title": "Cisco Email Threat Defense Messages",
+    "templateRelativePath": "CiscoETDMessages.json",
+    "subtitle": "",
+    "provider": "Cisco"
   }
-
 ]
