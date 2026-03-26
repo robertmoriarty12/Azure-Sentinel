@@ -23,7 +23,7 @@
   },
   "workbook1-name": {
     "type": "string",
-    "defaultValue": "Cisco Email Threat Defense Messages",
+    "defaultValue": "Netskope Web Transactions",
     "minLength": 1,
     "metadata": {
       "description": "Name for the workbook"
