@@ -70,7 +70,7 @@
       "stepCollectorConfigs": {
         "fetchMessageData": {
           "shouldJoinNestedData": true,
-          "joinedDataStepName": "message",
+          "joinedDataStepName": "expand",
           "auth": {
             "AuthType": "None"
           },
@@ -85,9 +85,12 @@
             "eventsJsonPaths": [
               "$"
             ],
-            "format": "json-line"
+            "format": "json"
           }
         }
+      },
+      "extra": {
+        "nestedTransformName": "/ASI/Microsoft/MvExpandTransformer"
       }
     }
   }

@@ -14,14 +14,44 @@
             "description": "The timestamp (UTC) reflecting the time in which the event was generated."
           },
           {
-            "name": "downloadLink",
-            "type": "string",
-            "description": "The URL from which message data was downloaded"
+            "name": "EventTime",
+            "type": "Datetime",
+            "description": "Timestamp of the email event from Cisco ETD."
+          },
+          {
+            "name": "EventType",
+            "type": "String",
+            "description": "Event type: create or update."
+          },
+          {
+            "name": "MessageId",
+            "type": "String",
+            "description": "Unique identifier of the email message."
+          },
+          {
+            "name": "Verdict",
+            "type": "String",
+            "description": "Threat verdict: phishing, malicious, bec, spam, scam, graymail."
+          },
+          {
+            "name": "Sender",
+            "type": "String",
+            "description": "Sender email address."
+          },
+          {
+            "name": "Recipient",
+            "type": "String",
+            "description": "Primary recipient email address."
+          },
+          {
+            "name": "Subject",
+            "type": "String",
+            "description": "Email subject line."
           },
           {
             "name": "message",
-            "type": "dynamic",
-            "description": "The JSONL message data from the download"
+            "type": "Dynamic",
+            "description": "Full Cisco ETD message event object."
           }
         ]
       }

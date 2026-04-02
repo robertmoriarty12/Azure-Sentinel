@@ -14,7 +14,7 @@
               "type": "string"
             },
             {
-              "name": "message",
+              "name": "expand",
               "type": "dynamic"
             }
           ]
@@ -36,7 +36,7 @@
           "destinations": [
             "clv2ws1"
           ],
-          "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, message",
+          "transformKql": "source | project TimeGenerated=now(), EventTime=todatetime(expand.message.timestamp), EventType=tostring(expand.message.eventType), MessageId=tostring(expand.message.id), Verdict=tostring(iff(isnotnull(expand.message.verdict.verdict), expand.message.verdict.verdict, expand.message.verdict.category)), Sender=tostring(iff(isnotempty(tostring(expand.message.fromAddresses)), expand.message.fromAddresses, expand.message.returnPath)), Recipient=tostring(iff(isnotempty(tostring(expand.message.toAddresses[0])), expand.message.toAddresses[0], expand.message.envelopeTo[0])), Subject=tostring(expand.message.subject), message=todynamic(expand.message)",
           "outputStream": "Custom-CiscoETD_CL"
         }
       ]

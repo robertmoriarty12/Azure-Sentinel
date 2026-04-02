@@ -8,9 +8,7 @@
   ],
   "Analytic Rules": [],
   "Playbooks": [],
-  "Parsers": [
-    "Parsers/CiscoETDMessages.yaml"
-  ],
+  "Parsers": [],
   "Hunting Queries": [],
   "Data Connectors": [
     "Data Connectors/CiscoETD_ccp/CiscoETD_connectorDefinition.json"

@@ -39,7 +39,7 @@
     {
       "type": 1,
       "content": {
-        "json": "## Cisco Email Threat Defense\nThis workbook uses the **CiscoETDMessages** parser to visualize email threat data from the Cisco ETD v5 connector. Data is sourced from the `message` dynamic column — all fields are parsed at query time. Use the time range filter above to scope all tiles.\n\n> **Note:** Verdict analysis excludes `update` events (re-remediation records that carry no sender/verdict data)."
+        "json": "## Cisco Email Threat Defense\nThis workbook visualizes email threat data from the Cisco ETD v5 connector querying **CiscoETD_CL** directly — fields are extracted at ingestion time by the DCR transform. Use the time range filter above to scope all tiles.\n\n> **Note:** Verdict analysis excludes `update` events (re-remediation records that carry no sender/verdict data)."
       },
       "name": "header-text"
     },
@@ -54,7 +54,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| extend EventType = tostring(message['eventType'])\n| extend Folder = tostring(message['action']['folder'])\n| summarize\n    ['Total Events']       = count(),\n    ['New Messages']       = countif(EventType =~ 'create'),\n    ['Remediation Updates']= countif(EventType =~ 'update'),\n    Phishing               = countif(Verdict =~ 'phishing'),\n    Malicious              = countif(Verdict =~ 'malicious'),\n    BEC                    = countif(Verdict =~ 'bec'),\n    Graymail               = countif(Verdict =~ 'graymail'),\n    Spam                   = countif(Verdict =~ 'spam'),\n    Scam                   = countif(Verdict =~ 'scam'),\n    Quarantined            = countif(Folder =~ 'quarantine'),\n    ['Sent to Junk']       = countif(Folder =~ 'junk')",
+              "query": "CiscoETD_CL\n| extend Folder = tostring(message['action']['folder'])\n| summarize\n    ['Total Events']       = count(),\n    ['New Messages']       = countif(EventType =~ 'create'),\n    ['Remediation Updates']= countif(EventType =~ 'update'),\n    Phishing               = countif(Verdict =~ 'phishing'),\n    Malicious              = countif(Verdict =~ 'malicious'),\n    BEC                    = countif(Verdict =~ 'bec'),\n    Graymail               = countif(Verdict =~ 'graymail'),\n    Spam                   = countif(Verdict =~ 'spam'),\n    Scam                   = countif(Verdict =~ 'scam'),\n    Quarantined            = countif(Folder =~ 'quarantine'),\n    ['Sent to Junk']       = countif(Folder =~ 'junk')",
               "size": 4,
               "title": "Message Summary",
               "timeContextFromParameter": "TimeRange",
@@ -69,7 +69,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| summarize Count = count() by Verdict\n| render piechart title = 'Messages by Verdict'",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| summarize Count = count() by Verdict\n| render piechart title = 'Messages by Verdict'",
               "size": 0,
               "title": "Messages by Verdict",
               "timeContextFromParameter": "TimeRange",
@@ -84,7 +84,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| summarize Count = count() by bin(EventTime, 1h), Verdict\n| render timechart title = 'Message Volume Over Time'",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| summarize Count = count() by bin(EventTime, 1h), Verdict\n| render timechart title = 'Message Volume Over Time'",
               "size": 0,
               "title": "Message Volume Over Time (by Verdict)",
               "timeContextFromParameter": "TimeRange",
@@ -111,7 +111,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Sender)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by Sender\n| top 10 by MessageCount desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Sender)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by Sender\n| top 10 by MessageCount desc",
               "size": 0,
               "title": "Top 10 Senders",
               "timeContextFromParameter": "TimeRange",
@@ -129,7 +129,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Sender)\n| extend SenderDomain = tostring(split(Sender, '@')[1])\n| where isnotempty(SenderDomain)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by SenderDomain\n| top 10 by MessageCount desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Sender)\n| extend SenderDomain = tostring(split(Sender, '@')[1])\n| where isnotempty(SenderDomain)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by SenderDomain\n| top 10 by MessageCount desc",
               "size": 0,
               "title": "Top 10 Sender Domains",
               "timeContextFromParameter": "TimeRange",
@@ -147,7 +147,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Recipient)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by Recipient\n| top 10 by MessageCount desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Recipient)\n| summarize MessageCount = count(), Verdicts = make_set(Verdict, 5) by Recipient\n| top 10 by MessageCount desc",
               "size": 0,
               "title": "Top 10 Targeted Recipients",
               "timeContextFromParameter": "TimeRange",
@@ -164,7 +164,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Recipient)\n| extend RecipientDomain = tostring(split(Recipient, '@')[1])\n| where isnotempty(RecipientDomain)\n| summarize MessageCount = count() by RecipientDomain\n| top 10 by MessageCount desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Recipient)\n| extend RecipientDomain = tostring(split(Recipient, '@')[1])\n| where isnotempty(RecipientDomain)\n| summarize MessageCount = count() by RecipientDomain\n| top 10 by MessageCount desc",
               "size": 0,
               "title": "Top 10 Targeted Recipient Domains",
               "timeContextFromParameter": "TimeRange",
@@ -193,7 +193,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| mv-expand detection = message['verdict']['detections']\n| where isnotnull(detection)\n| extend Technique = tostring(detection['technique'])\n| where isnotempty(Technique)\n| summarize Count = count() by Technique\n| top 15 by Count desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| mv-expand detection = message['verdict']['detections']\n| where isnotnull(detection)\n| extend Technique = tostring(detection['technique'])\n| where isnotempty(Technique)\n| summarize Count = count() by Technique\n| top 15 by Count desc",
               "size": 0,
               "title": "Top Detection Techniques",
               "timeContextFromParameter": "TimeRange",
@@ -211,7 +211,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| extend BusinessRisk = tostring(message['verdict']['businessRisk'])\n| where isnotempty(BusinessRisk)\n| summarize Count = count() by BusinessRisk\n| render piechart title = 'Business Risk'",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| extend BusinessRisk = tostring(message['verdict']['businessRisk'])\n| where isnotempty(BusinessRisk)\n| summarize Count = count() by BusinessRisk\n| render piechart title = 'Business Risk'",
               "size": 0,
               "title": "Business Risk\n(phishing / malicious only)",
               "timeContextFromParameter": "TimeRange",
@@ -226,7 +226,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| mv-expand detection = message['verdict']['detections']\n| where isnotnull(detection)\n| extend Technique    = tostring(detection['technique']),\n         DetectionType = tostring(detection['type']),\n         Description  = tostring(detection['description'])\n| where isnotempty(Technique)\n| summarize Count = count() by Verdict, Technique, DetectionType\n| sort by Verdict asc, Count desc\n| project Verdict, Technique, DetectionType, Count",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| mv-expand detection = message['verdict']['detections']\n| where isnotnull(detection)\n| extend Technique    = tostring(detection['technique']),\n         DetectionType = tostring(detection['type']),\n         Description  = tostring(detection['description'])\n| where isnotempty(Technique)\n| summarize Count = count() by Verdict, Technique, DetectionType\n| sort by Verdict asc, Count desc\n| project Verdict, Technique, DetectionType, Count",
               "size": 0,
               "title": "Detection Technique Details",
               "timeContextFromParameter": "TimeRange",
@@ -255,7 +255,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| extend Folder = tostring(message['action']['folder'])\n| where isnotempty(Folder)\n| summarize Count = count() by Folder\n| render piechart title = 'Disposition Folder'",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| extend Folder = tostring(message['action']['folder'])\n| where isnotempty(Folder)\n| summarize Count = count() by Folder\n| render piechart title = 'Disposition Folder'",
               "size": 0,
               "title": "Disposition Folder\n(junk vs quarantine)",
               "timeContextFromParameter": "TimeRange",
@@ -270,7 +270,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| extend Folder = tostring(message['action']['folder'])\n| where isnotempty(Folder)\n| summarize Count = count() by Verdict, Folder\n| sort by Count desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| extend Folder = tostring(message['action']['folder'])\n| where isnotempty(Folder)\n| summarize Count = count() by Verdict, Folder\n| sort by Count desc",
               "size": 0,
               "title": "Verdict vs. Folder",
               "timeContextFromParameter": "TimeRange",
@@ -286,7 +286,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Verdict)\n| extend IsAutoRemediated = tostring(message['verdict']['isAutoRemediated'])\n| extend ReclassifiedBy  = tostring(message['verdict']['reclassifiedBy'])\n| where isnotempty(IsAutoRemediated)\n| summarize Count = count() by IsAutoRemediated, ReclassifiedBy\n| project ['Auto-Remediated'] = IsAutoRemediated, ['Reclassified By'] = ReclassifiedBy, Count",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Verdict)\n| extend IsAutoRemediated = tostring(message['verdict']['isAutoRemediated'])\n| extend ReclassifiedBy  = tostring(message['verdict']['reclassifiedBy'])\n| where isnotempty(IsAutoRemediated)\n| summarize Count = count() by IsAutoRemediated, ReclassifiedBy\n| project ['Auto-Remediated'] = IsAutoRemediated, ['Reclassified By'] = ReclassifiedBy, Count",
               "size": 0,
               "title": "Auto-Remediation & Reclassification",
               "timeContextFromParameter": "TimeRange",
@@ -301,7 +301,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'update'\n| extend Folder       = tostring(message['action']['folder'])\n| extend RemediatedBy = tostring(message['action']['remediatedBy'])\n| extend ActionType   = tostring(message['action']['action'])\n| project EventTime, MessageId, ActionType, Folder, RemediatedBy\n| sort by EventTime desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'update'\n| extend Folder       = tostring(message['action']['folder'])\n| extend RemediatedBy = tostring(message['action']['remediatedBy'])\n| extend ActionType   = tostring(message['action']['action'])\n| project EventTime, MessageId, ActionType, Folder, RemediatedBy\n| sort by EventTime desc",
               "size": 0,
               "title": "Remediation Update Events",
               "timeContextFromParameter": "TimeRange",
@@ -330,7 +330,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotnull(message['attachments'])\n| mv-expand attachment = message['attachments']\n| extend FileName = tostring(attachment['filename'])\n| where isnotempty(FileName)\n| extend FileExt = tolower(extract(@'\\.([^.]+)$', 1, FileName))\n| where isnotempty(FileExt)\n| summarize Count = count() by FileExt\n| top 10 by Count desc\n| render piechart title = 'Attachment File Types'",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotnull(message['attachments'])\n| mv-expand attachment = message['attachments']\n| extend FileName = tostring(attachment['filename'])\n| where isnotempty(FileName)\n| extend FileExt = tolower(extract(@'\\.([^.]+)$', 1, FileName))\n| where isnotempty(FileExt)\n| summarize Count = count() by FileExt\n| top 10 by Count desc\n| render piechart title = 'Attachment File Types'",
               "size": 0,
               "title": "Attachment File Extensions",
               "timeContextFromParameter": "TimeRange",
@@ -345,7 +345,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotnull(message['attachments'])\n| mv-expand attachment = message['attachments']\n| extend FileName = tostring(attachment['filename']),\n         SHA256   = tostring(attachment['SHA256'])\n| where isnotempty(SHA256)\n// Deduplicate by SHA256 to find unique files seen across many messages\n| summarize\n    FileNames  = make_set(FileName, 10),\n    TimeSeen   = count(),\n    Verdicts   = make_set(Verdict, 5),\n    Senders    = make_set(Sender, 10)\n    by SHA256\n| sort by TimeSeen desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotnull(message['attachments'])\n| mv-expand attachment = message['attachments']\n| extend FileName = tostring(attachment['filename']),\n         SHA256   = tostring(attachment['SHA256'])\n| where isnotempty(SHA256)\n// Deduplicate by SHA256 to find unique files seen across many messages\n| summarize\n    FileNames  = make_set(FileName, 10),\n    TimeSeen   = count(),\n    Verdicts   = make_set(Verdict, 5),\n    Senders    = make_set(Sender, 10)\n    by SHA256\n| sort by TimeSeen desc",
               "size": 0,
               "title": "Unique Attachment Hashes (SHA256)",
               "timeContextFromParameter": "TimeRange",
@@ -362,7 +362,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "// Uses the verdict detections array — type='sha256' entries flag files\n// identified by threat intelligence, distinct from all attachments above\nCiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where Verdict =~ 'malicious'\n| mv-expand detection = message['verdict']['detections']\n| where tostring(detection['type']) =~ 'sha256'\n| extend SHA256    = tostring(detection['description']),\n         Technique = tostring(detection['technique'])\n| where isnotempty(SHA256)\n| summarize Count = count() by SHA256, Technique, Sender, Subject\n| sort by Count desc",
+              "query": "// Uses the verdict detections array — type='sha256' entries flag files\n// identified by threat intelligence, distinct from all attachments above\nCiscoETD_CL\n| where EventType =~ 'create'\n| where Verdict =~ 'malicious'\n| mv-expand detection = message['verdict']['detections']\n| where tostring(detection['type']) =~ 'sha256'\n| extend SHA256    = tostring(detection['description']),\n         Technique = tostring(detection['technique'])\n| where isnotempty(SHA256)\n| summarize Count = count() by SHA256, Technique, Sender, Subject\n| sort by Count desc",
               "size": 0,
               "title": "Malicious File Hashes (from Threat Detections)",
               "timeContextFromParameter": "TimeRange",
@@ -391,7 +391,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "// URLs surfaced in the verdict detections array with type='url'\n// These are the URLs Cisco ETD flagged as malicious/suspicious\nCiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where Verdict in~ ('phishing', 'malicious')\n| mv-expand detection = message['verdict']['detections']\n| where tostring(detection['type']) =~ 'url'\n| extend MaliciousUrl = tostring(detection['description']),\n         Technique    = tostring(detection['technique'])\n| where isnotempty(MaliciousUrl)\n| summarize Count = count(), Senders = make_set(Sender, 5) by MaliciousUrl, Technique\n| sort by Count desc",
+              "query": "// URLs surfaced in the verdict detections array with type='url'\n// These are the URLs Cisco ETD flagged as malicious/suspicious\nCiscoETD_CL\n| where EventType =~ 'create'\n| where Verdict in~ ('phishing', 'malicious')\n| mv-expand detection = message['verdict']['detections']\n| where tostring(detection['type']) =~ 'url'\n| extend MaliciousUrl = tostring(detection['description']),\n         Technique    = tostring(detection['technique'])\n| where isnotempty(MaliciousUrl)\n| summarize Count = count(), Senders = make_set(Sender, 5) by MaliciousUrl, Technique\n| sort by Count desc",
               "size": 0,
               "title": "Malicious URLs (flagged in Detections)",
               "timeContextFromParameter": "TimeRange",
@@ -408,7 +408,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "// All URLs in urlMetadata across threat messages, grouped by domain\n// Excludes HTML entities (&nbsp;) and mailto links\nCiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| where isnotnull(message['urlMetadata'])\n| mv-expand urlItem = message['urlMetadata']\n| extend Url = tostring(urlItem['url'])\n| where isnotempty(Url)\n    and Url !startswith '&'\n    and Url !startswith 'http://mailto'\n    and not(Url matches regex @'^www\\.')\n| extend UrlDomain = extract(@'^https?://([^/?#\\s]+)', 1, Url)\n| where isnotempty(UrlDomain)\n| summarize Count = count() by UrlDomain\n| top 20 by Count desc",
+              "query": "// All URLs in urlMetadata across threat messages, grouped by domain\n// Excludes HTML entities (&nbsp;) and mailto links\nCiscoETD_CL\n| where EventType =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| where isnotnull(message['urlMetadata'])\n| mv-expand urlItem = message['urlMetadata']\n| extend Url = tostring(urlItem['url'])\n| where isnotempty(Url)\n    and Url !startswith '&'\n    and Url !startswith 'http://mailto'\n    and not(Url matches regex @'^www\\.')\n| extend UrlDomain = extract(@'^https?://([^/?#\\s]+)', 1, Url)\n| where isnotempty(UrlDomain)\n| summarize Count = count() by UrlDomain\n| top 20 by Count desc",
               "size": 0,
               "title": "Top URL Domains in Threat Messages",
               "timeContextFromParameter": "TimeRange",
@@ -438,7 +438,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "// clientIp = the external IP that delivered mail to the Cisco gateway\n// This is meaningful: hotmail.com sends from Azure IPs, gmail.com from Google IPs, etc.\nCiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| extend ClientIp = tostring(message['clientIp'])\n| where isnotempty(ClientIp)\n| summarize\n    MessageCount = count(),\n    Verdicts     = make_set(Verdict, 5),\n    Senders      = make_set(Sender, 10)\n    by ClientIp\n| sort by MessageCount desc",
+              "query": "// clientIp = the external IP that delivered mail to the Cisco gateway\n// This is meaningful: hotmail.com sends from Azure IPs, gmail.com from Google IPs, etc.\nCiscoETD_CL\n| where EventType =~ 'create'\n| extend ClientIp = tostring(message['clientIp'])\n| where isnotempty(ClientIp)\n| summarize\n    MessageCount = count(),\n    Verdicts     = make_set(Verdict, 5),\n    Senders      = make_set(Sender, 10)\n    by ClientIp\n| sort by MessageCount desc",
               "size": 0,
               "title": "Top Sending Client IPs",
               "timeContextFromParameter": "TimeRange",
@@ -455,7 +455,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| extend ClientIp = tostring(message['clientIp'])\n| where isnotempty(ClientIp)\n| summarize\n    ThreatCount  = count(),\n    Verdicts     = make_set(Verdict, 5),\n    Senders      = make_set(Sender, 5),\n    Subjects     = make_set(Subject, 5)\n    by ClientIp\n| sort by ThreatCount desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| extend ClientIp = tostring(message['clientIp'])\n| where isnotempty(ClientIp)\n| summarize\n    ThreatCount  = count(),\n    Verdicts     = make_set(Verdict, 5),\n    Senders      = make_set(Sender, 5),\n    Subjects     = make_set(Subject, 5)\n    by ClientIp\n| sort by ThreatCount desc",
               "size": 0,
               "title": "Threat-Associated Sending IPs",
               "timeContextFromParameter": "TimeRange",
@@ -484,7 +484,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| extend ClientIp     = tostring(message['clientIp'])\n| extend Folder       = tostring(message['action']['folder'])\n| extend BusinessRisk = tostring(message['verdict']['businessRisk'])\n| extend HasAttach    = isnotnull(message['attachments']) and array_length(message['attachments']) > 0\n| extend HasMalUrl    = isnotnull(message['verdict']['detections'])\n| project\n    EventTime,\n    MessageId,\n    Verdict,\n    BusinessRisk,\n    Sender,\n    Recipient,\n    Subject,\n    Folder,\n    ['Has Attachments'] = HasAttach,\n    ['Has Malicious URL'] = HasMalUrl,\n    ClientIp\n| sort by EventTime desc\n| take 100",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| extend ClientIp     = tostring(message['clientIp'])\n| extend Folder       = tostring(message['action']['folder'])\n| extend BusinessRisk = tostring(message['verdict']['businessRisk'])\n| extend HasAttach    = isnotnull(message['attachments']) and array_length(message['attachments']) > 0\n| extend HasMalUrl    = isnotnull(message['verdict']['detections'])\n| project\n    EventTime,\n    MessageId,\n    Verdict,\n    BusinessRisk,\n    Sender,\n    Recipient,\n    Subject,\n    Folder,\n    ['Has Attachments'] = HasAttach,\n    ['Has Malicious URL'] = HasMalUrl,\n    ClientIp\n| sort by EventTime desc\n| take 100",
               "size": 0,
               "title": "Recent High-Threat Messages (Phishing / Malicious / BEC)",
               "timeContextFromParameter": "TimeRange",
@@ -501,7 +501,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "CiscoETDMessages\n| where tostring(message['eventType']) =~ 'create'\n| where isnotempty(Subject) and isnotempty(Verdict)\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| project EventTime, Verdict, Subject, Sender, Recipient\n| sort by EventTime desc",
+              "query": "CiscoETD_CL\n| where EventType =~ 'create'\n| where isnotempty(Subject) and isnotempty(Verdict)\n| where Verdict in~ ('phishing', 'malicious', 'bec')\n| project EventTime, Verdict, Subject, Sender, Recipient\n| sort by EventTime desc",
               "size": 0,
               "title": "Subject Lines in Threat Messages",
               "timeContextFromParameter": "TimeRange",
@@ -521,6 +521,6 @@
     }
   ],
   "fallbackResourceIds": [],
-  "fromTemplateId": "sentinel-CiscoETDMessages",
+  "fromTemplateId": "sentinel-CiscoETD_CL",
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
