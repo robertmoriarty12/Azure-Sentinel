@@ -7,7 +7,7 @@
   "properties": {
     "connectorUiConfig": {
       "id": "CiscoETDConnectorDefinition",
-      "title": "Cisco Email Threat Defense (ETD)",
+      "title": "Cisco Email Threat Defense (ETD) CCF",
       "publisher": "Cisco",
       "descriptionMarkdown": "The [Cisco Email Threat Defense (ETD)](https://docs.cmd.cisco.com/en/Content/secure-email-threat-defense-user-guide/homeUG.htm) data connector provides the capability to ingest [message events](https://docs.cmd.cisco.com/en/Content/secure-email-threat-defense-user-guide/Messages/messages.htm) from Cisco ETD into Microsoft Sentinel using the [Log Export API](https://developer.cisco.com/docs/message-search-api/log-export-api/).",
       "graphQueriesTableName": "CiscoETDv2_CL",
