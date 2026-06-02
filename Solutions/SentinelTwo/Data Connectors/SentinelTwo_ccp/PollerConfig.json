@@ -1,0 +1,52 @@
+[
+  {
+    "name": "SentinelTwoPoller_threats_created_events",
+    "apiVersion": "2022-10-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SentinelTwoCCP",
+      "dcrConfig": {
+        "streamName": "Custom-SentinelTwoThreats_API",
+        "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
+        "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]"
+      },
+      "dataType": "SentinelTwo API",
+      "auth": {
+        "type": "Commvault",
+        "TokenEndpoint": "[[parameters('tokenEndpoint')]",
+        "AccessToken": "[[parameters('accessToken')]",
+        "RefreshToken": "[[parameters('refreshToken')]"
+      },
+      "request": {
+        "apiEndpoint": "[[concat(parameters('managementUrl'), '/web/api/','v2.1', '/', 'threats')]",
+        "rateLimitQPS": 50,
+        "queryWindowInMin": 15,
+        "httpMethod": "GET",
+        "queryTimeFormat": "UnixTimestamp",
+        "queryParameters": {
+          "fromTime": "{_QueryWindowStartTime}",
+          "toTime": "{_QueryWindowEndTime}"
+        },
+        "retryCount": 2,
+        "timeoutInSeconds": 60,
+        "headers": {
+          "Accept": "application/json",
+          "User-Agent": "SentinelDataConnector"
+        }
+      },
+      "paging": {
+        "pagingType": "Offset",
+        "pagingInfoPlacement": "RequestHeader",
+        "offsetParaName": "pagingInfo",
+        "pageSize": 100,
+        "offsetValueTemplate": "{_Offset},{_PageSize}"
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.data"
+        ]
+      }
+    }
+  }
+]

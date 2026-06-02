@@ -1,0 +1,37 @@
+{
+    "name": "SentinelTwoThreatsDCR",
+    "apiVersion": "2021-09-01-preview",
+    "location": "[parameters('workspace-location')]",
+    "type": "Microsoft.Insights/dataCollectionRules",
+    "properties": {
+        "streamDeclarations": {
+            "Custom-SentinelTwoThreats_API": {
+                "columns": [
+                    { "name": "threatInfo",        "type": "string", "description": "The information regarding the threat." },
+                    { "name": "agentDetectionInfo","type": "string", "description": "The information of the agent on detection." },
+                    { "name": "agentRealtimeInfo", "type": "string", "description": "The information of the agent in real time." },
+                    { "name": "indicators",        "type": "string", "description": "Details of the indicators." },
+                    { "name": "whiteningOptions",  "type": "string", "description": "Details of the whitening options." },
+                    { "name": "id",                "type": "string", "description": "Event Id." }
+                ]
+            }
+        },
+        "destinations": {
+            "logAnalytics": [
+                {
+                    "workspaceResourceId": "not important. changed by the script",
+                    "name": "clv2ws1"
+                }
+            ]
+        },
+        "dataFlows": [
+            {
+                "streams": [ "Custom-SentinelTwoThreats_API" ],
+                "destinations": [ "clv2ws1" ],
+                "transformKql": "source | extend ThreatInfo = parse_json(todynamic(threatInfo)), AgentDetectionInfo=parse_json(todynamic(agentDetectionInfo)), AgentRealtimeInfo=parse_json(todynamic(agentRealtimeInfo)) | project TimeGenerated = todatetime(ThreatInfo.createdAt), FilePath = tostring(ThreatInfo.filePath), CloudVerdict = tostring(ThreatInfo.cloudVerdict), MitigationMode = tostring(AgentDetectionInfo.mitigationMode), AgentOsType = tostring(AgentRealtimeInfo.agentOsType), AgentInfected = tobool(AgentRealtimeInfo.agentInfected), InitiatingUserId = tostring(ThreatInfo.initiatingUserId), Engines = tostring(ThreatInfo.engines), Id = id, FileExtensionType = tostring(ThreatInfo.fileExtensionType), MitigationStatus = tostring(ThreatInfo.mitigationStatus), AgentDomain = tostring(AgentDetectionInfo.agentDomain), CreatedAt = todatetime(ThreatInfo.createdAt), IsCertValid = tobool(ThreatInfo.isValidCertificate), ThreatName = tostring(ThreatInfo.threatName), Classification = tostring(ThreatInfo.classification), UpdatedAt = todatetime(ThreatInfo.updatedAt), AgentComputerName = tostring(AgentRealtimeInfo.agentComputerName), AgentNetworkStatus = tostring(AgentRealtimeInfo.agentNetworkStatus)",
+                "outputStream": "Custom-SentinelTwoThreats_CL"
+            }
+        ],
+        "dataCollectionEndpointId": "[concat('/subscriptions/',parameters('subscription'),'/resourceGroups/',parameters('resourceGroupName'),'/providers/Microsoft.Insights/dataCollectionEndpoints/',parameters('workspace'))]"
+    }
+}

@@ -1,0 +1,108 @@
+{
+  "name": "SentinelTwo",
+  "apiVersion": "2024-01-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "kind": "Customizable",
+  "properties": {
+    "connectorUiConfig": {
+      "id": "SentinelTwoCCP",
+      "title": "SentinelTwo (via Codeless Connector Framework)",
+      "publisher": "Microsoft",
+      "descriptionMarkdown": "The SentinelTwo data connector ingests threat logs via the SentinelTwo API into Microsoft Sentinel using the Codeless Connector Platform.",
+      "graphQueries": [
+        {
+          "metricName": "Total threats logs received",
+          "legend": "SentinelTwo Threats Logs",
+          "baseQuery": "SentinelTwoThreats_CL"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "Get Sample of SentinelTwo threats logs",
+          "query": "SentinelTwoThreats_CL | take 10"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "SentinelTwoThreats_CL",
+          "lastDataReceivedQuery": "SentinelTwoThreats_CL\n | where TimeGenerated > ago(12h) | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "HasDataConnectors"
+        }
+      ],
+      "availability": {
+        "status": 1,
+        "isPreview": false
+      },
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and Write permissions are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "read": true,
+              "write": true,
+              "delete": true,
+              "action": false
+            }
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "instructions": [
+            {
+              "parameters": {
+                "label": "Management URL",
+                "placeholder": "https://example.sentineltwo.net/",
+                "type": "text",
+                "name": "managementUrl"
+              },
+              "type": "Textbox"
+            },
+            {
+              "parameters": {
+                "label": "Token Endpoint",
+                "placeholder": "https://your-instance/v4/accesstoken/renew",
+                "type": "text",
+                "name": "tokenEndpoint"
+              },
+              "type": "Textbox"
+            },
+            {
+              "parameters": {
+                "label": "Access Token",
+                "placeholder": "Access Token",
+                "type": "securestring",
+                "name": "accessToken"
+              },
+              "type": "Textbox"
+            },
+            {
+              "parameters": {
+                "label": "Refresh Token",
+                "placeholder": "Refresh Token",
+                "type": "securestring",
+                "name": "refreshToken"
+              },
+              "type": "Textbox"
+            },
+            {
+              "parameters": {
+                "label": "toggle",
+                "name": "toggle"
+              },
+              "type": "ConnectionToggleButton"
+            }
+          ]
+        }
+      ],
+      "isConnectivityCriteriasMatchSome": false
+    }
+  }
+}

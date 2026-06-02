@@ -1,0 +1,905 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "author": "Microsoft - support@microsoft.com",
+    "comments": "Solution template for SentinelTwo"
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Not used, but needed to pass arm-ttk test `Location-Should-Not-Be-Hardcoded`.  We instead use the `workspace-location` which is derived from the LA workspace"
+      }
+    },
+    "workspace-location": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "[concat('Region to deploy solution resources -- separate from location selection',parameters('location'))]"
+      }
+    },
+    "workspace": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Workspace name for Log Analytics where Microsoft Sentinel is setup"
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "resource group name where Microsoft Sentinel is setup"
+      }
+    },
+    "subscription": {
+      "type": "string",
+      "defaultValue": "[last(split(subscription().id, '/'))]",
+      "metadata": {
+        "description": "subscription id where Microsoft Sentinel is setup"
+      }
+    }
+  },
+  "variables": {
+    "email": "support@microsoft.com",
+    "_email": "[variables('email')]",
+    "_solutionName": "SentinelTwo",
+    "_solutionVersion": "3.0.10",
+    "solutionId": "azuresentinel.azure-sentinel-solution-sentinelone",
+    "_solutionId": "[variables('solutionId')]",
+    "workspaceResourceId": "[resourceId('microsoft.OperationalInsights/Workspaces', parameters('workspace'))]",
+    "dataConnectorCCPVersion": "3.0.10",
+    "_dataConnectorContentIdConnectorDefinition1": "SentinelTwoCCP",
+    "dataConnectorTemplateNameConnectorDefinition1": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnectorDefinition1')))]",
+    "_dataConnectorContentIdConnections1": "SentinelTwoCCPConnections",
+    "dataConnectorTemplateNameConnections1": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnections1')))]",
+    "blanks": "[replace('b', 'b', '')]",
+    "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnectorDefinition1'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+        "displayName": "SentinelTwo (via Codeless Connector Framework)",
+        "contentKind": "DataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition1'))]",
+              "apiVersion": "2022-09-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Customizable",
+              "properties": {
+                "connectorUiConfig": {
+                  "id": "SentinelTwoCCP",
+                  "title": "SentinelTwo (via Codeless Connector Framework)",
+                  "publisher": "Microsoft",
+                  "descriptionMarkdown": "The SentinelTwo data connector ingests threat logs via the SentinelTwo API into Microsoft Sentinel using the Codeless Connector Platform.",
+                  "graphQueries": [
+                    {
+                      "metricName": "Total threats logs received",
+                      "legend": "SentinelTwo Threats Logs",
+                      "baseQuery": "SentinelTwoThreats_CL"
+                    }
+                  ],
+                  "sampleQueries": [
+                    {
+                      "description": "Get Sample of SentinelTwo threats logs",
+                      "query": "SentinelTwoThreats_CL | take 10"
+                    }
+                  ],
+                  "dataTypes": [
+                    {
+                      "name": "SentinelTwoThreats_CL",
+                      "lastDataReceivedQuery": "SentinelTwoThreats_CL\n | where TimeGenerated > ago(12h) | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+                    }
+                  ],
+                  "connectivityCriteria": [
+                    {
+                      "type": "HasDataConnectors"
+                    }
+                  ],
+                  "availability": {
+                    "status": 1,
+                    "isPreview": false
+                  },
+                  "permissions": {
+                    "resourceProvider": [
+                      {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "Read and Write permissions are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                          "read": true,
+                          "write": true,
+                          "delete": true,
+                          "action": false
+                        }
+                      }
+                    ]
+                  },
+                  "instructionSteps": [
+                    {
+                      "instructions": [
+                        {
+                          "parameters": {
+                            "label": "Management URL",
+                            "placeholder": "https://example.sentineltwo.net/",
+                            "type": "text",
+                            "name": "managementUrl"
+                          },
+                          "type": "Textbox"
+                        },
+                        {
+                          "parameters": {
+                            "label": "Token Endpoint",
+                            "placeholder": "https://your-instance/v4/accesstoken/renew",
+                            "type": "text",
+                            "name": "tokenEndpoint"
+                          },
+                          "type": "Textbox"
+                        },
+                        {
+                          "parameters": {
+                            "label": "Access Token",
+                            "placeholder": "Access Token",
+                            "type": "securestring",
+                            "name": "accessToken"
+                          },
+                          "type": "Textbox"
+                        },
+                        {
+                          "parameters": {
+                            "label": "Refresh Token",
+                            "placeholder": "Refresh Token",
+                            "type": "securestring",
+                            "name": "refreshToken"
+                          },
+                          "type": "Textbox"
+                        },
+                        {
+                          "parameters": {
+                            "label": "toggle",
+                            "name": "toggle"
+                          },
+                          "type": "ConnectionToggleButton"
+                        }
+                      ]
+                    }
+                  ],
+                  "isConnectivityCriteriasMatchSome": false
+                }
+              }
+            },
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition1')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition1'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+                "kind": "DataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "Microsoft",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "Microsoft Corporation",
+                  "email": "support@microsoft.com",
+                  "tier": "Microsoft",
+                  "link": "https://support.microsoft.com"
+                },
+                "dependencies": {
+                  "criteria": [
+                    {
+                      "version": "[variables('dataConnectorCCPVersion')]",
+                      "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+                      "kind": "ResourcesDataConnector"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SentinelTwoThreatsDCR",
+              "apiVersion": "2022-06-01",
+              "type": "Microsoft.Insights/dataCollectionRules",
+              "location": "[parameters('workspace-location')]",
+              "kind": "[variables('blanks')]",
+              "properties": {
+                "streamDeclarations": {
+                  "Custom-SentinelTwoThreats_API": {
+                    "columns": [
+                      {
+                        "name": "threatInfo",
+                        "type": "string",
+                        "description": "The information regarding the threat."
+                      },
+                      {
+                        "name": "agentDetectionInfo",
+                        "type": "string",
+                        "description": "The information of the agent on detection."
+                      },
+                      {
+                        "name": "agentRealtimeInfo",
+                        "type": "string",
+                        "description": "The information of the agent in real time."
+                      },
+                      {
+                        "name": "indicators",
+                        "type": "string",
+                        "description": "Details of the indicators."
+                      },
+                      {
+                        "name": "whiteningOptions",
+                        "type": "string",
+                        "description": "Details of the whitening options."
+                      },
+                      {
+                        "name": "id",
+                        "type": "string",
+                        "description": "Event Id."
+                      }
+                    ]
+                  }
+                },
+                "destinations": {
+                  "logAnalytics": [
+                    {
+                      "workspaceResourceId": "[variables('workspaceResourceId')]",
+                      "name": "clv2ws1"
+                    }
+                  ]
+                },
+                "dataFlows": [
+                  {
+                    "streams": [
+                      "Custom-SentinelTwoThreats_API"
+                    ],
+                    "destinations": [
+                      "clv2ws1"
+                    ],
+                    "transformKql": "source | extend ThreatInfo = parse_json(todynamic(threatInfo)), AgentDetectionInfo=parse_json(todynamic(agentDetectionInfo)), AgentRealtimeInfo=parse_json(todynamic(agentRealtimeInfo)) | project TimeGenerated = todatetime(ThreatInfo.createdAt), FilePath = tostring(ThreatInfo.filePath), CloudVerdict = tostring(ThreatInfo.cloudVerdict), MitigationMode = tostring(AgentDetectionInfo.mitigationMode), AgentOsType = tostring(AgentRealtimeInfo.agentOsType), AgentInfected = tobool(AgentRealtimeInfo.agentInfected), InitiatingUserId = tostring(ThreatInfo.initiatingUserId), Engines = tostring(ThreatInfo.engines), Id = id, FileExtensionType = tostring(ThreatInfo.fileExtensionType), MitigationStatus = tostring(ThreatInfo.mitigationStatus), AgentDomain = tostring(AgentDetectionInfo.agentDomain), CreatedAt = todatetime(ThreatInfo.createdAt), IsCertValid = tobool(ThreatInfo.isValidCertificate), ThreatName = tostring(ThreatInfo.threatName), Classification = tostring(ThreatInfo.classification), UpdatedAt = todatetime(ThreatInfo.updatedAt), AgentComputerName = tostring(AgentRealtimeInfo.agentComputerName), AgentNetworkStatus = tostring(AgentRealtimeInfo.agentNetworkStatus)",
+                    "outputStream": "Custom-SentinelTwoThreats_CL"
+                  }
+                ],
+                "dataCollectionEndpointId": "[concat('/subscriptions/',parameters('subscription'),'/resourceGroups/',parameters('resourceGroupName'),'/providers/Microsoft.Insights/dataCollectionEndpoints/',parameters('workspace'))]"
+              }
+            },
+            {
+              "name": "SentinelTwoThreats_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SentinelTwoThreats_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "isDefaultDisplay": true,
+                      "description": "The timestamp (UTC) reflecting the time in which the event was generated."
+                    },
+                    {
+                      "name": "FilePath",
+                      "type": "string",
+                      "description": "The path of the file."
+                    },
+                    {
+                      "name": "CloudVerdict",
+                      "type": "string",
+                      "description": "The cloud verdict for the file."
+                    },
+                    {
+                      "name": "MitigationMode",
+                      "type": "string",
+                      "description": "The mode of mitigation applied."
+                    },
+                    {
+                      "name": "AgentOsType",
+                      "type": "string",
+                      "description": "The operating system type of the agent."
+                    },
+                    {
+                      "name": "AgentInfected",
+                      "type": "boolean",
+                      "description": "Indicates whether the agent is infected."
+                    },
+                    {
+                      "name": "InitiatingUserId",
+                      "type": "string",
+                      "description": "The unique identifier for the initiating user."
+                    },
+                    {
+                      "name": "Engines",
+                      "type": "string",
+                      "description": "Details of the engines used."
+                    },
+                    {
+                      "name": "Id",
+                      "type": "string",
+                      "description": "The unique identifier for the record."
+                    },
+                    {
+                      "name": "FileExtensionType",
+                      "type": "string",
+                      "description": "The type of file extension."
+                    },
+                    {
+                      "name": "MitigationStatus",
+                      "type": "string",
+                      "description": "The status of mitigation."
+                    },
+                    {
+                      "name": "AgentDomain",
+                      "type": "string",
+                      "description": "The domain of the agent."
+                    },
+                    {
+                      "name": "CreatedAt",
+                      "type": "datetime",
+                      "description": "The timestamp (UTC) when the record was created."
+                    },
+                    {
+                      "name": "IsCertValid",
+                      "type": "boolean",
+                      "description": "Indicates whether the certificate is valid."
+                    },
+                    {
+                      "name": "FileDisplayName",
+                      "type": "string",
+                      "description": "The display name of the file."
+                    },
+                    {
+                      "name": "AgentIp",
+                      "type": "string",
+                      "description": "The IP address of the agent."
+                    },
+                    {
+                      "name": "AccountName",
+                      "type": "string",
+                      "description": "The name of the account associated with the event."
+                    },
+                    {
+                      "name": "AgentMachineType",
+                      "type": "string",
+                      "description": "The machine type of the agent."
+                    },
+                    {
+                      "name": "FileVerificationType",
+                      "type": "string",
+                      "description": "The type of file verification."
+                    },
+                    {
+                      "name": "Indicators",
+                      "type": "string",
+                      "description": "Details of the indicators."
+                    },
+                    {
+                      "name": "InitiatedByDescription",
+                      "type": "string",
+                      "description": "Description of the initiated by field."
+                    },
+                    {
+                      "name": "AutomaticallyResolved",
+                      "type": "boolean",
+                      "description": "Indicates whether the issue was automatically resolved."
+                    },
+                    {
+                      "name": "AgentId",
+                      "type": "string",
+                      "description": "The unique identifier for the agent."
+                    },
+                    {
+                      "name": "ProcessArguments",
+                      "type": "string",
+                      "description": "The unique identifier for the malicious group."
+                    },
+                    {
+                      "name": "MitigationReport",
+                      "type": "string",
+                      "description": "Report of the actions taken by the Agent."
+                    },
+                    {
+                      "name": "ThreatName",
+                      "type": "string",
+                      "description": "Details about the threat name."
+                    },
+                    {
+                      "name": "ClassificationSource",
+                      "type": "string",
+                      "description": "The source of the classification."
+                    },
+                    {
+                      "name": "UpdatedAt",
+                      "type": "datetime",
+                      "description": "The timestamp (UTC) when the record was last updated."
+                    },
+                    {
+                      "name": "InitiatedBy",
+                      "type": "string",
+                      "description": "Indicates by whom or what the action was initiated."
+                    },
+                    {
+                      "name": "AgentNetworkStatus",
+                      "type": "string",
+                      "description": "The network status of the agent."
+                    },
+                    {
+                      "name": "AgentComputerName",
+                      "type": "string",
+                      "description": "The computer name of the agent."
+                    },
+                    {
+                      "name": "Classification",
+                      "type": "string",
+                      "description": "The classification of the event."
+                    },
+                    {
+                      "name": "CertId",
+                      "type": "string",
+                      "description": "The certificate ID."
+                    },
+                    {
+                      "name": "AgentIsActive",
+                      "type": "boolean",
+                      "description": "Indicates whether the agent is active."
+                    },
+                    {
+                      "name": "SiteId",
+                      "type": "string",
+                      "description": "The unique identifier for the site."
+                    },
+                    {
+                      "name": "AgentVersion",
+                      "type": "string",
+                      "description": "The version of the agent."
+                    },
+                    {
+                      "name": "FileContentHash",
+                      "type": "string",
+                      "description": "The hash of the file content."
+                    },
+                    {
+                      "name": "WhiteningOptions",
+                      "type": "string",
+                      "description": "Details of the whitening options."
+                    },
+                    {
+                      "name": "Username",
+                      "type": "string",
+                      "description": "The username associated with the event."
+                    },
+                    {
+                      "name": "FileSha256",
+                      "type": "string",
+                      "description": "The SHA-256 hash of the file."
+                    },
+                    {
+                      "name": "AgentIsDecommissioned",
+                      "type": "boolean",
+                      "description": "Indicates whether the agent is decommissioned."
+                    },
+                    {
+                      "name": "CollectionId",
+                      "type": "string",
+                      "description": "The unique identifier for the collection."
+                    },
+                    {
+                      "name": "SiteName",
+                      "type": "string",
+                      "description": "The name of the site."
+                    },
+                    {
+                      "name": "AccountId",
+                      "type": "string",
+                      "description": "The unique identifier for the account."
+                    },
+                    {
+                      "name": "ThreatInfo",
+                      "type": "dynamic",
+                      "description": "The information about the threat."
+                    },
+                    {
+                      "name": "AgentDetectionInfo",
+                      "type": "dynamic",
+                      "description": "The information of the agent in detection."
+                    },
+                    {
+                      "name": "AgentRealtimeInfo",
+                      "type": "dynamic",
+                      "description": "The information of the agent in realtime."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','dc','-', uniqueString(concat(variables('_solutionId'),'-','DataConnector','-',variables('_dataConnectorContentIdConnectorDefinition1'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition1'))]",
+      "apiVersion": "2022-09-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+      "location": "[parameters('workspace-location')]",
+      "kind": "Customizable",
+      "properties": {
+        "connectorUiConfig": {
+          "id": "SentinelTwoCCP",
+          "title": "SentinelTwo (via Codeless Connector Framework)",
+          "publisher": "Microsoft",
+          "descriptionMarkdown": "The SentinelTwo data connector ingests threat logs via the SentinelTwo API into Microsoft Sentinel using the Codeless Connector Platform.",
+          "graphQueries": [
+            {
+              "metricName": "Total threats logs received",
+              "legend": "SentinelTwo Threats Logs",
+              "baseQuery": "SentinelTwoThreats_CL"
+            }
+          ],
+          "sampleQueries": [
+            {
+              "description": "Get Sample of SentinelTwo threats logs",
+              "query": "SentinelTwoThreats_CL | take 10"
+            }
+          ],
+          "dataTypes": [
+            {
+              "name": "SentinelTwoThreats_CL",
+              "lastDataReceivedQuery": "SentinelTwoThreats_CL\n | where TimeGenerated > ago(12h) | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+            }
+          ],
+          "connectivityCriteria": [
+            {
+              "type": "HasDataConnectors"
+            }
+          ],
+          "availability": {
+            "status": 1,
+            "isPreview": false
+          },
+          "permissions": {
+            "resourceProvider": [
+              {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "Read and Write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                  "read": true,
+                  "write": true,
+                  "delete": true,
+                  "action": false
+                }
+              }
+            ]
+          },
+          "instructionSteps": [
+            {
+              "instructions": [
+                {
+                  "parameters": {
+                    "label": "Management URL",
+                    "placeholder": "https://example.sentineltwo.net/",
+                    "type": "text",
+                    "name": "managementUrl"
+                  },
+                  "type": "Textbox"
+                },
+                {
+                  "parameters": {
+                    "label": "Token Endpoint",
+                    "placeholder": "https://your-instance/v4/accesstoken/renew",
+                    "type": "text",
+                    "name": "tokenEndpoint"
+                  },
+                  "type": "Textbox"
+                },
+                {
+                  "parameters": {
+                    "label": "Access Token",
+                    "placeholder": "Access Token",
+                    "type": "securestring",
+                    "name": "accessToken"
+                  },
+                  "type": "Textbox"
+                },
+                {
+                  "parameters": {
+                    "label": "Refresh Token",
+                    "placeholder": "Refresh Token",
+                    "type": "securestring",
+                    "name": "refreshToken"
+                  },
+                  "type": "Textbox"
+                },
+                {
+                  "parameters": {
+                    "label": "toggle",
+                    "name": "toggle"
+                  },
+                  "type": "ConnectionToggleButton"
+                }
+              ]
+            }
+          ],
+          "isConnectivityCriteriasMatchSome": false
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition1')))]",
+      "apiVersion": "2022-01-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "properties": {
+        "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition1'))]",
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+        "kind": "DataConnector",
+        "version": "[variables('dataConnectorCCPVersion')]",
+        "source": {
+          "sourceId": "[variables('_solutionId')]",
+          "name": "[variables('_solutionName')]",
+          "kind": "Solution"
+        },
+        "author": {
+          "name": "Microsoft",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "Microsoft Corporation",
+          "email": "support@microsoft.com",
+          "tier": "Microsoft",
+          "link": "https://support.microsoft.com"
+        },
+        "dependencies": {
+          "criteria": [
+            {
+              "version": "[variables('dataConnectorCCPVersion')]",
+              "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+              "kind": "ResourcesDataConnector"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnections1'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+        "displayName": "SentinelTwo (via Codeless Connector Framework)",
+        "contentKind": "ResourcesDataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {
+            "guidValue": {
+              "defaultValue": "[[newGuid()]",
+              "type": "securestring"
+            },
+            "innerWorkspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "connectorDefinitionName": {
+              "defaultValue": "SentinelTwo (via Codeless Connector Framework)",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "workspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "dcrConfig": {
+              "defaultValue": {
+                "dataCollectionEndpoint": "data collection Endpoint",
+                "dataCollectionRuleImmutableId": "data collection rule immutableId"
+              },
+              "type": "object"
+            },
+            "managementUrl": {
+              "defaultValue": "managementUrl",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "tokenEndpoint": {
+              "defaultValue": "tokenEndpoint",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "accessToken": {
+              "defaultValue": "accessToken",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "refreshToken": {
+              "defaultValue": "refreshToken",
+              "type": "securestring",
+              "minLength": 1
+            }
+          },
+          "variables": {
+            "_dataConnectorContentIdConnections1": "[variables('_dataConnectorContentIdConnections1')]"
+          },
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnections1')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentIdConnections1'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+                "kind": "ResourcesDataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "Microsoft",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "Microsoft Corporation",
+                  "email": "support@microsoft.com",
+                  "tier": "Microsoft",
+                  "link": "https://support.microsoft.com"
+                }
+              }
+            },
+            {
+              "name": "[[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'SentinelTwoPoller_threats_created_events', parameters('guidValue'))]",
+              "apiVersion": "2023-02-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+              "location": "[parameters('workspace-location')]",
+              "kind": "RestApiPoller",
+              "properties": {
+                "connectorDefinitionName": "SentinelTwoCCP",
+                "dcrConfig": {
+                  "streamName": "Custom-SentinelTwoThreats_API",
+                  "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
+                  "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]"
+                },
+                "dataType": "SentinelTwo API",
+                "auth": {
+                  "type": "Commvault",
+                  "TokenEndpoint": "[[parameters('tokenEndpoint')]",
+                  "AccessToken": "[[parameters('accessToken')]",
+                  "RefreshToken": "[[parameters('refreshToken')]"
+                },
+                "request": {
+                  "apiEndpoint": "[[concat(parameters('managementUrl'), '/web/api/','v2.1', '/', 'threats')]",
+                  "rateLimitQPS": 50,
+                  "queryWindowInMin": 15,
+                  "httpMethod": "GET",
+                  "queryTimeFormat": "UnixTimestamp",
+                  "queryParameters": {
+                    "fromTime": "{_QueryWindowStartTime}",
+                    "toTime": "{_QueryWindowEndTime}"
+                  },
+                  "retryCount": 2,
+                  "timeoutInSeconds": 60,
+                  "headers": {
+                    "Accept": "application/json",
+                    "User-Agent": "SentinelDataConnector"
+                  }
+                },
+                "paging": {
+                  "pagingType": "Offset",
+                  "pagingInfoPlacement": "RequestHeader",
+                  "offsetParaName": "pagingInfo",
+                  "pageSize": 100,
+                  "offsetValueTemplate": "{_Offset},{_PageSize}"
+                },
+                "response": {
+                  "eventsJsonPaths": [
+                    "$.data"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','rdc','-', uniqueString(concat(variables('_solutionId'),'-','ResourcesDataConnector','-',variables('_dataConnectorContentIdConnections1'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentPackages",
+      "apiVersion": "2023-04-01-preview",
+      "location": "[parameters('workspace-location')]",
+      "properties": {
+        "version": "3.0.10",
+        "kind": "Solution",
+        "contentSchemaVersion": "3.0.0",
+        "displayName": "SentinelTwo",
+        "publisherDisplayName": "Microsoft Sentinel, Microsoft Corporation",
+        "descriptionHtml": "<p><strong>Note:</strong> Please refer to the following before installing the solution:</p>\n<p>• Review the solution <a href=\"https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/SentinelTwo/ReleaseNotes.md\">Release Notes</a></p>\n<p>• There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</p>\n<p>The <a href=\"https://www.sentinelone.com/\">SentinelOne</a> solution provides ability to bring SentinelOne events to your Microsoft Sentinel Workspace to inform and to examine potential security risks, analyze your team's use of collaboration, diagnose configuration problems and more.</p>\n<p><strong>Underlying Microsoft Technologies used:</strong></p>\n<p>This solution takes a dependency on the following technologies, and some of these dependencies either may be in <a href=\"https://azure.microsoft.com/support/legal/preview-supplemental-terms/\">Preview</a> state or might result in additional ingestion or operational costs:</p>\n<ol type=\"a\">\n<li><p><a href=\"https://docs.microsoft.com/azure/azure-monitor/logs/data-collector-api\">Azure Monitor HTTP Data Collector API</a></p>\n</li>\n<li><p><a href=\"https://azure.microsoft.com/services/functions/#overview\">Azure Functions</a></p>\n</li>\n</ol>\n<p><strong>Data Connectors:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
+        "contentKind": "Solution",
+        "contentProductId": "[variables('_solutioncontentProductId')]",
+        "id": "[variables('_solutioncontentProductId')]",
+        "icon": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+        "contentId": "[variables('_solutionId')]",
+        "parentId": "[variables('_solutionId')]",
+        "source": {
+          "kind": "Solution",
+          "name": "SentinelTwo",
+          "sourceId": "[variables('_solutionId')]"
+        },
+        "author": {
+          "name": "Microsoft",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "Microsoft Corporation",
+          "email": "support@microsoft.com",
+          "tier": "Microsoft",
+          "link": "https://support.microsoft.com"
+        },
+        "dependencies": {
+          "operator": "AND",
+          "criteria": [
+            {
+              "kind": "DataConnector",
+              "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+              "version": "[variables('dataConnectorCCPVersion')]"
+            }
+          ]
+        },
+        "firstPublishDate": "2024-11-26",
+        "providers": [
+          "SentinelOne"
+        ],
+        "categories": {
+          "domains": [
+            "Security - Threat Protection"
+          ]
+        }
+      },
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('_solutionId'))]"
+    }
+  ],
+  "outputs": {}
+}
