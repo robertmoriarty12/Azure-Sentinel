@@ -1,0 +1,17 @@
+{
+  "Name": "CloudFortSys",
+  "Author": "CloudFort",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "The [CloudFort](https://www.cloudfort.com) Microsoft Sentinel Solution delivers CloudFort security platform log messages to your Microsoft Sentinel workspace via Syslog.\n\nThis solution is dependent on the Syslog solution containing the Syslog via AMA connector to collect the logs. The Syslog solution will be installed as part of this solution installation.\n\n**NOTE:** Microsoft recommends installation of the Syslog via AMA connector. Legacy MMA-based connectors are deprecated.",
+  "Data Connectors": [
+    "Solutions/CloudFortSys/Data Connectors/CloudFortSys.json"
+  ],
+  "dependentDomainSolutionIds": [
+    "azuresentinel.azure-sentinel-solution-syslog"
+  ],
+  "Metadata": "SolutionMetadata.json",
+  "BasePath": "C:\\GitHub\\Azure-Sentinel",
+  "Version": "1.0.0",
+  "TemplateSpec": true,
+  "Is1PConnector": false
+}

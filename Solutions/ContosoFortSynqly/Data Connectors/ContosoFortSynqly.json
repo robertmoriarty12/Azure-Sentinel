@@ -1,0 +1,90 @@
+{
+    "id": "ContosoFortSynqly",
+    "title": "ContosoFort (via Synqly)",
+    "publisher": "ContosoFort",
+    "descriptionMarkdown": "The ContosoFort data connector provides a dedicated presence in the Microsoft Sentinel content hub for ContosoFort integrations delivered through the Synqly platform. Data is ingested into your workspace by the **Synqly** connector, which writes events to ASIM-normalized tables. This page describes how to enable the ContosoFort integration in Synqly and verify that your data is flowing.\n\nThis connector does not perform data ingestion. If you have not already installed the Synqly solution, see Step 2 below.",
+    "graphQueriesTableName": "ASimNetworkSessionLogs",
+    "graphQueries": [
+        {
+            "metricName": "Total events received",
+            "legend": "ContosoFort events",
+            "baseQuery": "ASimNetworkSessionLogs\n| where EventVendor == \"ContosoFort\""
+        }
+    ],
+    "sampleQueries": [
+        {
+            "description": "All ContosoFort events",
+            "query": "ASimNetworkSessionLogs\n| where EventVendor == \"ContosoFort\"\n| sort by TimeGenerated desc"
+        },
+        {
+            "description": "ContosoFort events – last 24 hours",
+            "query": "ASimNetworkSessionLogs\n| where EventVendor == \"ContosoFort\"\n| where TimeGenerated > ago(24h)\n| sort by TimeGenerated desc"
+        }
+    ],
+    "dataTypes": [
+        {
+            "name": "ASimNetworkSessionLogs",
+            "lastDataReceivedQuery": "ASimNetworkSessionLogs\n| where EventVendor == \"ContosoFort\"\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+    ],
+    "connectivityCriterias": [
+        {
+            "type": "IsConnectedQuery",
+            "value": [
+                "ASimNetworkSessionLogs\n| where EventVendor == \"ContosoFort\"\n| summarize LastLogReceived = max(TimeGenerated)\n| project IsConnected = LastLogReceived > ago(30d)"
+            ]
+        }
+    ],
+    "availability": {
+        "status": 1,
+        "isPreview": false
+    },
+    "permissions": {
+        "resourceProvider": [
+            {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "read and write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                    "write": true,
+                    "read": true,
+                    "delete": true
+                }
+            }
+        ],
+        "customs": [
+            {
+                "name": "Synqly integration",
+                "description": "An active Synqly subscription with ContosoFort configured as a source is required. The Synqly solution must also be installed in your Microsoft Sentinel workspace. [Install Synqly from Microsoft Marketplace](https://marketplace.microsoft.com/en-us/product/synqlyinc1759267074521.azure-sentinel-solution-synqly-integration)"
+            }
+        ]
+    },
+    "instructionSteps": [
+        {
+            "title": "1. Enable the ContosoFort integration in Synqly",
+            "description": "Configure the ContosoFort integration in the Synqly portal to forward events to your Microsoft Sentinel workspace.\n\n1. Log into the [Synqly portal](https://app.synqly.com).\n2. Navigate to **Integrations** and select **Add Integration**.\n3. Search for and select **ContosoFort**.\n4. Follow the on-screen steps to authenticate with ContosoFort and select the event types to forward.\n5. Set the destination to your Microsoft Sentinel workspace.\n6. Save and enable the integration."
+        },
+        {
+            "title": "2. Install the Synqly solution",
+            "description": "This connector relies on the **Synqly** solution to collect and normalize data into your Microsoft Sentinel workspace. If you have not already installed it, install it from the Microsoft Marketplace and complete its connection steps.\n\n[Install Synqly from Microsoft Marketplace](https://marketplace.microsoft.com/en-us/product/synqlyinc1759267074521.azure-sentinel-solution-synqly-integration)"
+        }
+    ],
+    "metadata": {
+        "id": "ContosoFortSynqly",
+        "version": "1.0.0",
+        "kind": "dataConnector",
+        "source": {
+            "kind": "solution",
+            "name": "ContosoFortSynqly"
+        },
+        "author": {
+            "name": "ContosoFort"
+        },
+        "support": {
+            "tier": "Partner",
+            "name": "ContosoFort",
+            "link": "https://support.contosofort.io"
+        }
+    }
+}

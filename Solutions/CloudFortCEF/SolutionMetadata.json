@@ -1,0 +1,16 @@
+{
+	"publisherId": "cloudfort",
+	"offerId": "cloudfort-sentinel-cef",
+	"firstPublishDate": "2026-06-19",
+	"providers": ["CloudFort"],
+	"categories": {
+		"domains": ["Security - Threat Protection", "Security - Network"],
+		"verticals": []
+	},
+	"support": {
+		"name": "CloudFort",
+		"email": "support@cloudfort.com",
+		"tier": "Partner",
+		"link": "https://www.cloudfort.com/support"
+	}
+}

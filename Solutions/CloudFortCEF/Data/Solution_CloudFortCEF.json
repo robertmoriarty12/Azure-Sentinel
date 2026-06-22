@@ -1,0 +1,17 @@
+{
+  "Name": "CloudFortCEF",
+  "Author": "CloudFort",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "The [CloudFort](https://www.cloudfort.com) Microsoft Sentinel Solution delivers CloudFort security platform log messages to your Microsoft Sentinel workspace via Common Event Format (CEF).\n\nThis solution is dependent on the Common Event Format solution containing the CEF via AMA connector to collect the logs. The CEF solution will be installed as part of this solution installation.\n\n**NOTE:** Microsoft recommends installation of the CEF via AMA connector. Legacy MMA-based connectors are deprecated.",
+  "Data Connectors": [
+    "Solutions/CloudFortCEF/Data Connectors/CloudFortCEF.json"
+  ],
+  "dependentDomainSolutionIds": [
+    "azuresentinel.azure-sentinel-solution-commoneventformat"
+  ],
+  "Metadata": "SolutionMetadata.json",
+  "BasePath": "C:\\GitHub\\Azure-Sentinel",
+  "Version": "1.0.0",
+  "TemplateSpec": true,
+  "Is1PConnector": false
+}

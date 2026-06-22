@@ -1,0 +1,16 @@
+{
+	"publisherId": "contosofort",
+	"offerId": "contosofort-sentinel-synqly",
+	"firstPublishDate": "2026-06-22",
+	"providers": ["ContosoFort"],
+	"categories": {
+		"domains": ["Security - Threat Protection", "Security - Network"],
+		"verticals": []
+	},
+	"support": {
+		"name": "ContosoFort",
+		"email": "support@contosofort.io",
+		"tier": "Partner",
+		"link": "https://support.contosofort.io"
+	}
+}

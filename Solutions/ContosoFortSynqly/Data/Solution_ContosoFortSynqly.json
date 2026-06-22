@@ -1,0 +1,17 @@
+{
+  "Name": "ContosoFortSynqly",
+  "Author": "ContosoFort",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "The [ContosoFort](https://www.contosofort.io) Microsoft Sentinel Solution provides a dedicated content hub presence for ContosoFort integrations delivered through the Synqly platform. Data is collected by the Synqly connector and written to ASIM-normalized tables in your Microsoft Sentinel workspace.\n\nThis solution is dependent on the Synqly solution to collect the data. The Synqly solution must be installed separately.\n\n**Underlying Microsoft Technologies used:**\n\nThis solution takes a dependency on the following technologies:\n\na. [Synqly Integration Platform](https://marketplace.microsoft.com/en-us/product/synqlyinc1759267074521.azure-sentinel-solution-synqly-integration)",
+  "Data Connectors": [
+    "Solutions/ContosoFortSynqly/Data Connectors/ContosoFortSynqly.json"
+  ],
+  "dependentDomainSolutionIds": [
+    "synqlyinc1759267074521.azure-sentinel-solution-synqly-integration"
+  ],
+  "Metadata": "SolutionMetadata.json",
+  "BasePath": "C:\\GitHub\\Azure-Sentinel",
+  "Version": "1.0.0",
+  "TemplateSpec": true,
+  "Is1PConnector": false
+}

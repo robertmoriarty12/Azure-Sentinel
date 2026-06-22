@@ -1,0 +1,91 @@
+{
+    "id": "CloudFortCEF",
+    "title": "CloudFort (via CEF)",
+    "publisher": "CloudFort",
+    "descriptionMarkdown": "The CloudFort data connector ingests Common Event Format (CEF) logs from the CloudFort security platform into Microsoft Sentinel. Logs are collected using the Azure Monitor Agent (AMA) via the Microsoft **Common Event Format (CEF) via AMA** solution, which must be installed in your workspace before configuring this connector.\n\n[Learn more about the CEF via AMA connector >](https://learn.microsoft.com/azure/sentinel/connect-cef-ama)",
+    "graphQueries": [
+        {
+            "metricName": "Total data received",
+            "legend": "CloudFort events",
+            "baseQuery": "CommonSecurityLog\n| where DeviceVendor == \"CloudFort\"\n| where DeviceProduct == \"CloudFort\""
+        }
+    ],
+    "sampleQueries": [
+        {
+            "description": "All CloudFort events",
+            "query": "CommonSecurityLog\n| where DeviceVendor == \"CloudFort\"\n| where DeviceProduct == \"CloudFort\"\n| sort by TimeGenerated desc"
+        },
+        {
+            "description": "CloudFort events – last 24 hours",
+            "query": "CommonSecurityLog\n| where DeviceVendor == \"CloudFort\"\n| where DeviceProduct == \"CloudFort\"\n| where TimeGenerated > ago(24h)\n| sort by TimeGenerated desc"
+        }
+    ],
+    "dataTypes": [
+        {
+            "name": "CommonSecurityLog (CloudFort)",
+            "lastDataReceivedQuery": "CommonSecurityLog\n| where DeviceVendor == \"CloudFort\"\n| where DeviceProduct == \"CloudFort\"\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+    ],
+    "connectivityCriterias": [
+        {
+            "type": "IsConnectedQuery",
+            "value": [
+                "CommonSecurityLog\n| where DeviceVendor == \"CloudFort\"\n| where DeviceProduct == \"CloudFort\"\n| summarize LastLogReceived = max(TimeGenerated)\n| project IsConnected = LastLogReceived > ago(30d)"
+            ]
+        }
+    ],
+    "availability": {
+        "status": 1,
+        "isPreview": false
+    },
+    "permissions": {
+        "resourceProvider": [
+            {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "read and write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                    "read": true,
+                    "write": true,
+                    "delete": true
+                }
+            }
+        ],
+        "customs": [
+            {
+                "description": "To collect data from non-Azure VMs, they must have Azure Arc installed and enabled. [Learn more](https://learn.microsoft.com/azure/azure-monitor/agents/azure-monitor-agent-install)"
+            },
+            {
+                "description": "The **Common Event Format (CEF) via AMA** solution must be installed in your Microsoft Sentinel workspace. [Install from Microsoft Marketplace](https://marketplace.microsoft.com/en-us/product/saas/azuresentinel.azure-sentinel-solution-commoneventformat)"
+            }
+        ]
+    },
+    "instructionSteps": [
+        {
+            "title": "1. Configure CloudFort to forward CEF logs",
+            "description": "Configure the CloudFort platform to forward Syslog messages in CEF format to a Linux log forwarder machine on port 514 TCP.\n\n1. Log into the CloudFort administration console.\n2. Navigate to **Settings > Integrations > Syslog**.\n3. Enable CEF output and set the destination to the IP address or hostname of your Linux log forwarder.\n4. Set the port to **514** and the protocol to **TCP**.\n5. Save the configuration."
+        },
+        {
+            "title": "2. Install the Common Event Format (CEF) via AMA solution",
+            "description": "This connector relies on the Microsoft **Common Event Format (CEF) via AMA** solution to collect CEF data into your workspace using the Azure Monitor Agent. If you have not already installed it, install it from the Microsoft Marketplace and create a Data Collection Rule (DCR) to collect CEF logs from your log forwarder.\n\n[Install Common Event Format (CEF) via AMA from Microsoft Marketplace](https://marketplace.microsoft.com/en-us/product/saas/azuresentinel.azure-sentinel-solution-commoneventformat)"
+        }
+    ],
+    "metadata": {
+        "id": "CloudFortCEF",
+        "version": "1.0.0",
+        "kind": "dataConnector",
+        "source": {
+            "kind": "solution",
+            "name": "CloudFortCEF"
+        },
+        "author": {
+            "name": "CloudFort"
+        },
+        "support": {
+            "tier": "Partner",
+            "name": "CloudFort",
+            "link": "https://www.cloudfort.com/support"
+        }
+    }
+}
