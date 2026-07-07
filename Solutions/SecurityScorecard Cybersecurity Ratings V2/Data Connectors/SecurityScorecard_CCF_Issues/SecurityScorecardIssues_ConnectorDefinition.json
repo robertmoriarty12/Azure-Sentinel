@@ -1,0 +1,117 @@
+{
+  "name": "SSCIssuesConnectorDefinition",
+    "apiVersion": "2022-09-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+    "location": "{{location}}",
+    "kind": "Customizable",
+    "properties": {
+      "connectorUiConfig": {
+        "id": "SecurityScorecardIssuesConnector",
+        "title": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+        "publisher": "SecurityScorecard",
+        "logo": "SecurityScorecard.svg",
+        "descriptionMarkdown": "The SecurityScorecard Issues connector ingests daily issue-change events from the [SecurityScorecard](https://securityscorecard.com) API into Microsoft Sentinel. For each company in the specified portfolio, it collects events from the `/companies/{domain}/history/events` endpoint — recording when issues appear, change severity, or resolve. Each row captures the issue type, severity, security factor, score impact, and resolution status, enabling continuous monitoring of your third-party attack surface.\n\nSupports API Key authentication.\n\nFor more information, visit [SecurityScorecard API Docs](https://securityscorecard.readme.io/reference/introduction).",
+        "graphQueriesTableName": "SecurityScorecardIssues_CL",
+        "graphQueries": [
+          {
+            "metricName": "Total issues received",
+            "legend": "{{graphQueriesTableName}}",
+            "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+          }
+        ],
+        "dataTypes": [
+          {
+            "name": "{{graphQueriesTableName}}",
+            "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+          }
+        ],
+        "sampleQueries": [
+          {
+            "description": "All issues, most recent first",
+            "query": "{{graphQueriesTableName}} | sort by TimeGenerated desc"
+          },
+          {
+            "description": "Active critical and high-severity issues",
+            "query": "{{graphQueriesTableName}} | where GroupStatus == \"active\" and Severity in (\"critical\",\"high\") | sort by TimeGenerated desc"
+          },
+          {
+            "description": "Issues by security factor (last 30 days)",
+            "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(30d) | summarize Count=count() by Factor, Severity | sort by Count desc"
+          }
+        ],
+        "availability": {
+          "isPreview": true
+        },
+        "connectivityCriteria": [
+          {
+            "type": "HasDataConnectors"
+          }
+        ],
+        "permissions": {
+          "resourceProvider": [
+            {
+              "provider": "Microsoft.OperationalInsights/workspaces",
+              "permissionsDisplayText": "Read and Write permissions are required.",
+              "providerDisplayName": "Workspace",
+              "scope": "Workspace",
+              "requiredPermissions": {
+                "write": true,
+                "read": true,
+                "delete": false
+              }
+            }
+          ],
+          "customs": [
+            {
+              "name": "SecurityScorecard API Key",
+              "description": "A SecurityScorecard API key with access to the Portfolio and Event History endpoints is required. Generate one from your SecurityScorecard account under **Settings → API**."
+            }
+          ]
+        },
+        "instructionSteps": [
+          {
+            "title": "Step 1 - Obtain credentials",
+            "description": "To connect SecurityScorecard Issues to Microsoft Sentinel, you will need:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key.\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. Find it in the URL when viewing a portfolio (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+          },
+          {
+            "title": "Step 2 - Connect SecurityScorecard Issues to Microsoft Sentinel",
+            "description": "Enter your SecurityScorecard API key and Portfolio ID below.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+            "instructions": [
+              {
+                "type": "Textbox",
+                "parameters": {
+                  "label": "Portfolio ID",
+                  "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                  "type": "text",
+                  "name": "PortfolioId",
+                  "validations": {
+                    "required": true
+                  }
+                }
+              },
+              {
+                "type": "Textbox",
+                "parameters": {
+                  "label": "SecurityScorecard API Key",
+                  "placeholder": "Enter your SecurityScorecard API key",
+                  "type": "password",
+                  "name": "SecurityScorecardAPIKey",
+                  "validations": {
+                    "required": true
+                  }
+                }
+              },
+              {
+                "type": "ConnectionToggleButton",
+                "parameters": {
+                  "connectLabel": "connect",
+                  "name": "connect"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+

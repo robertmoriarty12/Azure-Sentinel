@@ -1,0 +1,16 @@
+{
+	"publisherId": "SecurityScorecard",
+	"offerId": "SecurityScorecard-cybersecurity-ratings-v2",
+	"firstPublishDate": "2026-07-07",
+	"providers": ["SecurityScorecard"],
+	"categories": {
+		"domains": ["Security - Vulnerability Management", "Security - Threat Intelligence"],
+		"verticals": []
+	},
+	"support": {
+		"name": "SecurityScorecard",
+		"email": "integrations@securityscorecard.io",
+		"tier": "Partner",
+		"link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+	}
+}

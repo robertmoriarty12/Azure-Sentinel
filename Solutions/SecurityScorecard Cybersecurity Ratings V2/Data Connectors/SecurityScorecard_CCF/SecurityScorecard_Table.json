@@ -1,0 +1,30 @@
+[
+    {
+        "name": "SecurityScorecardRatings_CL",
+        "type": "Microsoft.OperationalInsights/workspaces/tables",
+        "apiVersion": "2025-02-01",
+        "location": "{{location}}",
+        "properties": {
+            "schema": {
+                "name": "SecurityScorecardRatings_CL",
+                "columns": [
+                    {
+                        "name": "TimeGenerated",
+                        "type": "datetime",
+                        "description": "The date for which the score was recorded, mapped from the 'date' field in the API response."
+                    },
+                    {
+                        "name": "Domain",
+                        "type": "string",
+                        "description": "The company domain name for which the score history was retrieved (e.g. 'trueblue.com')."
+                    },
+                    {
+                        "name": "Score",
+                        "type": "real",
+                        "description": "The SecurityScorecard cybersecurity rating score for the company on the recorded date (0-100)."
+                    }
+                ]
+            }
+        }
+    }
+]

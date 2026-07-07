@@ -1,0 +1,74 @@
+[
+  {
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "apiVersion": "2023-02-01-preview",
+    "name": "SecurityScorecardRatingsConnector",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardCybersecurityRatings",
+      "dataType": "SecurityScorecardRatings_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardRatings_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "APIKey",
+        "ApiKey": "{{SecurityScorecardAPIKey}}",
+        "ApiKeyName": "Authorization",
+        "ApiKeyIdentifier": "Token"
+      },
+      "request": {
+        "apiEndpoint": "https://api.securityscorecard.io/portfolios/{{PortfolioId}}/companies",
+        "httpMethod": "GET",
+        "rateLimitQPS": 10,
+        "retryCount": 3,
+        "timeoutInSeconds": 60,
+        "queryWindowInMin": 7000,
+        "headers": {
+          "Accept": "application/json; charset=utf-8"
+        }
+      },
+      "response": {
+        "format": "json",
+        "eventsJsonPaths": [
+          "$.entries[*]"
+        ]
+      },
+      "stepInfo": {
+        "stepType": "Nested",
+        "nextSteps": [
+          {
+            "stepId": "fetchDomainScoreHistory",
+            "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+          }
+        ]
+      },
+      "stepCollectorConfigs": {
+        "fetchDomainScoreHistory": {
+          "shouldJoinNestedData": false,
+          "request": {
+            "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/score",
+            "httpMethod": "GET",
+            "queryWindowInMin": 7000,
+            "queryTimeFormat": "yyyy-MM-dd",
+            "startTimeAttributeName": "from",
+            "endTimeAttributeName": "to",
+            "retryCount": 3,
+            "timeoutInSeconds": 60,
+            "headers": {
+              "Accept": "application/json; charset=utf-8"
+            }
+          },
+          "response": {
+            "format": "json",
+            "eventsJsonPaths": [
+              "$.entries[*]"
+            ]
+          }
+        }
+      }
+    }
+  }
+]

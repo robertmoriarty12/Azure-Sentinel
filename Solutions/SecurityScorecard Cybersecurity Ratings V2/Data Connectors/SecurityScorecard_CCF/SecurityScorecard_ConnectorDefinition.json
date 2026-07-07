@@ -1,0 +1,128 @@
+{
+    "name": "SecurityScorecardConnector",
+    "apiVersion": "2022-09-01-preview",
+    "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+    "location": "{{location}}",
+    "kind": "Customizable",
+    "properties": {
+        "connectorUiConfig": {
+            "id": "SecurityScorecardCybersecurityRatings",
+            "title": "SecurityScorecard Cybersecurity Ratings",
+            "publisher": "SecurityScorecard",
+            "descriptionMarkdown": "The [SecurityScorecard](https://securityscorecard.com) connector ingests daily cybersecurity ratings for all companies in a monitored portfolio into Microsoft Sentinel. SecurityScorecard rates organizations across ten risk factors—Network Security, DNS Health, Patching Cadence, Endpoint Security, IP Reputation, Application Security, Cubit Score, Hacker Chatter, Leaked Information, and Social Engineering—and produces an aggregate score (0–100) and letter grade. This connector polls your portfolio to discover member companies and then retrieves each company's score history on a daily cadence, enabling trend analysis, alerting on score drops, and third-party risk reporting inside Microsoft Sentinel.",
+            "logo": "SecurityScorecard.svg",
+            "graphQueriesTableName": "SecurityScorecardRatings_CL",
+            "graphQueries": [
+                {
+                    "metricName": "Total ratings received",
+                    "legend": "{{graphQueriesTableName}}",
+                    "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+                }
+            ],
+            "dataTypes": [
+                {
+                    "name": "{{graphQueriesTableName}}",
+                    "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+                }
+            ],
+            "sampleQueries": [
+                {
+                    "description": "All SecurityScorecard ratings from the last 24 hours",
+                    "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(24h)\n| project TimeGenerated, Domain, Score\n| sort by TimeGenerated desc"
+                },
+                {
+                    "description": "Average daily score per domain (last 30 days)",
+                    "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(30d)\n| summarize AvgScore = avg(Score) by Domain\n| sort by AvgScore asc"
+                },
+                {
+                    "description": "Domains with score below 70 (at risk)",
+                    "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize LatestScore = arg_max(TimeGenerated, Score) by Domain\n| where Score < 70\n| project Domain, Score\n| sort by Score asc"
+                },
+                {
+                    "description": "Score trend over the last 14 days by domain",
+                    "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(14d)\n| summarize AvgScore = avg(Score) by Domain, bin(TimeGenerated, 1d)\n| order by Domain asc, TimeGenerated asc"
+                },
+                {
+                    "description": "Largest score drops in the last 7 days",
+                    "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize\n    EarliestScore = arg_min(TimeGenerated, Score),\n    LatestScore = arg_max(TimeGenerated, Score)\n    by Domain\n| extend ScoreDrop = EarliestScore - LatestScore\n| where ScoreDrop > 0\n| project Domain, EarliestScore, LatestScore, ScoreDrop\n| sort by ScoreDrop desc"
+                }
+            ],
+            "availability": {
+                "isPreview": true
+            },
+            "connectivityCriteria": [
+                {
+                    "type": "HasDataConnectors"
+                }
+            ],
+            "permissions": {
+                "resourceProvider": [
+                    {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "read and write permissions are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                            "write": true,
+                            "read": true,
+                            "delete": false
+                        }
+                    }
+                ],
+                "customs": [
+                    {
+                        "name": "SecurityScorecard API Key",
+                        "description": "A SecurityScorecard API Key is required. Generate one at **My Settings → API** in the SecurityScorecard platform. [See documentation](https://securityscorecard.readme.io/reference/introduction)"
+                    },
+                    {
+                        "name": "SecurityScorecard Portfolio ID",
+                        "description": "The GUID of the SecurityScorecard portfolio to monitor. Find it in the portfolio URL on the SecurityScorecard platform."
+                    }
+                ]
+            },
+            "instructionSteps": [
+                {
+                    "title": "Step 1 - Obtain credentials",
+                    "description": "To connect SecurityScorecard to Microsoft Sentinel, you will need the following:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key. [See documentation](https://securityscorecard.readme.io/reference/introduction)\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. You can find it in the URL when viewing a portfolio on the SecurityScorecard platform (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+                },
+                {
+                    "title": "Step 2 - Connect SecurityScorecard to Microsoft Sentinel",
+                    "description": "Enter your SecurityScorecard API key and Portfolio ID below. The connector will poll daily score history for every company in that portfolio.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+                    "instructions": [
+                        {
+                            "type": "Textbox",
+                            "parameters": {
+                                "label": "API Key",
+                                "placeholder": "Enter your SecurityScorecard API key",
+                                "type": "password",
+                                "name": "SecurityScorecardAPIKey",
+                                "validations": {
+                                    "required": true
+                                }
+                            }
+                        },
+                        {
+                            "type": "Textbox",
+                            "parameters": {
+                                "label": "Portfolio ID",
+                                "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                                "type": "text",
+                                "name": "PortfolioId",
+                                "validations": {
+                                    "required": true
+                                }
+                            }
+                        },
+                        {
+                            "type": "ConnectionToggleButton",
+                            "parameters": {
+                                "connectLabel": "connect",
+                                "name": "connect"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

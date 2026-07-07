@@ -1,0 +1,2049 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "author": "SecurityScorecard - integrations@securityscorecard.io",
+    "comments": "Solution template for SecurityScorecard Cybersecurity Ratings V2"
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Not used, but needed to pass arm-ttk test `Location-Should-Not-Be-Hardcoded`.  We instead use the `workspace-location` which is derived from the LA workspace"
+      }
+    },
+    "workspace-location": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "[concat('Region to deploy solution resources -- separate from location selection',parameters('location'))]"
+      }
+    },
+    "workspace": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Workspace name for Log Analytics where Microsoft Sentinel is setup"
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "resource group name where Microsoft Sentinel is setup"
+      }
+    },
+    "subscription": {
+      "type": "string",
+      "defaultValue": "[last(split(subscription().id, '/'))]",
+      "metadata": {
+        "description": "subscription id where Microsoft Sentinel is setup"
+      }
+    }
+  },
+  "variables": {
+    "email": "integrations@securityscorecard.io",
+    "_email": "[variables('email')]",
+    "_solutionName": "SecurityScorecard Cybersecurity Ratings V2",
+    "_solutionVersion": "3.0.0",
+    "solutionId": "SecurityScorecard.SecurityScorecard-cybersecurity-ratings-v2",
+    "_solutionId": "[variables('solutionId')]",
+    "workspaceResourceId": "[resourceId('microsoft.OperationalInsights/Workspaces', parameters('workspace'))]",
+    "dataConnectorCCPVersion": "3.0.0",
+    "_dataConnectorContentIdConnectorDefinition1": "SecurityScorecardCybersecurityRatings",
+    "dataConnectorTemplateNameConnectorDefinition1": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnectorDefinition1')))]",
+    "_dataConnectorContentIdConnections1": "SecurityScorecardCybersecurityRatingsConnections",
+    "dataConnectorTemplateNameConnections1": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnections1')))]",
+    "dataCollectionEndpointId": "[concat('/subscriptions/',parameters('subscription'),'/resourceGroups/',parameters('resourceGroupName'),'/providers/Microsoft.Insights/dataCollectionEndpoints/',parameters('workspace'))]",
+    "_dataConnectorContentIdConnectorDefinition2": "SecurityScorecardIssuesConnector",
+    "dataConnectorTemplateNameConnectorDefinition2": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnectorDefinition2')))]",
+    "_dataConnectorContentIdConnections2": "SecurityScorecardIssuesConnectorConnections",
+    "dataConnectorTemplateNameConnections2": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnections2')))]",
+    "_dataConnectorContentIdConnectorDefinition3": "SecurityScorecardFactorConnector",
+    "dataConnectorTemplateNameConnectorDefinition3": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnectorDefinition3')))]",
+    "_dataConnectorContentIdConnections3": "SecurityScorecardFactorConnectorConnections",
+    "dataConnectorTemplateNameConnections3": "[concat(parameters('workspace'),'-dc-',uniquestring(variables('_dataConnectorContentIdConnections3')))]",
+    "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnectorDefinition1'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+        "displayName": "SecurityScorecard Cybersecurity Ratings",
+        "contentKind": "DataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition1'))]",
+              "apiVersion": "2022-09-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Customizable",
+              "properties": {
+                "connectorUiConfig": {
+                  "id": "SecurityScorecardCybersecurityRatings",
+                  "title": "SecurityScorecard Cybersecurity Ratings",
+                  "publisher": "SecurityScorecard",
+                  "descriptionMarkdown": "The [SecurityScorecard](https://securityscorecard.com) connector ingests daily cybersecurity ratings for all companies in a monitored portfolio into Microsoft Sentinel. SecurityScorecard rates organizations across ten risk factors—Network Security, DNS Health, Patching Cadence, Endpoint Security, IP Reputation, Application Security, Cubit Score, Hacker Chatter, Leaked Information, and Social Engineering—and produces an aggregate score (0–100) and letter grade. This connector polls your portfolio to discover member companies and then retrieves each company's score history on a daily cadence, enabling trend analysis, alerting on score drops, and third-party risk reporting inside Microsoft Sentinel.",
+                  "logo": "SecurityScorecard.svg",
+                  "graphQueriesTableName": "SecurityScorecardRatings_CL",
+                  "graphQueries": [
+                    {
+                      "metricName": "Total ratings received",
+                      "legend": "{{graphQueriesTableName}}",
+                      "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+                    }
+                  ],
+                  "dataTypes": [
+                    {
+                      "name": "{{graphQueriesTableName}}",
+                      "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+                    }
+                  ],
+                  "sampleQueries": [
+                    {
+                      "description": "All SecurityScorecard ratings from the last 24 hours",
+                      "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(24h)\n| project TimeGenerated, Domain, Score\n| sort by TimeGenerated desc"
+                    },
+                    {
+                      "description": "Average daily score per domain (last 30 days)",
+                      "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(30d)\n| summarize AvgScore = avg(Score) by Domain\n| sort by AvgScore asc"
+                    },
+                    {
+                      "description": "Domains with score below 70 (at risk)",
+                      "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize LatestScore = arg_max(TimeGenerated, Score) by Domain\n| where Score < 70\n| project Domain, Score\n| sort by Score asc"
+                    },
+                    {
+                      "description": "Score trend over the last 14 days by domain",
+                      "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(14d)\n| summarize AvgScore = avg(Score) by Domain, bin(TimeGenerated, 1d)\n| order by Domain asc, TimeGenerated asc"
+                    },
+                    {
+                      "description": "Largest score drops in the last 7 days",
+                      "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize\n    EarliestScore = arg_min(TimeGenerated, Score),\n    LatestScore = arg_max(TimeGenerated, Score)\n    by Domain\n| extend ScoreDrop = EarliestScore - LatestScore\n| where ScoreDrop > 0\n| project Domain, EarliestScore, LatestScore, ScoreDrop\n| sort by ScoreDrop desc"
+                    }
+                  ],
+                  "availability": {
+                    "isPreview": true
+                  },
+                  "connectivityCriteria": [
+                    {
+                      "type": "HasDataConnectors"
+                    }
+                  ],
+                  "permissions": {
+                    "resourceProvider": [
+                      {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "read and write permissions are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                          "write": true,
+                          "read": true,
+                          "delete": false
+                        }
+                      }
+                    ],
+                    "customs": [
+                      {
+                        "name": "SecurityScorecard API Key",
+                        "description": "A SecurityScorecard API Key is required. Generate one at **My Settings → API** in the SecurityScorecard platform. [See documentation](https://securityscorecard.readme.io/reference/introduction)"
+                      },
+                      {
+                        "name": "SecurityScorecard Portfolio ID",
+                        "description": "The GUID of the SecurityScorecard portfolio to monitor. Find it in the portfolio URL on the SecurityScorecard platform."
+                      }
+                    ]
+                  },
+                  "instructionSteps": [
+                    {
+                      "title": "Step 1 - Obtain credentials",
+                      "description": "To connect SecurityScorecard to Microsoft Sentinel, you will need the following:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key. [See documentation](https://securityscorecard.readme.io/reference/introduction)\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. You can find it in the URL when viewing a portfolio on the SecurityScorecard platform (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+                    },
+                    {
+                      "title": "Step 2 - Connect SecurityScorecard to Microsoft Sentinel",
+                      "description": "Enter your SecurityScorecard API key and Portfolio ID below. The connector will poll daily score history for every company in that portfolio.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+                      "instructions": [
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "API Key",
+                            "placeholder": "Enter your SecurityScorecard API key",
+                            "type": "password",
+                            "name": "SecurityScorecardAPIKey",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "Portfolio ID",
+                            "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                            "type": "text",
+                            "name": "PortfolioId",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "ConnectionToggleButton",
+                          "parameters": {
+                            "connectLabel": "connect",
+                            "name": "connect"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition1')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition1'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+                "kind": "DataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                },
+                "dependencies": {
+                  "criteria": [
+                    {
+                      "version": "[variables('dataConnectorCCPVersion')]",
+                      "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+                      "kind": "ResourcesDataConnector"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SecurityScorecardDCR",
+              "apiVersion": "2022-06-01",
+              "type": "Microsoft.Insights/dataCollectionRules",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Direct",
+              "properties": {
+                "streamDeclarations": {
+                  "Custom-SecurityScorecardRatings_CL": {
+                    "columns": [
+                      {
+                        "name": "domain",
+                        "type": "string"
+                      },
+                      {
+                        "name": "score",
+                        "type": "real"
+                      },
+                      {
+                        "name": "date",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "destinations": {
+                  "logAnalytics": [
+                    {
+                      "workspaceResourceId": "[variables('workspaceResourceId')]",
+                      "name": "clv2ws1"
+                    }
+                  ]
+                },
+                "dataFlows": [
+                  {
+                    "streams": [
+                      "Custom-SecurityScorecardRatings_CL"
+                    ],
+                    "destinations": [
+                      "clv2ws1"
+                    ],
+                    "outputStream": "Custom-SecurityScorecardRatings_CL",
+                    "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, Domain = domain, Score = score"
+                  }
+                ],
+                "dataCollectionEndpointId": "[variables('dataCollectionEndpointId')]"
+              }
+            },
+            {
+              "name": "SecurityScorecardRatings_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SecurityScorecardRatings_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "description": "The date for which the score was recorded, mapped from the 'date' field in the API response."
+                    },
+                    {
+                      "name": "Domain",
+                      "type": "string",
+                      "description": "The company domain name for which the score history was retrieved (e.g. 'trueblue.com')."
+                    },
+                    {
+                      "name": "Score",
+                      "type": "real",
+                      "description": "The SecurityScorecard cybersecurity rating score for the company on the recorded date (0-100)."
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SecurityScorecardFactor_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SecurityScorecardFactor_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "description": "Timestamp of the factor score entry, mapped from the 'date' field."
+                    },
+                    {
+                      "name": "Domain",
+                      "type": "string",
+                      "description": "The company domain this factor score belongs to, mapped from 'domain'."
+                    },
+                    {
+                      "name": "Factors",
+                      "type": "dynamic",
+                      "description": "Array of factor scores. Each element has 'name' (e.g. 'network_security') and 'score' (0-100). Unpack at query time with mv-expand."
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SecurityScorecardIssues_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SecurityScorecardIssues_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "description": "Timestamp of the event, mapped from the 'date' field."
+                    },
+                    {
+                      "name": "EventId",
+                      "type": "int",
+                      "description": "Unique numeric identifier for the event, mapped from 'id'."
+                    },
+                    {
+                      "name": "Domain",
+                      "type": "string",
+                      "description": "The company domain this issue belongs to, injected from the _domain placeholder."
+                    },
+                    {
+                      "name": "EventType",
+                      "type": "string",
+                      "description": "Category of the event, mapped from 'event_type' (e.g. 'issues')."
+                    },
+                    {
+                      "name": "GroupStatus",
+                      "type": "string",
+                      "description": "Whether the issue is currently active or departed, mapped from 'group_status'."
+                    },
+                    {
+                      "name": "IssueCount",
+                      "type": "int",
+                      "description": "Number of issues detected in this event, mapped from 'issue_count'."
+                    },
+                    {
+                      "name": "TotalScoreImpact",
+                      "type": "real",
+                      "description": "Aggregate score impact of this event, mapped from 'total_score_impact'."
+                    },
+                    {
+                      "name": "IssueType",
+                      "type": "string",
+                      "description": "Specific issue type identifier, mapped from 'issue_type' (e.g. 'tls_ocsp_stapling')."
+                    },
+                    {
+                      "name": "Severity",
+                      "type": "string",
+                      "description": "Severity level of the issue: info, low, medium, high, or critical."
+                    },
+                    {
+                      "name": "Factor",
+                      "type": "string",
+                      "description": "Security factor category, mapped from 'factor' (e.g. 'network_security')."
+                    },
+                    {
+                      "name": "DetailUrl",
+                      "type": "string",
+                      "description": "URL linking to the full issue detail in the SecurityScorecard API, mapped from 'detail_url'."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','dc','-', uniqueString(concat(variables('_solutionId'),'-','DataConnector','-',variables('_dataConnectorContentIdConnectorDefinition1'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition1'))]",
+      "apiVersion": "2022-09-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+      "location": "[parameters('workspace-location')]",
+      "kind": "Customizable",
+      "properties": {
+        "connectorUiConfig": {
+          "id": "SecurityScorecardCybersecurityRatings",
+          "title": "SecurityScorecard Cybersecurity Ratings",
+          "publisher": "SecurityScorecard",
+          "descriptionMarkdown": "The [SecurityScorecard](https://securityscorecard.com) connector ingests daily cybersecurity ratings for all companies in a monitored portfolio into Microsoft Sentinel. SecurityScorecard rates organizations across ten risk factors—Network Security, DNS Health, Patching Cadence, Endpoint Security, IP Reputation, Application Security, Cubit Score, Hacker Chatter, Leaked Information, and Social Engineering—and produces an aggregate score (0–100) and letter grade. This connector polls your portfolio to discover member companies and then retrieves each company's score history on a daily cadence, enabling trend analysis, alerting on score drops, and third-party risk reporting inside Microsoft Sentinel.",
+          "logo": "SecurityScorecard.svg",
+          "graphQueriesTableName": "SecurityScorecardRatings_CL",
+          "graphQueries": [
+            {
+              "metricName": "Total ratings received",
+              "legend": "{{graphQueriesTableName}}",
+              "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+            }
+          ],
+          "dataTypes": [
+            {
+              "name": "{{graphQueriesTableName}}",
+              "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+            }
+          ],
+          "sampleQueries": [
+            {
+              "description": "All SecurityScorecard ratings from the last 24 hours",
+              "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(24h)\n| project TimeGenerated, Domain, Score\n| sort by TimeGenerated desc"
+            },
+            {
+              "description": "Average daily score per domain (last 30 days)",
+              "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(30d)\n| summarize AvgScore = avg(Score) by Domain\n| sort by AvgScore asc"
+            },
+            {
+              "description": "Domains with score below 70 (at risk)",
+              "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize LatestScore = arg_max(TimeGenerated, Score) by Domain\n| where Score < 70\n| project Domain, Score\n| sort by Score asc"
+            },
+            {
+              "description": "Score trend over the last 14 days by domain",
+              "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(14d)\n| summarize AvgScore = avg(Score) by Domain, bin(TimeGenerated, 1d)\n| order by Domain asc, TimeGenerated asc"
+            },
+            {
+              "description": "Largest score drops in the last 7 days",
+              "query": "{{graphQueriesTableName}}\n| where TimeGenerated > ago(7d)\n| summarize\n    EarliestScore = arg_min(TimeGenerated, Score),\n    LatestScore = arg_max(TimeGenerated, Score)\n    by Domain\n| extend ScoreDrop = EarliestScore - LatestScore\n| where ScoreDrop > 0\n| project Domain, EarliestScore, LatestScore, ScoreDrop\n| sort by ScoreDrop desc"
+            }
+          ],
+          "availability": {
+            "isPreview": true
+          },
+          "connectivityCriteria": [
+            {
+              "type": "HasDataConnectors"
+            }
+          ],
+          "permissions": {
+            "resourceProvider": [
+              {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "read and write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                  "write": true,
+                  "read": true,
+                  "delete": false
+                }
+              }
+            ],
+            "customs": [
+              {
+                "name": "SecurityScorecard API Key",
+                "description": "A SecurityScorecard API Key is required. Generate one at **My Settings → API** in the SecurityScorecard platform. [See documentation](https://securityscorecard.readme.io/reference/introduction)"
+              },
+              {
+                "name": "SecurityScorecard Portfolio ID",
+                "description": "The GUID of the SecurityScorecard portfolio to monitor. Find it in the portfolio URL on the SecurityScorecard platform."
+              }
+            ]
+          },
+          "instructionSteps": [
+            {
+              "title": "Step 1 - Obtain credentials",
+              "description": "To connect SecurityScorecard to Microsoft Sentinel, you will need the following:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key. [See documentation](https://securityscorecard.readme.io/reference/introduction)\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. You can find it in the URL when viewing a portfolio on the SecurityScorecard platform (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+            },
+            {
+              "title": "Step 2 - Connect SecurityScorecard to Microsoft Sentinel",
+              "description": "Enter your SecurityScorecard API key and Portfolio ID below. The connector will poll daily score history for every company in that portfolio.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+              "instructions": [
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "API Key",
+                    "placeholder": "Enter your SecurityScorecard API key",
+                    "type": "password",
+                    "name": "SecurityScorecardAPIKey",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "Portfolio ID",
+                    "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                    "type": "text",
+                    "name": "PortfolioId",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "ConnectionToggleButton",
+                  "parameters": {
+                    "connectLabel": "connect",
+                    "name": "connect"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition1')))]",
+      "apiVersion": "2022-01-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "properties": {
+        "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition1'))]",
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition1')]",
+        "kind": "DataConnector",
+        "version": "[variables('dataConnectorCCPVersion')]",
+        "source": {
+          "sourceId": "[variables('_solutionId')]",
+          "name": "[variables('_solutionName')]",
+          "kind": "Solution"
+        },
+        "author": {
+          "name": "SecurityScorecard",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "SecurityScorecard",
+          "email": "integrations@securityscorecard.io",
+          "tier": "Partner",
+          "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+        },
+        "dependencies": {
+          "criteria": [
+            {
+              "version": "[variables('dataConnectorCCPVersion')]",
+              "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+              "kind": "ResourcesDataConnector"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnections1'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+        "displayName": "SecurityScorecard Cybersecurity Ratings",
+        "contentKind": "ResourcesDataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {
+            "guidValue": {
+              "defaultValue": "[[newGuid()]",
+              "type": "securestring"
+            },
+            "innerWorkspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "connectorDefinitionName": {
+              "defaultValue": "SecurityScorecard Cybersecurity Ratings",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "workspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "dcrConfig": {
+              "defaultValue": {
+                "dataCollectionEndpoint": "data collection Endpoint",
+                "dataCollectionRuleImmutableId": "data collection rule immutableId"
+              },
+              "type": "object"
+            },
+            "SecurityScorecardAPIKey": {
+              "defaultValue": "SecurityScorecardAPIKey",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "PortfolioId": {
+              "defaultValue": "PortfolioId",
+              "type": "securestring",
+              "minLength": 1
+            }
+          },
+          "variables": {
+            "_dataConnectorContentIdConnections1": "[variables('_dataConnectorContentIdConnections1')]"
+          },
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnections1')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentIdConnections1'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+                "kind": "ResourcesDataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                }
+              }
+            },
+            {
+              "name": "[[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'SecurityScorecardRatingsConnector', parameters('guidValue'))]",
+              "apiVersion": "2023-02-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+              "location": "[parameters('workspace-location')]",
+              "kind": "RestApiPoller",
+              "properties": {
+                "connectorDefinitionName": "SecurityScorecardCybersecurityRatings",
+                "dataType": "SecurityScorecardRatings_CL",
+                "dcrConfig": {
+                  "streamName": "Custom-SecurityScorecardRatings_CL",
+                  "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
+                  "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]"
+                },
+                "auth": {
+                  "type": "APIKey",
+                  "ApiKey": "[[parameters('SecurityScorecardAPIKey')]",
+                  "ApiKeyName": "Authorization",
+                  "ApiKeyIdentifier": "Token"
+                },
+                "request": {
+                  "apiEndpoint": "[[concat('https://api.securityscorecard.io/portfolios/',parameters('PortfolioId'),'/companies')]",
+                  "httpMethod": "GET",
+                  "rateLimitQPS": 10,
+                  "retryCount": 3,
+                  "timeoutInSeconds": 60,
+                  "queryWindowInMin": 7000,
+                  "headers": {
+                    "Accept": "application/json; charset=utf-8"
+                  }
+                },
+                "response": {
+                  "format": "json",
+                  "eventsJsonPaths": [
+                    "$.entries[*]"
+                  ]
+                },
+                "stepInfo": {
+                  "stepType": "Nested",
+                  "nextSteps": [
+                    {
+                      "stepId": "fetchDomainScoreHistory",
+                      "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+                    }
+                  ]
+                },
+                "stepCollectorConfigs": {
+                  "fetchDomainScoreHistory": {
+                    "shouldJoinNestedData": false,
+                    "request": {
+                      "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/score",
+                      "httpMethod": "GET",
+                      "queryWindowInMin": 7000,
+                      "queryTimeFormat": "yyyy-MM-dd",
+                      "startTimeAttributeName": "from",
+                      "endTimeAttributeName": "to",
+                      "retryCount": 3,
+                      "timeoutInSeconds": 60,
+                      "headers": {
+                        "Accept": "application/json; charset=utf-8"
+                      }
+                    },
+                    "response": {
+                      "format": "json",
+                      "eventsJsonPaths": [
+                        "$.entries[*]"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','rdc','-', uniqueString(concat(variables('_solutionId'),'-','ResourcesDataConnector','-',variables('_dataConnectorContentIdConnections1'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnectorDefinition2'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition2')]",
+        "displayName": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+        "contentKind": "DataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition2'))]",
+              "apiVersion": "2022-09-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Customizable",
+              "properties": {
+                "connectorUiConfig": {
+                  "id": "SecurityScorecardIssuesConnector",
+                  "title": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+                  "publisher": "SecurityScorecard",
+                  "logo": "SecurityScorecard.svg",
+                  "descriptionMarkdown": "The SecurityScorecard Issues connector ingests daily issue-change events from the [SecurityScorecard](https://securityscorecard.com) API into Microsoft Sentinel. For each company in the specified portfolio, it collects events from the `/companies/{domain}/history/events` endpoint — recording when issues appear, change severity, or resolve. Each row captures the issue type, severity, security factor, score impact, and resolution status, enabling continuous monitoring of your third-party attack surface.\n\nSupports API Key authentication.\n\nFor more information, visit [SecurityScorecard API Docs](https://securityscorecard.readme.io/reference/introduction).",
+                  "graphQueriesTableName": "SecurityScorecardIssues_CL",
+                  "graphQueries": [
+                    {
+                      "metricName": "Total issues received",
+                      "legend": "{{graphQueriesTableName}}",
+                      "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+                    }
+                  ],
+                  "dataTypes": [
+                    {
+                      "name": "{{graphQueriesTableName}}",
+                      "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+                    }
+                  ],
+                  "sampleQueries": [
+                    {
+                      "description": "All issues, most recent first",
+                      "query": "{{graphQueriesTableName}} | sort by TimeGenerated desc"
+                    },
+                    {
+                      "description": "Active critical and high-severity issues",
+                      "query": "{{graphQueriesTableName}} | where GroupStatus == \"active\" and Severity in (\"critical\",\"high\") | sort by TimeGenerated desc"
+                    },
+                    {
+                      "description": "Issues by security factor (last 30 days)",
+                      "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(30d) | summarize Count=count() by Factor, Severity | sort by Count desc"
+                    }
+                  ],
+                  "availability": {
+                    "isPreview": true
+                  },
+                  "connectivityCriteria": [
+                    {
+                      "type": "HasDataConnectors"
+                    }
+                  ],
+                  "permissions": {
+                    "resourceProvider": [
+                      {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "Read and Write permissions are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                          "write": true,
+                          "read": true,
+                          "delete": false
+                        }
+                      }
+                    ],
+                    "customs": [
+                      {
+                        "name": "SecurityScorecard API Key",
+                        "description": "A SecurityScorecard API key with access to the Portfolio and Event History endpoints is required. Generate one from your SecurityScorecard account under **Settings → API**."
+                      }
+                    ]
+                  },
+                  "instructionSteps": [
+                    {
+                      "title": "Step 1 - Obtain credentials",
+                      "description": "To connect SecurityScorecard Issues to Microsoft Sentinel, you will need:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key.\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. Find it in the URL when viewing a portfolio (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+                    },
+                    {
+                      "title": "Step 2 - Connect SecurityScorecard Issues to Microsoft Sentinel",
+                      "description": "Enter your SecurityScorecard API key and Portfolio ID below.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+                      "instructions": [
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "Portfolio ID",
+                            "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                            "type": "text",
+                            "name": "PortfolioId",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "SecurityScorecard API Key",
+                            "placeholder": "Enter your SecurityScorecard API key",
+                            "type": "password",
+                            "name": "SecurityScorecardAPIKey",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "ConnectionToggleButton",
+                          "parameters": {
+                            "connectLabel": "connect",
+                            "name": "connect"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition2')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition2'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnectorDefinition2')]",
+                "kind": "DataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                },
+                "dependencies": {
+                  "criteria": [
+                    {
+                      "version": "[variables('dataConnectorCCPVersion')]",
+                      "contentId": "[variables('_dataConnectorContentIdConnections2')]",
+                      "kind": "ResourcesDataConnector"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SecurityScorecardIssuesDCR",
+              "apiVersion": "2022-06-01",
+              "type": "Microsoft.Insights/dataCollectionRules",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Direct",
+              "properties": {
+                "streamDeclarations": {
+                  "Custom-SecurityScorecardIssues_CL": {
+                    "columns": [
+                      {
+                        "name": "date",
+                        "type": "string"
+                      },
+                      {
+                        "name": "id",
+                        "type": "int"
+                      },
+                      {
+                        "name": "_domain",
+                        "type": "string"
+                      },
+                      {
+                        "name": "event_type",
+                        "type": "string"
+                      },
+                      {
+                        "name": "group_status",
+                        "type": "string"
+                      },
+                      {
+                        "name": "issue_count",
+                        "type": "int"
+                      },
+                      {
+                        "name": "total_score_impact",
+                        "type": "real"
+                      },
+                      {
+                        "name": "issue_type",
+                        "type": "string"
+                      },
+                      {
+                        "name": "severity",
+                        "type": "string"
+                      },
+                      {
+                        "name": "factor",
+                        "type": "string"
+                      },
+                      {
+                        "name": "detail_url",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "destinations": {
+                  "logAnalytics": [
+                    {
+                      "workspaceResourceId": "[variables('workspaceResourceId')]",
+                      "name": "clv2ws1"
+                    }
+                  ]
+                },
+                "dataFlows": [
+                  {
+                    "streams": [
+                      "Custom-SecurityScorecardIssues_CL"
+                    ],
+                    "destinations": [
+                      "clv2ws1"
+                    ],
+                    "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, EventId = id, Domain = _domain, EventType = event_type, GroupStatus = group_status, IssueCount = issue_count, TotalScoreImpact = total_score_impact, IssueType = issue_type, Severity = severity, Factor = factor, DetailUrl = detail_url",
+                    "outputStream": "Custom-SecurityScorecardIssues_CL"
+                  }
+                ],
+                "dataCollectionEndpointId": "[variables('dataCollectionEndpointId')]"
+              }
+            },
+            {
+              "name": "SecurityScorecardIssues_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SecurityScorecardIssues_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "description": "Timestamp of the event, mapped from the 'date' field."
+                    },
+                    {
+                      "name": "EventId",
+                      "type": "int",
+                      "description": "Unique numeric identifier for the event, mapped from 'id'."
+                    },
+                    {
+                      "name": "Domain",
+                      "type": "string",
+                      "description": "The company domain this issue belongs to, injected from the _domain placeholder."
+                    },
+                    {
+                      "name": "EventType",
+                      "type": "string",
+                      "description": "Category of the event, mapped from 'event_type' (e.g. 'issues')."
+                    },
+                    {
+                      "name": "GroupStatus",
+                      "type": "string",
+                      "description": "Whether the issue is currently active or departed, mapped from 'group_status'."
+                    },
+                    {
+                      "name": "IssueCount",
+                      "type": "int",
+                      "description": "Number of issues detected in this event, mapped from 'issue_count'."
+                    },
+                    {
+                      "name": "TotalScoreImpact",
+                      "type": "real",
+                      "description": "Aggregate score impact of this event, mapped from 'total_score_impact'."
+                    },
+                    {
+                      "name": "IssueType",
+                      "type": "string",
+                      "description": "Specific issue type identifier, mapped from 'issue_type' (e.g. 'tls_ocsp_stapling')."
+                    },
+                    {
+                      "name": "Severity",
+                      "type": "string",
+                      "description": "Severity level of the issue: info, low, medium, high, or critical."
+                    },
+                    {
+                      "name": "Factor",
+                      "type": "string",
+                      "description": "Security factor category, mapped from 'factor' (e.g. 'network_security')."
+                    },
+                    {
+                      "name": "DetailUrl",
+                      "type": "string",
+                      "description": "URL linking to the full issue detail in the SecurityScorecard API, mapped from 'detail_url'."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','dc','-', uniqueString(concat(variables('_solutionId'),'-','DataConnector','-',variables('_dataConnectorContentIdConnectorDefinition2'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition2'))]",
+      "apiVersion": "2022-09-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+      "location": "[parameters('workspace-location')]",
+      "kind": "Customizable",
+      "properties": {
+        "connectorUiConfig": {
+          "id": "SecurityScorecardIssuesConnector",
+          "title": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+          "publisher": "SecurityScorecard",
+          "logo": "SecurityScorecard.svg",
+          "descriptionMarkdown": "The SecurityScorecard Issues connector ingests daily issue-change events from the [SecurityScorecard](https://securityscorecard.com) API into Microsoft Sentinel. For each company in the specified portfolio, it collects events from the `/companies/{domain}/history/events` endpoint — recording when issues appear, change severity, or resolve. Each row captures the issue type, severity, security factor, score impact, and resolution status, enabling continuous monitoring of your third-party attack surface.\n\nSupports API Key authentication.\n\nFor more information, visit [SecurityScorecard API Docs](https://securityscorecard.readme.io/reference/introduction).",
+          "graphQueriesTableName": "SecurityScorecardIssues_CL",
+          "graphQueries": [
+            {
+              "metricName": "Total issues received",
+              "legend": "{{graphQueriesTableName}}",
+              "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+            }
+          ],
+          "dataTypes": [
+            {
+              "name": "{{graphQueriesTableName}}",
+              "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+            }
+          ],
+          "sampleQueries": [
+            {
+              "description": "All issues, most recent first",
+              "query": "{{graphQueriesTableName}} | sort by TimeGenerated desc"
+            },
+            {
+              "description": "Active critical and high-severity issues",
+              "query": "{{graphQueriesTableName}} | where GroupStatus == \"active\" and Severity in (\"critical\",\"high\") | sort by TimeGenerated desc"
+            },
+            {
+              "description": "Issues by security factor (last 30 days)",
+              "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(30d) | summarize Count=count() by Factor, Severity | sort by Count desc"
+            }
+          ],
+          "availability": {
+            "isPreview": true
+          },
+          "connectivityCriteria": [
+            {
+              "type": "HasDataConnectors"
+            }
+          ],
+          "permissions": {
+            "resourceProvider": [
+              {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "Read and Write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                  "write": true,
+                  "read": true,
+                  "delete": false
+                }
+              }
+            ],
+            "customs": [
+              {
+                "name": "SecurityScorecard API Key",
+                "description": "A SecurityScorecard API key with access to the Portfolio and Event History endpoints is required. Generate one from your SecurityScorecard account under **Settings → API**."
+              }
+            ]
+          },
+          "instructionSteps": [
+            {
+              "title": "Step 1 - Obtain credentials",
+              "description": "To connect SecurityScorecard Issues to Microsoft Sentinel, you will need:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key.\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. Find it in the URL when viewing a portfolio (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+            },
+            {
+              "title": "Step 2 - Connect SecurityScorecard Issues to Microsoft Sentinel",
+              "description": "Enter your SecurityScorecard API key and Portfolio ID below.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+              "instructions": [
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "Portfolio ID",
+                    "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                    "type": "text",
+                    "name": "PortfolioId",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "SecurityScorecard API Key",
+                    "placeholder": "Enter your SecurityScorecard API key",
+                    "type": "password",
+                    "name": "SecurityScorecardAPIKey",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "ConnectionToggleButton",
+                  "parameters": {
+                    "connectLabel": "connect",
+                    "name": "connect"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition2')))]",
+      "apiVersion": "2022-01-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "properties": {
+        "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition2'))]",
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition2')]",
+        "kind": "DataConnector",
+        "version": "[variables('dataConnectorCCPVersion')]",
+        "source": {
+          "sourceId": "[variables('_solutionId')]",
+          "name": "[variables('_solutionName')]",
+          "kind": "Solution"
+        },
+        "author": {
+          "name": "SecurityScorecard",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "SecurityScorecard",
+          "email": "integrations@securityscorecard.io",
+          "tier": "Partner",
+          "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+        },
+        "dependencies": {
+          "criteria": [
+            {
+              "version": "[variables('dataConnectorCCPVersion')]",
+              "contentId": "[variables('_dataConnectorContentIdConnections2')]",
+              "kind": "ResourcesDataConnector"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnections2'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnections2')]",
+        "displayName": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+        "contentKind": "ResourcesDataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {
+            "guidValue": {
+              "defaultValue": "[[newGuid()]",
+              "type": "securestring"
+            },
+            "innerWorkspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "connectorDefinitionName": {
+              "defaultValue": "SecurityScorecard Issues (using Sentinel Connector Builder Agent)",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "workspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "dcrConfig": {
+              "defaultValue": {
+                "dataCollectionEndpoint": "data collection Endpoint",
+                "dataCollectionRuleImmutableId": "data collection rule immutableId"
+              },
+              "type": "object"
+            },
+            "PortfolioId": {
+              "defaultValue": "PortfolioId",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "SecurityScorecardAPIKey": {
+              "defaultValue": "SecurityScorecardAPIKey",
+              "type": "securestring",
+              "minLength": 1
+            }
+          },
+          "variables": {
+            "_dataConnectorContentIdConnections2": "[variables('_dataConnectorContentIdConnections2')]"
+          },
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnections2')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentIdConnections2'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnections2')]",
+                "kind": "ResourcesDataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                }
+              }
+            },
+            {
+              "name": "[[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'SecurityScorecardIssuesConnector', parameters('guidValue'))]",
+              "apiVersion": "2023-02-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+              "location": "[parameters('workspace-location')]",
+              "kind": "RestApiPoller",
+              "properties": {
+                "connectorDefinitionName": "SecurityScorecardIssuesConnector",
+                "dataType": "SecurityScorecardIssues_CL",
+                "dcrConfig": {
+                  "streamName": "Custom-SecurityScorecardIssues_CL",
+                  "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
+                  "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]"
+                },
+                "auth": {
+                  "type": "APIKey",
+                  "ApiKey": "[[parameters('SecurityScorecardAPIKey')]",
+                  "ApiKeyName": "Authorization",
+                  "ApiKeyIdentifier": "Token"
+                },
+                "request": {
+                  "apiEndpoint": "[[concat('https://api.securityscorecard.io/portfolios/',parameters('PortfolioId'),'/companies')]",
+                  "httpMethod": "GET",
+                  "rateLimitQPS": 10,
+                  "retryCount": 3,
+                  "timeoutInSeconds": 60,
+                  "queryWindowInMin": 7000,
+                  "headers": {
+                    "Accept": "application/json"
+                  }
+                },
+                "response": {
+                  "format": "json",
+                  "eventsJsonPaths": [
+                    "$.entries[*]"
+                  ]
+                },
+                "stepInfo": {
+                  "stepType": "Nested",
+                  "nextSteps": [
+                    {
+                      "stepId": "fetchDomainIssueHistory",
+                      "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+                    }
+                  ]
+                },
+                "stepCollectorConfigs": {
+                  "fetchDomainIssueHistory": {
+                    "shouldJoinNestedData": false,
+                    "request": {
+                      "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/events",
+                      "httpMethod": "GET",
+                      "queryWindowInMin": 7000,
+                      "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+                      "retryCount": 3,
+                      "timeoutInSeconds": 60,
+                      "queryParameters": {
+                        "date_from": "{_QueryWindowStartTime}",
+                        "date_to": "{_QueryWindowEndTime}"
+                      },
+                      "headers": {
+                        "Accept": "application/json"
+                      }
+                    },
+                    "response": {
+                      "format": "json",
+                      "eventsJsonPaths": [
+                        "$.entries[*]"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','rdc','-', uniqueString(concat(variables('_solutionId'),'-','ResourcesDataConnector','-',variables('_dataConnectorContentIdConnections2'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnectorDefinition3'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition3')]",
+        "displayName": "SecurityScorecard Factor Scores",
+        "contentKind": "DataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition3'))]",
+              "apiVersion": "2022-09-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Customizable",
+              "properties": {
+                "connectorUiConfig": {
+                  "id": "SecurityScorecardFactorConnector",
+                  "title": "SecurityScorecard Factor Scores",
+                  "publisher": "SecurityScorecard",
+                  "logo": "SecurityScorecard.svg",
+                  "descriptionMarkdown": "The SecurityScorecard Factor Scores connector ingests daily per-factor security scores from the [SecurityScorecard](https://securityscorecard.com) API into Microsoft Sentinel. For each company in the specified portfolio, it collects scores across 10 security categories — DNS Health, IP Reputation, Network Security, Application Security, Patching Cadence, Endpoint Security, Social Engineering, Hacker Chatter, Leaked Information, and Cubit Score — from the `/companies/{domain}/history/factors/score` endpoint. Factor scores enable granular trend analysis and alerting on specific security weaknesses.\n\nSupports API Key authentication.\n\nFor more information, visit [SecurityScorecard API Docs](https://securityscorecard.readme.io/reference/introduction).",
+                  "graphQueriesTableName": "SecurityScorecardFactor_CL",
+                  "graphQueries": [
+                    {
+                      "metricName": "Total factor score records received",
+                      "legend": "{{graphQueriesTableName}}",
+                      "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+                    }
+                  ],
+                  "dataTypes": [
+                    {
+                      "name": "{{graphQueriesTableName}}",
+                      "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+                    }
+                  ],
+                  "sampleQueries": [
+                    {
+                      "description": "All factor scores, most recent first",
+                      "query": "{{graphQueriesTableName}} | sort by TimeGenerated desc"
+                    },
+                    {
+                      "description": "Domains with weak network security (last 7 days)",
+                      "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(7d) | mv-expand factor = Factors | extend FactorName = tostring(factor.name), FactorScore = toint(factor.score) | where FactorName == \"network_security\" and FactorScore < 80 | project Domain, FactorScore | sort by FactorScore asc"
+                    },
+                    {
+                      "description": "Factor score trends per domain (last 30 days)",
+                      "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(30d) | mv-expand factor = Factors | extend FactorName = tostring(factor.name), FactorScore = toint(factor.score) | summarize AvgScore = avg(FactorScore) by Domain, FactorName | sort by AvgScore asc"
+                    }
+                  ],
+                  "availability": {
+                    "isPreview": true
+                  },
+                  "connectivityCriteria": [
+                    {
+                      "type": "HasDataConnectors"
+                    }
+                  ],
+                  "permissions": {
+                    "resourceProvider": [
+                      {
+                        "provider": "Microsoft.OperationalInsights/workspaces",
+                        "permissionsDisplayText": "Read and Write permissions are required.",
+                        "providerDisplayName": "Workspace",
+                        "scope": "Workspace",
+                        "requiredPermissions": {
+                          "write": true,
+                          "read": true,
+                          "delete": false
+                        }
+                      }
+                    ],
+                    "customs": [
+                      {
+                        "name": "SecurityScorecard API Key",
+                        "description": "A SecurityScorecard API key with access to the Portfolio and Factor Score History endpoints is required. Generate one from your SecurityScorecard account under **Settings → API**."
+                      }
+                    ]
+                  },
+                  "instructionSteps": [
+                    {
+                      "title": "Step 1 - Obtain credentials",
+                      "description": "To connect SecurityScorecard Factor Scores to Microsoft Sentinel, you will need:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key.\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. Find it in the URL when viewing a portfolio (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+                    },
+                    {
+                      "title": "Step 2 - Connect SecurityScorecard Factor Scores to Microsoft Sentinel",
+                      "description": "Enter your SecurityScorecard API key and Portfolio ID below.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+                      "instructions": [
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "Portfolio ID",
+                            "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                            "type": "text",
+                            "name": "PortfolioId",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "Textbox",
+                          "parameters": {
+                            "label": "SecurityScorecard API Key",
+                            "placeholder": "Enter your SecurityScorecard API key",
+                            "type": "password",
+                            "name": "SecurityScorecardAPIKey",
+                            "validations": {
+                              "required": true
+                            }
+                          }
+                        },
+                        {
+                          "type": "ConnectionToggleButton",
+                          "parameters": {
+                            "connectLabel": "connect",
+                            "name": "connect"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition3')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition3'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnectorDefinition3')]",
+                "kind": "DataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                },
+                "dependencies": {
+                  "criteria": [
+                    {
+                      "version": "[variables('dataConnectorCCPVersion')]",
+                      "contentId": "[variables('_dataConnectorContentIdConnections3')]",
+                      "kind": "ResourcesDataConnector"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SecurityScorecardFactorDCR",
+              "apiVersion": "2022-06-01",
+              "type": "Microsoft.Insights/dataCollectionRules",
+              "location": "[parameters('workspace-location')]",
+              "kind": "Direct",
+              "properties": {
+                "streamDeclarations": {
+                  "Custom-SecurityScorecardFactor_CL": {
+                    "columns": [
+                      {
+                        "name": "date",
+                        "type": "string"
+                      },
+                      {
+                        "name": "domain",
+                        "type": "string"
+                      },
+                      {
+                        "name": "factors",
+                        "type": "dynamic"
+                      }
+                    ]
+                  }
+                },
+                "destinations": {
+                  "logAnalytics": [
+                    {
+                      "workspaceResourceId": "[variables('workspaceResourceId')]",
+                      "name": "clv2ws1"
+                    }
+                  ]
+                },
+                "dataFlows": [
+                  {
+                    "streams": [
+                      "Custom-SecurityScorecardFactor_CL"
+                    ],
+                    "destinations": [
+                      "clv2ws1"
+                    ],
+                    "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, Domain = tostring(domain), Factors = todynamic(factors)",
+                    "outputStream": "Custom-SecurityScorecardFactor_CL"
+                  }
+                ],
+                "dataCollectionEndpointId": "[variables('dataCollectionEndpointId')]"
+              }
+            },
+            {
+              "name": "SecurityScorecardFactor_CL",
+              "apiVersion": "2022-10-01",
+              "type": "Microsoft.OperationalInsights/workspaces/tables",
+              "location": "[parameters('workspace-location')]",
+              "kind": null,
+              "properties": {
+                "schema": {
+                  "name": "SecurityScorecardFactor_CL",
+                  "columns": [
+                    {
+                      "name": "TimeGenerated",
+                      "type": "datetime",
+                      "description": "Timestamp of the factor score entry, mapped from the 'date' field."
+                    },
+                    {
+                      "name": "Domain",
+                      "type": "string",
+                      "description": "The company domain this factor score belongs to, mapped from 'domain'."
+                    },
+                    {
+                      "name": "Factors",
+                      "type": "dynamic",
+                      "description": "Array of factor scores. Each element has 'name' (e.g. 'network_security') and 'score' (0-100). Unpack at query time with mv-expand."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','dc','-', uniqueString(concat(variables('_solutionId'),'-','DataConnector','-',variables('_dataConnectorContentIdConnectorDefinition3'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',variables('_dataConnectorContentIdConnectorDefinition3'))]",
+      "apiVersion": "2022-09-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectorDefinitions",
+      "location": "[parameters('workspace-location')]",
+      "kind": "Customizable",
+      "properties": {
+        "connectorUiConfig": {
+          "id": "SecurityScorecardFactorConnector",
+          "title": "SecurityScorecard Factor Scores",
+          "publisher": "SecurityScorecard",
+          "logo": "SecurityScorecard.svg",
+          "descriptionMarkdown": "The SecurityScorecard Factor Scores connector ingests daily per-factor security scores from the [SecurityScorecard](https://securityscorecard.com) API into Microsoft Sentinel. For each company in the specified portfolio, it collects scores across 10 security categories — DNS Health, IP Reputation, Network Security, Application Security, Patching Cadence, Endpoint Security, Social Engineering, Hacker Chatter, Leaked Information, and Cubit Score — from the `/companies/{domain}/history/factors/score` endpoint. Factor scores enable granular trend analysis and alerting on specific security weaknesses.\n\nSupports API Key authentication.\n\nFor more information, visit [SecurityScorecard API Docs](https://securityscorecard.readme.io/reference/introduction).",
+          "graphQueriesTableName": "SecurityScorecardFactor_CL",
+          "graphQueries": [
+            {
+              "metricName": "Total factor score records received",
+              "legend": "{{graphQueriesTableName}}",
+              "baseQuery": "{{graphQueriesTableName}} | where TimeGenerated > ago(14d) | summarize count() by bin(TimeGenerated, 1d)"
+            }
+          ],
+          "dataTypes": [
+            {
+              "name": "{{graphQueriesTableName}}",
+              "lastDataReceivedQuery": "{{graphQueriesTableName}} | summarize Time = max(TimeGenerated) | where isnotempty(Time)"
+            }
+          ],
+          "sampleQueries": [
+            {
+              "description": "All factor scores, most recent first",
+              "query": "{{graphQueriesTableName}} | sort by TimeGenerated desc"
+            },
+            {
+              "description": "Domains with weak network security (last 7 days)",
+              "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(7d) | mv-expand factor = Factors | extend FactorName = tostring(factor.name), FactorScore = toint(factor.score) | where FactorName == \"network_security\" and FactorScore < 80 | project Domain, FactorScore | sort by FactorScore asc"
+            },
+            {
+              "description": "Factor score trends per domain (last 30 days)",
+              "query": "{{graphQueriesTableName}} | where TimeGenerated > ago(30d) | mv-expand factor = Factors | extend FactorName = tostring(factor.name), FactorScore = toint(factor.score) | summarize AvgScore = avg(FactorScore) by Domain, FactorName | sort by AvgScore asc"
+            }
+          ],
+          "availability": {
+            "isPreview": true
+          },
+          "connectivityCriteria": [
+            {
+              "type": "HasDataConnectors"
+            }
+          ],
+          "permissions": {
+            "resourceProvider": [
+              {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "Read and Write permissions are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                  "write": true,
+                  "read": true,
+                  "delete": false
+                }
+              }
+            ],
+            "customs": [
+              {
+                "name": "SecurityScorecard API Key",
+                "description": "A SecurityScorecard API key with access to the Portfolio and Factor Score History endpoints is required. Generate one from your SecurityScorecard account under **Settings → API**."
+              }
+            ]
+          },
+          "instructionSteps": [
+            {
+              "title": "Step 1 - Obtain credentials",
+              "description": "To connect SecurityScorecard Factor Scores to Microsoft Sentinel, you will need:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key.\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. Find it in the URL when viewing a portfolio (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
+            },
+            {
+              "title": "Step 2 - Connect SecurityScorecard Factor Scores to Microsoft Sentinel",
+              "description": "Enter your SecurityScorecard API key and Portfolio ID below.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+              "instructions": [
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "Portfolio ID",
+                    "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                    "type": "text",
+                    "name": "PortfolioId",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "Textbox",
+                  "parameters": {
+                    "label": "SecurityScorecard API Key",
+                    "placeholder": "Enter your SecurityScorecard API key",
+                    "type": "password",
+                    "name": "SecurityScorecardAPIKey",
+                    "validations": {
+                      "required": true
+                    }
+                  }
+                },
+                {
+                  "type": "ConnectionToggleButton",
+                  "parameters": {
+                    "connectLabel": "connect",
+                    "name": "connect"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnectorDefinition3')))]",
+      "apiVersion": "2022-01-01-preview",
+      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+      "properties": {
+        "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectorDefinitions', variables('_dataConnectorContentIdConnectorDefinition3'))]",
+        "contentId": "[variables('_dataConnectorContentIdConnectorDefinition3')]",
+        "kind": "DataConnector",
+        "version": "[variables('dataConnectorCCPVersion')]",
+        "source": {
+          "sourceId": "[variables('_solutionId')]",
+          "name": "[variables('_solutionName')]",
+          "kind": "Solution"
+        },
+        "author": {
+          "name": "SecurityScorecard",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "SecurityScorecard",
+          "email": "integrations@securityscorecard.io",
+          "tier": "Partner",
+          "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+        },
+        "dependencies": {
+          "criteria": [
+            {
+              "version": "[variables('dataConnectorCCPVersion')]",
+              "contentId": "[variables('_dataConnectorContentIdConnections3')]",
+              "kind": "ResourcesDataConnector"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnections3'), variables('dataConnectorCCPVersion'))]",
+      "location": "[parameters('workspace-location')]",
+      "dependsOn": [
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+      ],
+      "properties": {
+        "contentId": "[variables('_dataConnectorContentIdConnections3')]",
+        "displayName": "SecurityScorecard Factor Scores",
+        "contentKind": "ResourcesDataConnector",
+        "mainTemplate": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "[variables('dataConnectorCCPVersion')]",
+          "parameters": {
+            "guidValue": {
+              "defaultValue": "[[newGuid()]",
+              "type": "securestring"
+            },
+            "innerWorkspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "connectorDefinitionName": {
+              "defaultValue": "SecurityScorecard Factor Scores",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "workspace": {
+              "defaultValue": "[parameters('workspace')]",
+              "type": "securestring"
+            },
+            "dcrConfig": {
+              "defaultValue": {
+                "dataCollectionEndpoint": "data collection Endpoint",
+                "dataCollectionRuleImmutableId": "data collection rule immutableId"
+              },
+              "type": "object"
+            },
+            "PortfolioId": {
+              "defaultValue": "PortfolioId",
+              "type": "securestring",
+              "minLength": 1
+            },
+            "SecurityScorecardAPIKey": {
+              "defaultValue": "SecurityScorecardAPIKey",
+              "type": "securestring",
+              "minLength": 1
+            }
+          },
+          "variables": {
+            "_dataConnectorContentIdConnections3": "[variables('_dataConnectorContentIdConnections3')]"
+          },
+          "resources": [
+            {
+              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('DataConnector-', variables('_dataConnectorContentIdConnections3')))]",
+              "apiVersion": "2022-01-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
+              "properties": {
+                "parentId": "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/dataConnectors', variables('_dataConnectorContentIdConnections3'))]",
+                "contentId": "[variables('_dataConnectorContentIdConnections3')]",
+                "kind": "ResourcesDataConnector",
+                "version": "[variables('dataConnectorCCPVersion')]",
+                "source": {
+                  "sourceId": "[variables('_solutionId')]",
+                  "name": "[variables('_solutionName')]",
+                  "kind": "Solution"
+                },
+                "author": {
+                  "name": "SecurityScorecard",
+                  "email": "[variables('_email')]"
+                },
+                "support": {
+                  "name": "SecurityScorecard",
+                  "email": "integrations@securityscorecard.io",
+                  "tier": "Partner",
+                  "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+                }
+              }
+            },
+            {
+              "name": "[[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'SecurityScorecardFactorConnector', parameters('guidValue'))]",
+              "apiVersion": "2023-02-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+              "location": "[parameters('workspace-location')]",
+              "kind": "RestApiPoller",
+              "properties": {
+                "connectorDefinitionName": "SecurityScorecardFactorConnector",
+                "dataType": "SecurityScorecardFactor_CL",
+                "dcrConfig": {
+                  "streamName": "Custom-SecurityScorecardFactor_CL",
+                  "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
+                  "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]"
+                },
+                "auth": {
+                  "type": "APIKey",
+                  "ApiKey": "[[parameters('SecurityScorecardAPIKey')]",
+                  "ApiKeyName": "Authorization",
+                  "ApiKeyIdentifier": "Token"
+                },
+                "request": {
+                  "apiEndpoint": "[[concat('https://api.securityscorecard.io/portfolios/',parameters('PortfolioId'),'/companies')]",
+                  "httpMethod": "GET",
+                  "rateLimitQPS": 10,
+                  "retryCount": 3,
+                  "timeoutInSeconds": 60,
+                  "queryWindowInMin": 7000,
+                  "queryTimeFormat": "yyyy-MM-dd",
+                  "startTimeAttributeName": "from",
+                  "endTimeAttributeName": "to",
+                  "headers": {
+                    "Accept": "application/json"
+                  }
+                },
+                "response": {
+                  "format": "json",
+                  "eventsJsonPaths": [
+                    "$.entries[*]"
+                  ]
+                },
+                "stepInfo": {
+                  "stepType": "Nested",
+                  "nextSteps": [
+                    {
+                      "stepId": "fetchDomainFactorScores",
+                      "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+                    }
+                  ]
+                },
+                "stepCollectorConfigs": {
+                  "fetchDomainFactorScores": {
+                    "shouldJoinNestedData": false,
+                    "request": {
+                      "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/factors/score",
+                      "httpMethod": "GET",
+                      "retryCount": 3,
+                      "timeoutInSeconds": 60,
+                      "headers": {
+                        "Accept": "application/json"
+                      }
+                    },
+                    "response": {
+                      "format": "json",
+                      "eventsJsonPaths": [
+                        "$.entries[*]"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "packageKind": "Solution",
+        "packageVersion": "[variables('_solutionVersion')]",
+        "packageName": "[variables('_solutionName')]",
+        "contentProductId": "[concat(take(variables('_solutionId'), 50),'-','rdc','-', uniqueString(concat(variables('_solutionId'),'-','ResourcesDataConnector','-',variables('_dataConnectorContentIdConnections3'),'-', variables('dataConnectorCCPVersion'))))]",
+        "packageId": "[variables('_solutionId')]",
+        "contentSchemaVersion": "3.0.0",
+        "version": "[variables('dataConnectorCCPVersion')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/contentPackages",
+      "apiVersion": "2023-04-01-preview",
+      "location": "[parameters('workspace-location')]",
+      "properties": {
+        "version": "3.0.0",
+        "kind": "Solution",
+        "contentSchemaVersion": "3.0.0",
+        "displayName": "SecurityScorecard Cybersecurity Ratings V2",
+        "publisherDisplayName": "SecurityScorecard",
+        "descriptionHtml": "<p><strong>Note:</strong> Please refer to the following before installing the solution:</p>\n<p>• Review the solution <a href=\"https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/SecurityScorecard%20Cybersecurity%20Ratings%20V2/ReleaseNotes.md\">Release Notes</a></p>\n<p>• There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</p>\n<p>The <a href=\"https://securityscorecard.com\">SecurityScorecard</a> Cybersecurity Ratings V2 solution provides three Codeless Connector Framework (CCF) data connectors that ingest daily cybersecurity ratings data from the SecurityScorecard API into Microsoft Sentinel.</p>\n<p><strong>Connectors included:</strong></p>\n<ul>\n<li><strong>SecurityScorecard Ratings</strong> — Daily overall score history for every company in a monitored portfolio (<code>/companies/{domain}/history/score</code>).</li>\n<li><strong>SecurityScorecard Issues</strong> — Daily security issue and event history, recording when issues appear, change severity, or resolve (<code>/companies/{domain}/history/events</code>).</li>\n<li><strong>SecurityScorecard Factor Scores</strong> — Daily per-factor scores across 10 security categories (DNS Health, IP Reputation, Network Security, Application Security, Patching Cadence, Endpoint Security, Social Engineering, Hacker Chatter, Leaked Information, Cubit Score) for every portfolio company (<code>/companies/{domain}/history/factors/score</code>).</li>\n</ul>\n<p>All three connectors discover monitored companies automatically from a specified SecurityScorecard portfolio, requiring only an API key and portfolio ID at setup time.</p>\n<p><strong>Data Connectors:</strong> 3</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
+        "contentKind": "Solution",
+        "contentProductId": "[variables('_solutioncontentProductId')]",
+        "id": "[variables('_solutioncontentProductId')]",
+        "icon": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/SecurityScorecard-Cybersecurity-Ratings.svg\" width=\"75px\" height=\"75px\">",
+        "contentId": "[variables('_solutionId')]",
+        "parentId": "[variables('_solutionId')]",
+        "source": {
+          "kind": "Solution",
+          "name": "SecurityScorecard Cybersecurity Ratings V2",
+          "sourceId": "[variables('_solutionId')]"
+        },
+        "author": {
+          "name": "SecurityScorecard",
+          "email": "[variables('_email')]"
+        },
+        "support": {
+          "name": "SecurityScorecard",
+          "email": "integrations@securityscorecard.io",
+          "tier": "Partner",
+          "link": "https://support.securityscorecard.com/hc/en-us/requests/new"
+        },
+        "dependencies": {
+          "operator": "AND",
+          "criteria": [
+            {
+              "kind": "DataConnector",
+              "contentId": "[variables('_dataConnectorContentIdConnections1')]",
+              "version": "[variables('dataConnectorCCPVersion')]"
+            },
+            {
+              "kind": "DataConnector",
+              "contentId": "[variables('_dataConnectorContentIdConnections2')]",
+              "version": "[variables('dataConnectorCCPVersion')]"
+            },
+            {
+              "kind": "DataConnector",
+              "contentId": "[variables('_dataConnectorContentIdConnections3')]",
+              "version": "[variables('dataConnectorCCPVersion')]"
+            }
+          ]
+        },
+        "firstPublishDate": "2026-07-07",
+        "providers": [
+          "SecurityScorecard"
+        ],
+        "categories": {
+          "domains": [
+            "Security - Vulnerability Management",
+            "Security - Threat Intelligence"
+          ]
+        }
+      },
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('_solutionId'))]"
+    }
+  ],
+  "outputs": {}
+}

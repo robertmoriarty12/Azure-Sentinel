@@ -1,0 +1,76 @@
+[
+  {
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "apiVersion": "2023-02-01-preview",
+    "name": "SecurityScorecardIssuesConnector",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardIssuesConnector",
+      "dataType": "SecurityScorecardIssues_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardIssues_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "APIKey",
+        "ApiKey": "{{SecurityScorecardAPIKey}}",
+        "ApiKeyName": "Authorization",
+        "ApiKeyIdentifier": "Token"
+      },
+      "request": {
+        "apiEndpoint": "https://api.securityscorecard.io/portfolios/{{PortfolioId}}/companies",
+        "httpMethod": "GET",
+        "rateLimitQPS": 10,
+        "retryCount": 3,
+        "timeoutInSeconds": 60,
+        "queryWindowInMin": 7000,
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "format": "json",
+        "eventsJsonPaths": [
+          "$.entries[*]"
+        ]
+      },
+      "stepInfo": {
+        "stepType": "Nested",
+        "nextSteps": [
+          {
+            "stepId": "fetchDomainIssueHistory",
+            "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+          }
+        ]
+      },
+      "stepCollectorConfigs": {
+        "fetchDomainIssueHistory": {
+          "shouldJoinNestedData": false,
+          "request": {
+            "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/events",
+            "httpMethod": "GET",
+            "queryWindowInMin": 7000,
+            "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+            "retryCount": 3,
+            "timeoutInSeconds": 60,
+            "queryParameters": {
+              "date_from": "{_QueryWindowStartTime}",
+              "date_to": "{_QueryWindowEndTime}"
+            },
+            "headers": {
+              "Accept": "application/json"
+            }
+          },
+          "response": {
+            "format": "json",
+            "eventsJsonPaths": [
+              "$.entries[*]"
+            ]
+          }
+        }
+      }
+    }
+  }
+]

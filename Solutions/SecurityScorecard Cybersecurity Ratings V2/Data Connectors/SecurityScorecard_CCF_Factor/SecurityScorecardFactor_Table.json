@@ -1,0 +1,29 @@
+[
+  {
+    "name": "SecurityScorecardFactor_CL",
+    "apiVersion": "2022-10-01",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "properties": {
+      "schema": {
+        "name": "SecurityScorecardFactor_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime",
+            "description": "Timestamp of the factor score entry, mapped from the 'date' field."
+          },
+          {
+            "name": "Domain",
+            "type": "string",
+            "description": "The company domain this factor score belongs to, mapped from 'domain'."
+          },
+          {
+            "name": "Factors",
+            "type": "dynamic",
+            "description": "Array of factor scores. Each element has 'name' (e.g. 'network_security') and 'score' (0-100). Unpack at query time with mv-expand."
+          }
+        ]
+      }
+    }
+  }
+]

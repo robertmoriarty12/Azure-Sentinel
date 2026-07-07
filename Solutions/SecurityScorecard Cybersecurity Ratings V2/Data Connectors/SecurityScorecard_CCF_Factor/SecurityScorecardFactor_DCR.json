@@ -1,0 +1,35 @@
+{
+  "name": "SecurityScorecardFactorDCR",
+  "apiVersion": "2022-06-01",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "kind": "Direct",
+  "location": "{{location}}",
+  "tags": {},
+  "properties": {
+    "streamDeclarations": {
+      "Custom-SecurityScorecardFactor_CL": {
+        "columns": [
+          { "name": "date",    "type": "string"  },
+          { "name": "domain",  "type": "string"  },
+          { "name": "factors", "type": "dynamic" }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "name": "clv2ws1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": ["Custom-SecurityScorecardFactor_CL"],
+        "destinations": ["clv2ws1"],
+        "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, Domain = tostring(domain), Factors = todynamic(factors)",
+        "outputStream": "Custom-SecurityScorecardFactor_CL"
+      }
+    ]
+  }
+}

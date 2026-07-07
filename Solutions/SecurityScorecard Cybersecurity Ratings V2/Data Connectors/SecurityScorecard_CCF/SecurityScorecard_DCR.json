@@ -1,0 +1,46 @@
+{
+    "name": "SecurityScorecardDCR",
+    "apiVersion": "2024-03-11",
+    "type": "Microsoft.Insights/dataCollectionRules",
+    "kind": "Direct",
+    "location": "{{location}}",
+    "tags": {
+        "createdBy": "SentinelCodelessConnector"
+    },
+    "properties": {
+        "streamDeclarations": {
+            "Custom-SecurityScorecardRatings_CL": {
+                "columns": [
+                    {
+                        "name": "domain",
+                        "type": "string"
+                    },
+                    {
+                        "name": "score",
+                        "type": "real"
+                    },
+                    {
+                        "name": "date",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "destinations": {
+            "logAnalytics": [
+                {
+                    "workspaceResourceId": "{{workspaceResourceId}}",
+                    "name": "clv2ws1"
+                }
+            ]
+        },
+        "dataFlows": [
+            {
+                "streams": ["Custom-SecurityScorecardRatings_CL"],
+                "destinations": ["clv2ws1"],
+                "outputStream": "Custom-SecurityScorecardRatings_CL",
+                "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, Domain = domain, Score = score"
+            }
+        ]
+    }
+}

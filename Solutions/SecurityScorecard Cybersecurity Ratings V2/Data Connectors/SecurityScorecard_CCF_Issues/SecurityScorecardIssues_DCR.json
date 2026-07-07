@@ -1,0 +1,43 @@
+{
+  "name": "SecurityScorecardIssuesDCR",
+  "apiVersion": "2022-06-01",
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "kind": "Direct",
+  "location": "{{location}}",
+  "tags": {},
+  "properties": {
+    "streamDeclarations": {
+      "Custom-SecurityScorecardIssues_CL": {
+        "columns": [
+          { "name": "date",               "type": "string"  },
+          { "name": "id",                 "type": "int"     },
+          { "name": "_domain",            "type": "string"  },
+          { "name": "event_type",         "type": "string"  },
+          { "name": "group_status",       "type": "string"  },
+          { "name": "issue_count",        "type": "int"     },
+          { "name": "total_score_impact", "type": "real"    },
+          { "name": "issue_type",         "type": "string"  },
+          { "name": "severity",           "type": "string"  },
+          { "name": "factor",             "type": "string"  },
+          { "name": "detail_url",         "type": "string"  }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "name": "clv2ws1"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": ["Custom-SecurityScorecardIssues_CL"],
+        "destinations": ["clv2ws1"],
+        "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, EventId = id, Domain = _domain, EventType = event_type, GroupStatus = group_status, IssueCount = issue_count, TotalScoreImpact = total_score_impact, IssueType = issue_type, Severity = severity, Factor = factor, DetailUrl = detail_url",
+        "outputStream": "Custom-SecurityScorecardIssues_CL"
+      }
+    ]
+  }
+}

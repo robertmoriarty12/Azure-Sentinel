@@ -1,0 +1,16 @@
+{
+	"Name": "SecurityScorecard Cybersecurity Ratings V2",
+	"Author": "SecurityScorecard - integrations@securityscorecard.io",
+	"Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/SecurityScorecard-Cybersecurity-Ratings.svg\" width=\"75px\" height=\"75px\">",
+	"Description": "The [SecurityScorecard](https://securityscorecard.com) Cybersecurity Ratings V2 solution provides three Codeless Connector Framework (CCF) data connectors that ingest daily cybersecurity ratings data from the SecurityScorecard API into Microsoft Sentinel.\n\n**Connectors included:**\n\n- **SecurityScorecard Ratings** — Daily overall score history for every company in a monitored portfolio (`/companies/{domain}/history/score`).\n- **SecurityScorecard Issues** — Daily security issue and event history, recording when issues appear, change severity, or resolve (`/companies/{domain}/history/events`).\n- **SecurityScorecard Factor Scores** — Daily per-factor scores across 10 security categories (DNS Health, IP Reputation, Network Security, Application Security, Patching Cadence, Endpoint Security, Social Engineering, Hacker Chatter, Leaked Information, Cubit Score) for every portfolio company (`/companies/{domain}/history/factors/score`).\n\nAll three connectors discover monitored companies automatically from a specified SecurityScorecard portfolio, requiring only an API key and portfolio ID at setup time.",
+	"Data Connectors": [
+		"Data Connectors/SecurityScorecard_CCF/SecurityScorecard_ConnectorDefinition.json",
+		"Data Connectors/SecurityScorecard_CCF_Issues/SecurityScorecardIssues_ConnectorDefinition.json",
+		"Data Connectors/SecurityScorecard_CCF_Factor/SecurityScorecardFactor_ConnectorDefinition.json"
+	],
+	"BasePath": "C:\\Azure-Sentinel\\Solutions\\SecurityScorecard Cybersecurity Ratings V2",
+	"Version": "1.0.0",
+	"Metadata": "SolutionMetadata.json",
+	"TemplateSpec": true,
+	"Is1PConnector": false
+}

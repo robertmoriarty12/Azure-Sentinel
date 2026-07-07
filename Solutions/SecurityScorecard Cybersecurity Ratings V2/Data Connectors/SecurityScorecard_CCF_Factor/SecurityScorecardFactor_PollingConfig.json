@@ -1,0 +1,73 @@
+[
+  {
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "apiVersion": "2023-02-01-preview",
+    "name": "SecurityScorecardFactorConnector",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "SecurityScorecardFactorConnector",
+      "dataType": "SecurityScorecardFactor_CL",
+      "dcrConfig": {
+        "streamName": "Custom-SecurityScorecardFactor_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "APIKey",
+        "ApiKey": "{{SecurityScorecardAPIKey}}",
+        "ApiKeyName": "Authorization",
+        "ApiKeyIdentifier": "Token"
+      },
+      "request": {
+        "apiEndpoint": "https://api.securityscorecard.io/portfolios/{{PortfolioId}}/companies",
+        "httpMethod": "GET",
+        "rateLimitQPS": 10,
+        "retryCount": 3,
+        "timeoutInSeconds": 60,
+        "queryWindowInMin": 7000,
+        "queryTimeFormat": "yyyy-MM-dd",
+        "startTimeAttributeName": "from",
+        "endTimeAttributeName": "to",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "format": "json",
+        "eventsJsonPaths": [
+          "$.entries[*]"
+        ]
+      },
+      "stepInfo": {
+        "stepType": "Nested",
+        "nextSteps": [
+          {
+            "stepId": "fetchDomainFactorScores",
+            "stepPlaceholdersParsingKql": "source | project res = parse_json(data) | project domainPlaceholder = tostring(res.domain)"
+          }
+        ]
+      },
+      "stepCollectorConfigs": {
+        "fetchDomainFactorScores": {
+          "shouldJoinNestedData": false,
+          "request": {
+            "apiEndpoint": "https://api.securityscorecard.io/companies/$domainPlaceholder$/history/factors/score",
+            "httpMethod": "GET",
+            "retryCount": 3,
+            "timeoutInSeconds": 60,
+            "headers": {
+              "Accept": "application/json"
+            }
+          },
+          "response": {
+            "format": "json",
+            "eventsJsonPaths": [
+              "$.entries[*]"
+            ]
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "name": "SecurityScorecardIssues_CL",
+    "apiVersion": "2022-10-01",
+    "type": "Microsoft.OperationalInsights/workspaces/tables",
+    "properties": {
+      "schema": {
+        "name": "SecurityScorecardIssues_CL",
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime",
+            "description": "Timestamp of the event, mapped from the 'date' field."
+          },
+          {
+            "name": "EventId",
+            "type": "int",
+            "description": "Unique numeric identifier for the event, mapped from 'id'."
+          },
+          {
+            "name": "Domain",
+            "type": "string",
+            "description": "The company domain this issue belongs to, injected from the _domain placeholder."
+          },
+          {
+            "name": "EventType",
+            "type": "string",
+            "description": "Category of the event, mapped from 'event_type' (e.g. 'issues')."
+          },
+          {
+            "name": "GroupStatus",
+            "type": "string",
+            "description": "Whether the issue is currently active or departed, mapped from 'group_status'."
+          },
+          {
+            "name": "IssueCount",
+            "type": "int",
+            "description": "Number of issues detected in this event, mapped from 'issue_count'."
+          },
+          {
+            "name": "TotalScoreImpact",
+            "type": "real",
+            "description": "Aggregate score impact of this event, mapped from 'total_score_impact'."
+          },
+          {
+            "name": "IssueType",
+            "type": "string",
+            "description": "Specific issue type identifier, mapped from 'issue_type' (e.g. 'tls_ocsp_stapling')."
+          },
+          {
+            "name": "Severity",
+            "type": "string",
+            "description": "Severity level of the issue: info, low, medium, high, or critical."
+          },
+          {
+            "name": "Factor",
+            "type": "string",
+            "description": "Security factor category, mapped from 'factor' (e.g. 'network_security')."
+          },
+          {
+            "name": "DetailUrl",
+            "type": "string",
+            "description": "URL linking to the full issue detail in the SecurityScorecard API, mapped from 'detail_url'."
+          }
+        ]
+      }
+    }
+  }
+]
