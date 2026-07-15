@@ -2,12 +2,15 @@
   {
     "type": "Microsoft.SecurityInsights/dataConnectors",
     "apiVersion": "2023-02-01-preview",
-    "name": "SecurityScorecardRatingsConnector",
+    "name": "[[concat(parameters('innerWorkspace'), '/Microsoft.SecurityInsights/', 'SecurityScorecardRatings', uniqueString(parameters('PortfolioId')))]",
     "location": "{{location}}",
     "kind": "RestApiPoller",
     "properties": {
       "connectorDefinitionName": "SecurityScorecardCybersecurityRatings",
       "dataType": "SecurityScorecardRatings_CL",
+      "addOnAttributes": {
+        "PortfolioId": "[[parameters('PortfolioId')]"
+      },
       "dcrConfig": {
         "streamName": "Custom-SecurityScorecardRatings_CL",
         "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
@@ -20,7 +23,7 @@
         "ApiKeyIdentifier": "Token"
       },
       "request": {
-        "apiEndpoint": "https://api.securityscorecard.io/portfolios/{{PortfolioId}}/companies",
+        "apiEndpoint": "[[concat('https://api.securityscorecard.io/portfolios/', parameters('PortfolioId'), '/companies')]",
         "httpMethod": "GET",
         "rateLimitQPS": 10,
         "retryCount": 3,

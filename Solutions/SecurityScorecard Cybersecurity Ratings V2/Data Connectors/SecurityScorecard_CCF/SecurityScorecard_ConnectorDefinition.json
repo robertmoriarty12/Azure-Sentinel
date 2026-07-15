@@ -82,42 +82,63 @@
             },
             "instructionSteps": [
                 {
-                    "title": "Step 1 - Obtain credentials",
-                    "description": "To connect SecurityScorecard to Microsoft Sentinel, you will need the following:\n\n1. **API Key** — In the SecurityScorecard platform, navigate to **My Settings → API** and generate or copy your API key. [See documentation](https://securityscorecard.readme.io/reference/introduction)\n2. **Portfolio ID** — The unique identifier of the portfolio you want to monitor. You can find it in the URL when viewing a portfolio on the SecurityScorecard platform (e.g., `https://platform.securityscorecard.io/#/portfolios/<portfolio-id>`)."
-                },
-                {
-                    "title": "Step 2 - Connect SecurityScorecard to Microsoft Sentinel",
-                    "description": "Enter your SecurityScorecard API key and Portfolio ID below. The connector will poll daily score history for every company in that portfolio.\n\n>**NOTE:** Your API key is stored securely as a workspace secret and is never logged.",
+                    "title": "Connect SecurityScorecard Cybersecurity Ratings to Microsoft Sentinel",
+                    "description": "Add one connection per SecurityScorecard portfolio. Each row below represents one monitored portfolio.",
                     "instructions": [
                         {
-                            "type": "Textbox",
+                            "type": "DataConnectorsGrid",
                             "parameters": {
-                                "label": "API Key",
-                                "placeholder": "Enter your SecurityScorecard API key",
-                                "type": "password",
-                                "name": "SecurityScorecardAPIKey",
-                                "validations": {
-                                    "required": true
-                                }
+                                "mapping": [
+                                    {
+                                        "columnName": "Portfolio ID",
+                                        "columnValue": "properties.addOnAttributes.PortfolioId"
+                                    }
+                                ],
+                                "menuItems": [
+                                    "DeleteConnector"
+                                ]
                             }
                         },
                         {
-                            "type": "Textbox",
+                            "type": "ContextPane",
                             "parameters": {
-                                "label": "Portfolio ID",
-                                "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
-                                "type": "text",
-                                "name": "PortfolioId",
-                                "validations": {
-                                    "required": true
-                                }
-                            }
-                        },
-                        {
-                            "type": "ConnectionToggleButton",
-                            "parameters": {
-                                "connectLabel": "connect",
-                                "name": "connect"
+                                "isPrimary": true,
+                                "label": "Add Portfolio",
+                                "title": "Add Portfolio",
+                                "subtitle": "Connect a SecurityScorecard portfolio to Microsoft Sentinel",
+                                "contextPaneType": "DataConnectorsContextPane",
+                                "instructionSteps": [
+                                    {
+                                        "title": "Portfolio credentials",
+                                        "description": "Enter your API key and the Portfolio ID to monitor. Find your API key in the SecurityScorecard platform under My Settings > API. Find the Portfolio ID in the portfolio URL (e.g. https://platform.securityscorecard.io/#/portfolios/<portfolio-id>).",
+                                        "instructions": [
+                                            {
+                                                "type": "Textbox",
+                                                "parameters": {
+                                                    "label": "API Key",
+                                                    "placeholder": "Enter your SecurityScorecard API key",
+                                                    "type": "password",
+                                                    "name": "SecurityScorecardAPIKey",
+                                                    "validations": {
+                                                        "required": true
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "Textbox",
+                                                "parameters": {
+                                                    "label": "Portfolio ID",
+                                                    "placeholder": "d733f77e-60de-5d23-b386-a5aad26fcdc3",
+                                                    "type": "text",
+                                                    "name": "PortfolioId",
+                                                    "validations": {
+                                                        "required": true
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         }
                     ]

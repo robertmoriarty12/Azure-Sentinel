@@ -2,12 +2,15 @@
   {
     "type": "Microsoft.SecurityInsights/dataConnectors",
     "apiVersion": "2023-02-01-preview",
-    "name": "SecurityScorecardFactorConnector",
+    "name": "[[concat(parameters('innerWorkspace'), '/Microsoft.SecurityInsights/', 'SecurityScorecardFactor', uniqueString(parameters('PortfolioId')))]",
     "location": "{{location}}",
     "kind": "RestApiPoller",
     "properties": {
       "connectorDefinitionName": "SecurityScorecardFactorConnector",
       "dataType": "SecurityScorecardFactor_CL",
+      "addOnAttributes": {
+        "PortfolioId": "[[parameters('PortfolioId')]"
+      },
       "dcrConfig": {
         "streamName": "Custom-SecurityScorecardFactor_CL",
         "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
@@ -20,7 +23,7 @@
         "ApiKeyIdentifier": "Token"
       },
       "request": {
-        "apiEndpoint": "https://api.securityscorecard.io/portfolios/{{PortfolioId}}/companies",
+        "apiEndpoint": "[[concat('https://api.securityscorecard.io/portfolios/', parameters('PortfolioId'), '/companies')]",
         "httpMethod": "GET",
         "rateLimitQPS": 10,
         "retryCount": 3,
