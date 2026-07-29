@@ -16,7 +16,7 @@
     "Solutions/Silverfort/Analytic Rules/User_Brute_Force.yaml"
   ],
   "BasePath": "C:\\GitHub\\Azure-Sentinel",
-  "Version": "3.0.1",
+  "Version": "3.0.2",
   "Metadata": "SolutionMetadata.json",
   "TemplateSpec": true,
   "Is1Pconnector": false
