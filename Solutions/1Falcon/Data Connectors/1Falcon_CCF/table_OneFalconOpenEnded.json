@@ -1,0 +1,34 @@
+{
+  "name": "OneFalconOpenEnded_CL",
+  "type": "Microsoft.OperationalInsights/workspaces/tables",
+  "apiVersion": "2022-10-01",
+  "tags": {
+    "StreamName": "Custom-OneFalconOpenEnded_CL",
+    "DataSource": "1Falcon",
+    "Category": "Security"
+  },
+  "properties": {
+    "retentionInDays": 90,
+    "schema": {
+      "name": "OneFalconOpenEnded_CL",
+      "description": "1Falcon CCF checkpoint test events, open-ended start-time-only query connection.",
+      "columns": [
+        {
+          "name": "TimeGenerated",
+          "type": "datetime",
+          "isDefaultDisplay": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "description": "Test event identifier returned by the mock API."
+        },
+        {
+          "name": "Message",
+          "type": "string",
+          "description": "Test event message returned by the mock API."
+        }
+      ]
+    }
+  }
+}

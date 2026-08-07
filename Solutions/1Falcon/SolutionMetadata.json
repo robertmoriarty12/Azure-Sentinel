@@ -1,0 +1,15 @@
+{
+  "publisherId": "microsoftsentinelcommunity",
+  "offerId": "azure-sentinel-solution-1falcon",
+  "firstPublishDate": "2026-07-31",
+  "providers": ["Microsoft"],
+  "categories": {
+    "domains": ["Platform"]
+  },
+  "support": {
+    "name": "Microsoft Corporation",
+    "email": "support@microsoft.com",
+    "tier": "Microsoft",
+    "link": "https://support.microsoft.com"
+  }
+}

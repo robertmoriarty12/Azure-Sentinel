@@ -1,0 +1,47 @@
+{
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2022-06-01",
+  "name": "1Falcon-DCR",
+  "location": "{{location}}",
+  "properties": {
+    "dataCollectionEndpointId": "{{dataCollectionEndpoint}}",
+    "streamDeclarations": {
+      "Custom-OneFalconPaired_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "id",            "type": "string" },
+          { "name": "message",       "type": "string" }
+        ]
+      },
+      "Custom-OneFalconOpenEnded_CL": {
+        "columns": [
+          { "name": "TimeGenerated", "type": "datetime" },
+          { "name": "id",            "type": "string" },
+          { "name": "message",       "type": "string" }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "name": "sentinel-workspace"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [ "Custom-OneFalconPaired_CL" ],
+        "destinations": [ "sentinel-workspace" ],
+        "transformKql": "source | extend TimeGenerated = now()",
+        "outputStream": "Custom-OneFalconPaired_CL"
+      },
+      {
+        "streams": [ "Custom-OneFalconOpenEnded_CL" ],
+        "destinations": [ "sentinel-workspace" ],
+        "transformKql": "source | extend TimeGenerated = now()",
+        "outputStream": "Custom-OneFalconOpenEnded_CL"
+      }
+    ]
+  }
+}

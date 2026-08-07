@@ -1,0 +1,48 @@
+[
+  {
+    "type": "Microsoft.SecurityInsights/dataConnectors",
+    "apiVersion": "2024-09-01",
+    "name": "1FalconPairedBackfill",
+    "location": "{{location}}",
+    "kind": "RestApiPoller",
+    "properties": {
+      "connectorDefinitionName": "1FalconConnector",
+      "dataType": "OneFalconPaired_CL",
+      "dcrConfig": {
+        "streamName": "Custom-OneFalconPaired_CL",
+        "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+        "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+      },
+      "auth": {
+        "type": "APIKey",
+        "ApiKey": "{{ApiKey}}",
+        "ApiKeyName": "x-functions-key"
+      },
+      "request": {
+        "apiEndpoint": "{{mockApiBaseUrl}}/paired",
+        "httpMethod": "GET",
+        "queryWindowInMin": 5,
+        "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+        "queryParameters": {
+          "from": "{_QueryWindowStartTime}",
+          "to": "{_QueryWindowEndTime}"
+        },
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "eventsJsonPaths": [
+          "$.events"
+        ],
+        "format": "json"
+      },
+      "backfill": {
+        "isEnabled": true,
+        "queryWindowInMin": 240,
+        "startTimeUtc": "[[parameters('backfillStartTime')]",
+        "endTimeUtc": "[[parameters('backfillEndTime')]"
+      }
+    }
+  }
+]

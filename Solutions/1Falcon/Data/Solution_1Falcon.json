@@ -1,0 +1,14 @@
+{
+  "Name": "1Falcon",
+  "Author": "Internal Test - support@microsoft.com",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "1Falcon is an internal, throwaway CCF (Codeless Connector Framework) test harness used to observe how RestApiPoller connectors compute query time windows and apply initialCheckpointTimeUtc. It is not intended for production use or marketplace distribution.\n\n**Underlying Microsoft Technologies used:**\n\nThis solution takes a dependency on the following technologies, and some of these dependencies either may be in [Preview](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) state or might result in additional ingestion or operational costs:\n\na. [Codeless Connector Framework (CCF)](https://learn.microsoft.com/azure/sentinel/create-codeless-connector)\n\nb. [Log Ingestion API](https://docs.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview)\n\nc. [Data Collection Rules (DCR)](https://docs.microsoft.com/azure/azure-monitor/essentials/data-collection-rule-overview)",
+  "Data Connectors": [
+    "Data Connectors/1Falcon_CCF/1Falcon_ConnectorDefinition.json"
+  ],
+  "BasePath": "C:\\git\\Azure-Sentinel\\Solutions\\1Falcon",
+  "Version": "1.0.0",
+  "Metadata": "SolutionMetadata.json",
+  "TemplateSpec": false,
+  "Is1PConnector": false
+}
