@@ -1,0 +1,21 @@
+{
+  "Name": "CCFObservability",
+  "Author": "Microsoft",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "A controllable mock data source for testing the Connector Diagnostics Agent in Microsoft Security Copilot. Includes an Azure Function App with error-injection switch endpoints and a fully configured CCF RestApiPoller connector. Use the switch endpoints to force specific connector errors (invalid API key, HTTP errors, empty payloads, latency, pagination loops) and observe how the Diagnostics Agent surfaces and resolves them.",
+  "WorkbookDescription": [],
+  "Workbooks": [],
+  "Analytic Rules": [],
+  "Playbooks": [],
+  "Hunting Queries": [],
+  "Data Connectors": [
+    "Data Connectors/CCFObservability_CCF/CCFObservability_ConnectorDefinition.json"
+  ],
+  "Parsers": [],
+  "Watchlists": [],
+  "BasePath": "C:\\git\\Azure-Sentinel\\Tools\\CCF-Observability",
+  "Version": "1.0.0",
+  "Metadata": "SolutionMetadata.json",
+  "TemplateSpec": true,
+  "Is1PConnector": false
+}

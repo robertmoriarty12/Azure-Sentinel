@@ -1,0 +1,110 @@
+{
+  "name": "CCFObservabilityConnector",
+  "apiVersion": "2022-09-01-preview",
+  "type": "Microsoft.SecurityInsights/dataConnectorDefinitions",
+  "location": "{{location}}",
+  "kind": "Customizable",
+  "availability": {
+    "isPreview": true
+  },
+  "properties": {
+    "connectorUiConfig": {
+      "id": "CCFObservabilityConnector",
+      "title": "CCF Observability — Error Injection Test API",
+      "publisher": "Microsoft",
+      "descriptionMarkdown": "A **controllable mock data source** for testing the Connector Diagnostics Agent in Microsoft Security Copilot. Deploy the included Azure Function App, point this connector at it, and use the switch endpoints (`/api/switchapikey`, `/api/switchhttpstatus`, `/api/switchempty`, `/api/switchlatency`, `/api/switchpagination`) to inject specific error conditions on demand. Then open the connector in Sentinel and trigger the Diagnostics Agent to observe how it surfaces and explains each induced error. Call `/api/revert` at any time to return to a healthy state.",
+      "graphQueriesTableName": "CCFObservabilityEvents_CL",
+      "graphQueries": [
+        {
+          "metricName": "Events ingested",
+          "legend": "CCFObservabilityEvents_CL",
+          "baseQuery": "{{graphQueriesTableName}}"
+        }
+      ],
+      "sampleQueries": [
+        {
+          "description": "All synthetic events, newest first",
+          "query": "CCFObservabilityEvents_CL\n| sort by TimeGenerated desc"
+        },
+        {
+          "description": "Events by action type",
+          "query": "CCFObservabilityEvents_CL\n| summarize Count = count() by Action\n| sort by Count desc"
+        },
+        {
+          "description": "High and critical severity events",
+          "query": "CCFObservabilityEvents_CL\n| where Severity in ('high', 'critical')\n| project TimeGenerated, EventId, SourceIp, DestinationIp, Action, Severity, Protocol"
+        }
+      ],
+      "dataTypes": [
+        {
+          "name": "CCFObservabilityEvents_CL",
+          "lastDataReceivedQuery": "CCFObservabilityEvents_CL\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
+        }
+      ],
+      "connectivityCriteria": [
+        {
+          "type": "IsConnectedQuery",
+          "value": [
+            "CCFObservabilityEvents_CL\n| summarize LastLogReceived = max(TimeGenerated)\n| project IsConnected = LastLogReceived > ago(1d)"
+          ]
+        }
+      ],
+      "permissions": {
+        "resourceProvider": [
+          {
+            "provider": "Microsoft.OperationalInsights/workspaces",
+            "permissionsDisplayText": "Read and write permissions on the Log Analytics workspace are required.",
+            "providerDisplayName": "Workspace",
+            "scope": "Workspace",
+            "requiredPermissions": {
+              "write": true,
+              "read": true,
+              "delete": true
+            }
+          }
+        ],
+        "customs": [
+          {
+            "name": "CCF Observability Function App",
+            "description": "The CCF Observability Function App must be deployed before configuring this connector. See STEP 1 below."
+          }
+        ]
+      },
+      "instructionSteps": [
+        {
+          "title": "STEP 1 — Deploy the CCF Observability Function App",
+          "description": "Deploy the Azure Function App that serves as the controllable mock data source:\n\n1. Create a resource group and storage account:\n```\naz group create -n ccf-obs-rg -l eastus\naz storage account create -n ccfobsstorage -g ccf-obs-rg --sku Standard_LRS\n```\n2. Create the Function App (Linux, Python 3.11):\n```\naz functionapp create -n <functionAppName> -g ccf-obs-rg --consumption-plan-location eastus --runtime python --runtime-version 3.11 --functions-version 4 --storage-account ccfobsstorage --os-type Linux\n```\n3. Deploy the code from the `FunctionApp/` folder:\n```\n# From the FunctionApp/ directory:\nCompress-Archive -Path .\\* -DestinationPath ccf-obs.zip\naz functionapp deployment source config-zip -n <functionAppName> -g ccf-obs-rg --src ccf-obs.zip --build-remote true\n```\n4. Note the deployed URL: `https://<functionAppName>.azurewebsites.net`\n\nThe connector polls `/api/main` using API key `abc123`. Use the switch endpoints to inject errors:\n- `POST /api/switchapikey` — rotate the accepted key (connector gets **HTTP 401**)\n- `POST /api/switchhttpstatus?code=429` — force any HTTP 4xx/5xx\n- `POST /api/switchempty` — return 200 with zero records\n- `POST /api/switchlatency?delay_seconds=70` — inject a timeout\n- `POST /api/switchpagination` — corrupt pagination (infinite loop)\n- `POST /api/revert` — reset all switches to defaults"
+        },
+        {
+          "title": "STEP 2 — Connect to the Observability API",
+          "description": "Enter the base URL of your deployed Function App and click **Connect**.",
+          "instructions": [
+            {
+              "type": "Textbox",
+              "parameters": {
+                "label": "Function App Base URL",
+                "placeholder": "https://<functionAppName>.azurewebsites.net",
+                "type": "text",
+                "name": "BaseUrl"
+              }
+            },
+            {              "type": "Textbox",
+              "parameters": {
+                "label": "API Key",
+                "placeholder": "abc123",
+                "type": "password",
+                "name": "ApiKey"
+              }
+            },
+            {              "type": "ConnectionToggleButton",
+              "parameters": {
+                "connectLabel": "connect",
+                "name": "connect"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

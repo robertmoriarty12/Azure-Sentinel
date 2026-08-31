@@ -1,0 +1,19 @@
+{
+  "publisherId": "microsoft-sentinel",
+  "offerId": "ccf-observability",
+  "firstPublishDate": "2026-08-14",
+  "lastPublishDate": "2026-08-14",
+  "url": "https://learn.microsoft.com/azure/sentinel/create-codeless-connector",
+  "description": "CCF Observability — Error Injection Test API for Microsoft Sentinel. Provides a controllable mock REST API and CCF RestApiPoller connector for testing the Connector Diagnostics Agent in Security Copilot. Supports five error-injection switches: API key rotation, HTTP error codes, empty payloads, response latency, and pagination corruption.",
+  "support": {
+    "name": "Microsoft Corporation",
+    "email": "azuresentinelpartner@microsoft.com",
+    "tier": "Microsoft",
+    "link": "https://learn.microsoft.com/azure/sentinel/create-codeless-connector"
+  },
+  "categories": {
+    "domains": [ "Security – Threat Protection" ]
+  },
+  "providers": [ "Microsoft" ],
+  "version": "1.0.0"
+}

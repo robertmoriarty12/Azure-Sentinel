@@ -1,0 +1,41 @@
+{
+  "type": "Microsoft.Insights/dataCollectionRules",
+  "apiVersion": "2022-06-01",
+  "name": "CCFObservability-DCR",
+  "location": "{{location}}",
+  "properties": {
+    "dataCollectionEndpointId": "{{dataCollectionEndpoint}}",
+    "streamDeclarations": {
+      "Custom-CCFObservabilityEvents_CL": {
+        "columns": [
+          { "name": "TimeGenerated",    "type": "datetime" },
+          { "name": "id",               "type": "string" },
+          { "name": "timestamp",        "type": "string" },
+          { "name": "source_ip",        "type": "string" },
+          { "name": "destination_ip",   "type": "string" },
+          { "name": "action",           "type": "string" },
+          { "name": "severity",         "type": "string" },
+          { "name": "protocol",         "type": "string" },
+          { "name": "bytes_transferred","type": "int" },
+          { "name": "message",          "type": "string" }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "workspaceResourceId": "{{workspaceResourceId}}",
+          "name": "sentinel-workspace"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [ "Custom-CCFObservabilityEvents_CL" ],
+        "destinations": [ "sentinel-workspace" ],
+        "transformKql": "source | extend TimeGenerated = now() | project TimeGenerated, EventId = ['id'], EventTimestamp = ['timestamp'], SourceIp = ['source_ip'], DestinationIp = ['destination_ip'], Action = ['action'], Severity = ['severity'], Protocol = ['protocol'], BytesTransferred = toint(['bytes_transferred']), Message = ['message']",
+        "outputStream": "Custom-CCFObservabilityEvents_CL"
+      }
+    ]
+  }
+}

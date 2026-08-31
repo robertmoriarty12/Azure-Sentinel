@@ -1,0 +1,50 @@
+{
+  "type": "Microsoft.SecurityInsights/dataConnectors",
+  "apiVersion": "2024-09-01",
+  "name": "CCFObservability",
+  "location": "{{location}}",
+  "kind": "RestApiPoller",
+  "properties": {
+    "connectorDefinitionName": "CCFObservabilityConnector",
+    "dataType": "CCFObservabilityEvents_CL",
+    "dcrConfig": {
+      "streamName": "Custom-CCFObservabilityEvents_CL",
+      "dataCollectionEndpoint": "{{dataCollectionEndpoint}}",
+      "dataCollectionRuleImmutableId": "{{dataCollectionRuleImmutableId}}"
+    },
+    "auth": {
+      "type": "APIKey",
+      "ApiKey": "{{ApiKey}}",
+      "ApiKeyName": "X-API-Key"
+    },
+    "request": {
+      "apiEndpoint": "{{BaseUrl}}/api/main",
+      "httpMethod": "GET",
+      "queryWindowInMin": 1,
+      "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
+      "startTimeAttributeName": "since",
+      "rateLimitQPS": 10,
+      "retryCount": 3,
+      "timeoutInSeconds": 60,
+      "headers": {
+        "Accept": "application/json"
+      },
+      "queryParameters": {
+        "pageSize": "5"
+      }
+    },
+    "paging": {
+      "pagingType": "CountBasedPaging",
+      "pageNumberParaName": "page",
+      "pageSize": 5,
+      "pageSizeParameterName": "pageSize",
+      "hasNextFlagJsonPath": "$.metadata.hasNextPage"
+    },
+    "response": {
+      "eventsJsonPaths": ["$.data"],
+      "format": "json",
+      "successStatusJsonPath": "$.status",
+      "successStatusValue": "success"
+    }
+  }
+}
