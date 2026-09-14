@@ -1,0 +1,56 @@
+version: 1
+
+database:
+  name: Microsoft Content Database
+  sourceRoot: Solutions
+  baselinePath: database/baseline/microsoft-content-database.jsonl
+  runtimePath: database/runtime/microsoft-content-database.jsonl
+  refreshReportPath: database/runtime/refresh-report.json
+
+selection:
+  supportTier: Microsoft
+  metadataFileName: SolutionMetadata.json
+  manifestDirectory: Data
+  manifestFilePrefix: Solution_
+  manifestFileSuffix: .json
+  indexOnlyManifestListedFiles: true
+  includeUserSubmittedData: false
+
+quality:
+  assumeMicrosoftSupportedContentIsGood: true
+  categorizationAffectsEligibility: false
+
+contentTypes:
+  analyticRule:
+    manifestKey: Analytic Rules
+    extensions:
+      - .yaml
+      - .yml
+  huntingQuery:
+    manifestKey: Hunting Queries
+    extensions:
+      - .yaml
+      - .yml
+  workbook:
+    manifestKey: Workbooks
+    extensions:
+      - .json
+  parser:
+    manifestKey: Parsers
+    extensions:
+      - .yaml
+      - .yml
+      - .txt
+      - .json
+  playbook:
+    manifestKey: Playbooks
+    extensions:
+      - .json
+
+refresh:
+  sourceOfTruth: localCheckout
+  pathFormat: workspaceRelative
+  includeChangedFiles: true
+  removeDeletedFiles: true
+  runOnEveryGenerationRequest: true
+  updateBaselineAutomatically: false

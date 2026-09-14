@@ -1,0 +1,11 @@
+# Local database refresh artifacts
+/database/runtime/*
+!/database/runtime/.gitkeep
+
+# Per-request generated content and reports
+/output/*
+!/output/.gitkeep
+
+# Python execution artifacts
+__pycache__/
+*.py[cod]

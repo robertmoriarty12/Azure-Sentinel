@@ -1,0 +1,1 @@
+{"TimeGenerated":"2026-09-14T12:00:00Z","ResourceType":"PUBLICIPADDRESSES","Category":"DDoSMitigationFlowLogs","destPublicIpAddress_s":"203.0.113.10","sourcePublicIpAddress_s":"198.51.100.42","action_s":"Mitigated","protocol_s":"TCP"}

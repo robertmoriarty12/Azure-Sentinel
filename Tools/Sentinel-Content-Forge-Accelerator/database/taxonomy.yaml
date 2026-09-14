@@ -1,0 +1,206 @@
+version: 1
+
+databaseCategorization:
+  method: metadata-and-asim
+  unmatchedCategory: unclassified
+
+sampleDataCategorization:
+  method: agent-guided
+  unmatchedCategory: unclassified
+
+categories:
+  - id: network
+    displayName: Network
+    metadataDomains:
+      - Networking
+      - Security - Network
+    asimFunctions:
+      - _Im_NetworkSession
+      - _Im_Dns
+      - _Im_WebSession
+    keywordHints:
+      - firewall
+      - network
+      - proxy
+      - dns
+      - http
+      - tls
+      - port
+      - packet
+    fieldHints:
+      - SrcIpAddr
+      - DstIpAddr
+      - SrcPortNumber
+      - DstPortNumber
+      - NetworkProtocol
+
+  - id: identity-authentication
+    displayName: Identity and authentication
+    metadataDomains:
+      - Identity
+      - User Behavior (UEBA)
+    asimFunctions:
+      - _Im_Authentication
+      - _Im_AuditEvent
+    keywordHints:
+      - authentication
+      - authorization
+      - login
+      - logon
+      - sign-in
+      - mfa
+      - identity
+      - directory
+    fieldHints:
+      - TargetUsername
+      - TargetUserId
+      - ActorUsername
+      - SrcIpAddr
+      - EventResult
+
+  - id: endpoint
+    displayName: Endpoint
+    metadataDomains: []
+    asimFunctions:
+      - _Im_ProcessCreate
+      - _Im_FileEvent
+      - _Im_RegistryEvent
+    keywordHints:
+      - endpoint
+      - process
+      - commandline
+      - malware
+      - antivirus
+      - edr
+      - registry
+    fieldHints:
+      - Process
+      - ProcessCommandLine
+      - FileName
+      - FileHash
+      - DvcHostname
+
+  - id: cloud-saas
+    displayName: Cloud and SaaS
+    metadataDomains:
+      - Cloud Provider
+      - Cloud Security
+      - Application
+    asimFunctions:
+      - _Im_AuditEvent
+    keywordHints:
+      - cloud
+      - saas
+      - api
+      - tenant
+      - subscription
+      - resource
+      - activity
+      - audit
+    fieldHints:
+      - AzureResourceId
+      - SubscriptionId
+      - TenantId
+      - OperationName
+      - CallerIpAddress
+
+  - id: database-audit
+    displayName: Database and audit
+    metadataDomains:
+      - Compliance
+      - Storage
+    asimFunctions:
+      - _Im_AuditEvent
+    keywordHints:
+      - database
+      - sql
+      - query
+      - audit
+      - table
+      - collection
+      - mongodb
+      - snowflake
+    fieldHints:
+      - DatabaseName
+      - QueryText
+      - ObjectName
+      - OperationName
+      - ActorUsername
+
+  - id: email-collaboration
+    displayName: Email and collaboration
+    metadataDomains: []
+    asimFunctions: []
+    keywordHints:
+      - email
+      - mailbox
+      - message
+      - attachment
+      - teams
+      - collaboration
+      - sharepoint
+      - onedrive
+    fieldHints:
+      - SenderFromAddress
+      - RecipientEmailAddress
+      - Subject
+      - AttachmentName
+      - MailboxOwnerUPN
+
+  - id: data-security
+    displayName: Data security
+    metadataDomains:
+      - Security - Information Protection
+      - Security - Insider Threat
+    asimFunctions: []
+    keywordHints:
+      - data loss
+      - dlp
+      - classification
+      - exfiltration
+      - sensitive
+      - information protection
+    fieldHints:
+      - SensitivityLabel
+      - FileName
+      - FileHash
+      - DestinationUrl
+      - UserPrincipalName
+
+  - id: threat-intelligence
+    displayName: Threat intelligence
+    metadataDomains:
+      - Security - Threat Intelligence
+    asimFunctions: []
+    keywordHints:
+      - threat intelligence
+      - indicator
+      - ioc
+      - observable
+      - reputation
+      - intel
+    fieldHints:
+      - IndicatorId
+      - ObservableValue
+      - ThreatType
+      - ConfidenceScore
+      - ValidUntil
+
+  - id: security-operations
+    displayName: Security operations
+    metadataDomains:
+      - Security - Automation (SOAR)
+    asimFunctions: []
+    keywordHints:
+      - incident
+      - alert
+      - case
+      - playbook
+      - automation
+      - response
+    fieldHints:
+      - IncidentNumber
+      - AlertName
+      - Severity
+      - Status
+      - Owner

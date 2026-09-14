@@ -1,0 +1,42 @@
+{
+  "requestVersion": 1,
+  "sourceBinding": {
+    "status": "provided",
+    "connectorId": "DDOS",
+    "connectorName": "Azure DDoS Protection",
+    "dataSource": {
+      "name": "AzureDiagnostics",
+      "kind": "table"
+    }
+  },
+  "sampleData": {
+    "path": "Tools/Sentinel-Content-Forge-Accelerator/examples/network/azure-ddos-sample-events.jsonl",
+    "format": "jsonl",
+    "fieldDescriptions": {
+      "ResourceType": "Azure resource type that produced the event.",
+      "Category": "Azure Diagnostics event category.",
+      "destPublicIpAddress_s": "Public IP address of the protected resource.",
+      "sourcePublicIpAddress_s": "Source IP address observed during mitigation.",
+      "action_s": "DDoS mitigation action applied to the observed traffic.",
+      "protocol_s": "Network protocol observed for the event."
+    }
+  },
+  "requestedContent": {
+    "types": [
+      "analyticRule",
+      "huntingQuery",
+      "workbook"
+    ],
+    "targetCounts": {
+      "analyticRule": 1,
+      "huntingQuery": 1,
+      "workbook": 1
+    }
+  },
+  "context": {
+    "productDescription": "Azure DDoS Protection mitigation telemetry delivered through Azure Diagnostics.",
+    "knownSecurityScenarios": [
+      "Identify source IP addresses contributing a disproportionate share of traffic during DDoS mitigation."
+    ]
+  }
+}

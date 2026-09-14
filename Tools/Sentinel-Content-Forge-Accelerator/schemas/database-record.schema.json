@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Azure/Azure-Sentinel/blob/master/Tools/Sentinel-Content-Forge-Accelerator/schemas/database-record.schema.json",
+  "title": "Microsoft Content Database record",
+  "description": "A normalized index record for a manifest-listed artifact in a Microsoft-supported Sentinel solution, with agent-assigned category labels for retrieval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sourcePath",
+    "sourceHash",
+    "solution",
+    "content",
+    "classification"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "sourcePath": {
+      "type": "string",
+      "pattern": "^Solutions/.+"
+    },
+    "sourceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "solution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "folderPath",
+        "metadataPath",
+        "manifestPath",
+        "publisherId",
+        "offerId",
+        "providers",
+        "supportTier",
+        "metadataDomains"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "folderPath": {
+          "type": "string",
+          "pattern": "^Solutions/.+"
+        },
+        "metadataPath": {
+          "type": "string",
+          "pattern": "^Solutions/.+/SolutionMetadata\\.json$"
+        },
+        "manifestPath": {
+          "type": "string",
+          "pattern": "^Solutions/.+/[Dd]ata/Solution_.+\\.json$"
+        },
+        "publisherId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "offerId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supportTier": {
+          "const": "Microsoft"
+        },
+        "metadataDomains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contentType",
+        "manifestKey",
+        "fileExtension",
+        "title",
+        "connectorIds",
+        "dataTypes",
+        "asimFunctions",
+        "tactics",
+        "techniques",
+        "entityTypes"
+      ],
+      "properties": {
+        "contentType": {
+          "enum": [
+            "analyticRule",
+            "huntingQuery",
+            "workbook",
+            "parser",
+            "playbook"
+          ]
+        },
+        "manifestKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileExtension": {
+          "type": "string",
+          "pattern": "^\\.[a-z0-9]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "connectorIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "dataTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "asimFunctions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^_Im_"
+          },
+          "uniqueItems": true
+        },
+        "tactics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "techniques": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+          },
+          "uniqueItems": true
+        },
+        "entityTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taxonomyVersion",
+        "primaryCategory",
+        "secondaryCategories"
+      ],
+      "properties": {
+        "taxonomyVersion": {
+          "const": 1
+        },
+        "primaryCategory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secondaryCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

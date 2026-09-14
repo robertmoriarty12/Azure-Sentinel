@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Azure/Azure-Sentinel/blob/master/Tools/Sentinel-Content-Forge-Accelerator/schemas/content-request.schema.json",
+  "title": "Sentinel Content Forge request",
+  "description": "The normalized request created from representative sample data, requested content, and an optional source binding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requestVersion",
+    "sampleData",
+    "requestedContent",
+    "sourceBinding"
+  ],
+  "properties": {
+    "requestVersion": {
+      "const": 1
+    },
+    "sourceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "provided",
+            "provisional",
+            "unbound"
+          ]
+        },
+        "connectorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "connectorName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataSource": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "kind"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "table",
+                "parser"
+              ]
+            }
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "provided"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "connectorId",
+              "dataSource"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "provisional"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "connectorId",
+              "dataSource",
+              "rationale"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unbound"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "connectorId"
+                  ]
+                },
+                {
+                  "required": [
+                    "dataSource"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "sampleData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "format"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "enum": [
+            "json",
+            "jsonl",
+            "csv",
+            "text",
+            "unknown"
+          ]
+        },
+        "fieldDescriptions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "classificationHints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "asimFunctions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^_Im_"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "requestedContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "types"
+      ],
+      "properties": {
+        "types": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "analyticRule",
+              "huntingQuery",
+              "workbook"
+            ]
+          }
+        },
+        "targetCounts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "analyticRule": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "huntingQuery": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "workbook": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "productDescription": {
+          "type": "string"
+        },
+        "knownSecurityScenarios": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetSolutionPath": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

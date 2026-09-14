@@ -1,0 +1,98 @@
+# Sentinel Content Forge Accelerator Instructions
+
+These instructions are for a GitHub Copilot agent. Load this file when a user asks to generate Microsoft Sentinel content from representative sample data.
+
+## Purpose
+
+Use the local Azure-Sentinel repository to refresh the Microsoft Content Database, classify the user's data, retrieve relevant Microsoft-supported examples, generate source-specific Sentinel content, and validate the staged output.
+
+The user has already cloned the Azure-Sentinel repository. Do not clone the repository, deploy Azure resources, run `git pull`, switch branches, or modify files under `Solutions`.
+
+## Required User Prompt
+
+The only required input is a path to representative sample data.
+
+The user may also provide a connector ID, a destination table or parser name, and requested content types. If content types are not specified, default to one analytic rule, one hunting query, and one workbook.
+
+Do not block database refresh, sample-data classification, or reference retrieval when connector and destination information is absent. Create `content-request.json` with one of these source-binding states:
+
+- `provided`: The user supplied a connector ID and destination table or parser.
+- `unbound`: The user supplied sample data only. This is valid for database refresh, classification, and reference retrieval.
+- `provisional`: The agent derived local draft identifiers from the sample-data name after retrieval. These identifiers are for staged content only and require later confirmation before a solution integration or pull request.
+
+Do not present a provisional connector ID or data source as an actual deployed Sentinel connector or table.
+
+## Workflow
+
+Complete the stages in order. Do not skip database refresh, do not generate output before retrieval, and do not present generated output as publish-ready before validation and human review.
+
+### Preflight: Verify Python Dependencies
+
+Before Stage 1, verify that Python can import `yaml` and `jsonschema`. If either import fails, install only the accelerator dependencies from the repository root:
+
+```powershell
+python -m pip install -r Tools/Sentinel-Content-Forge-Accelerator/requirements.txt
+```
+
+Verify the imports again before continuing. Do not install unrelated packages.
+
+### Stage 1: Refresh the Microsoft Content Database
+
+Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/update-microsoft-content-database.md`.
+
+The database must include only manifest-listed assets from solutions whose `SolutionMetadata.json` has `support.tier: Microsoft`. Treat Microsoft support tier as the v1 admission rule for good reference examples. Categorization is used only to organize and retrieve the database; it does not decide whether content is good.
+
+Stop if database refresh reports errors or produces no records.
+
+### Stage 2: Classify Sample Data and Retrieve References
+
+Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/classify-and-retrieve.md`.
+
+Create a unique run ID using this format:
+
+```text
+YYYYMMDD-HHMMSS-<short-product-slug>
+```
+
+Write all run artifacts under:
+
+```text
+Tools/Sentinel-Content-Forge-Accelerator/output/<run-id>/
+```
+
+If the data is `unclassified`, stop and ask the user to choose from the closest categories before generating content. Do not use Partner or Community content as a fallback.
+
+### Stage 3: Generate Sentinel Content
+
+Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/generate-sentinel-content.md`.
+
+Use the original repository files referenced by the selected database records. The selected Microsoft examples inform content patterns and security scenarios. The submitted sample data determines the source fields the generated content may use. A provided or provisional source binding supplies the connector ID and data source used in staged YAML and JSON output.
+
+When `sourceBinding.status` is `unbound`, derive a clearly labeled provisional connector ID and table or parser name from the sample-data product label. Update the current run's `content-request.json` to `provisional` before generating artifacts. Generate only requested artifact types and counts. Write all output to the current run directory, not to `Solutions`.
+
+### Stage 4: Validate and Repair
+
+Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/validate-sentinel-content.md`.
+
+Repair deterministic validation failures in the generated run output and rerun validation. Do not edit reference examples, the database policy, taxonomy, or files under `Solutions` to make validation pass.
+
+## Final Response
+
+Report:
+
+1. The database refresh summary: Microsoft-supported solutions, indexed artifacts, warnings, and errors.
+2. The sample-data primary category and rationale.
+3. Every selected Microsoft reference path.
+4. Every generated artifact path and its purpose.
+5. Validation status, including failed checks, warnings, and checks not run.
+6. Source-binding status and, when provisional, the connector ID and data source that require confirmation.
+7. The remaining human or test-workspace actions required before the content can move into a solution or pull request.
+
+## Safety and Scope Rules
+
+- Never update `database/baseline` during an ordinary user request.
+- Never treat user sample data as an entry in the Microsoft Content Database.
+- Never copy an entire reference artifact; generate original source-specific content.
+- Never automatically copy output into a solution package, update a solution manifest, or create a pull request.
+- Never claim KQL execution or workbook rendering passed unless the agent actually ran the relevant test.
+- Never claim staged content with a provisional source binding is package-ready or ready for solution integration.

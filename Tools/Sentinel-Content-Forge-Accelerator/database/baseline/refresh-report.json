@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-14T19:22:58Z",
+  "sourceRoot": "Solutions",
+  "selection": {
+    "supportTier": "Microsoft",
+    "indexOnlyManifestListedFiles": true
+  },
+  "statistics": {
+    "solutionMetadataFilesScanned": 556,
+    "microsoftSupportedSolutions": 253,
+    "nonMicrosoftSupportedSolutions": 303,
+    "manifestsRead": 252,
+    "artifactsIndexed": 2748,
+    "missingArtifacts": 40,
+    "duplicateArtifacts": 0,
+    "contentParseWarnings": 0,
+    "errors": 0
+  },
+  "warnings": [
+    {
+      "kind": "missingSolutionManifest",
+      "path": "Solutions/Azure Data Lake Storage Gen1/SolutionMetadata.json",
+      "message": "No solution manifest was found for this Microsoft-supported solution."
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_CommonSecurityLog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_DnsEvents.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_imWebSession.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_PaloAlto.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_SecurityAlert.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/DomainEntity_Syslog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_AzureActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_OfficeActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_PaloAlto.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_SecurityAlert.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_SecurityEvent.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/EmailEntity_SigninLogs.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/FileHashEntity_CommonSecurityLog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/FileHashEntity_SecurityEvent.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AppServiceHTTPLogs.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AWSCloudTrail.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AzureActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AzureFirewall.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AzureKeyVault.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AzureNetworkAnalytics.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_AzureSQL.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_CustomSecurityLog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_DnsEvents.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_imWebSession.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_OfficeActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPentity_SigninLogs.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_VMConnection.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_W3CIISLog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/URLEntity_AuditLogs.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/URLEntity_OfficeActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/URLEntity_PaloAlto.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/URLEntity_SecurityAlerts.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/URLEntity_Syslog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Analytic Rules/IPEntity_DuoSecurity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Hunting Queries/FileEntity_OfficeActivity.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Hunting Queries/FileEntity_SecurityEvent.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Hunting Queries/FileEntity_Syslog.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Hunting Queries/FileEntity_VMConnection.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Hunting Queries/FileEntity_WireData.yaml"
+    },
+    {
+      "kind": "missingManifestListedArtifact",
+      "path": "Solutions/Threat Intelligence Solution for Azure Government/Data/Solution_ThreatIntelligenceFairfax.json",
+      "message": "The manifest lists an unavailable file: Solutions/Threat Intelligence Solution for Azure Government/Workbooks/ThreatIntelligence.json"
+    }
+  ],
+  "errors": []
+}

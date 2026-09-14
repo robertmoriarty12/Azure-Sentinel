@@ -1,0 +1,48 @@
+{
+  "requestVersion": 1,
+  "sampleData": {
+    "path": "Tools/Sentinel-Content-Forge-Accelerator/examples/network/contoso-edge-network-sample-events.jsonl",
+    "format": "jsonl",
+    "fieldDescriptions": {
+      "SrcIpAddr": "Source IP address for the network session.",
+      "DstIpAddr": "Destination IP address for the network session.",
+      "SrcPortNumber": "Source network port.",
+      "DstPortNumber": "Destination network port.",
+      "NetworkProtocol": "Transport protocol observed for the session.",
+      "ApplicationProtocol": "Application protocol inferred for the session.",
+      "NetworkDirection": "Traffic direction relative to the monitored environment.",
+      "Action": "Firewall action applied to the session.",
+      "BytesSent": "Number of bytes sent during the session.",
+      "BytesReceived": "Number of bytes received during the session.",
+      "DnsQuery": "DNS name associated with the session when available.",
+      "Url": "HTTP or HTTPS URL associated with the session when available.",
+      "UserName": "User or service identity associated with the session when available.",
+      "DeviceName": "Network device that recorded the session.",
+      "RuleName": "Network policy or firewall rule applied to the session."
+    }
+  },
+  "requestedContent": {
+    "types": [
+      "analyticRule",
+      "huntingQuery",
+      "workbook"
+    ],
+    "targetCounts": {
+      "analyticRule": 2,
+      "huntingQuery": 2,
+      "workbook": 1
+    }
+  },
+  "sourceBinding": {
+    "status": "unbound"
+  },
+  "context": {
+    "productDescription": "Synthetic edge firewall and network session telemetry for testing the Sentinel Content Forge Accelerator.",
+    "knownSecurityScenarios": [
+      "External source scanning multiple destination ports in a short interval.",
+      "Repeated denied SSH access attempts from an external source.",
+      "Regular low-volume outbound HTTPS sessions that may be reviewed for beaconing patterns.",
+      "High-volume outbound HTTPS transfers to an external destination."
+    ]
+  }
+}

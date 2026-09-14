@@ -1,0 +1,27 @@
+id: not-a-guid
+name: Invalid example rule.
+description: Detects a deliberately invalid rule for validator testing.
+severity: Critical
+status: Ready
+requiredDataConnectors:
+  - connectorId: IncorrectConnector
+    dataTypes:
+      - IncorrectTable_CL
+queryFrequency: 2h
+queryPeriod: 1h
+triggerOperator: greaterThan
+triggerThreshold: -1
+tactics:
+  - NotATactic
+relevantTechniques:
+  - InvalidTechnique
+query: |
+  IncorrectTable_CL
+  | summarize count() by MissingEntityColumn
+entityMappings:
+  - entityType: InvalidEntity
+    fieldMappings:
+      - identifier: InvalidIdentifier
+        columnName: AbsentColumn
+version: 1
+kind: Scheduled
