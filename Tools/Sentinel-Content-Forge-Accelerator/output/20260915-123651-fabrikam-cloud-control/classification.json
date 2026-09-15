@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "contentRequestPath": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content-request.json",
+  "asimSchemas": [
+    "AuditEvent",
+    "UserManagement"
+  ],
+  "mappingStatus": "compatible",
+  "rationale": "The sample describes cloud control-plane operations with operation names, action categories, results, actors, source IP addresses, targets, before and after values, and correlation identifiers. Role assignment and service principal credential operations also provide a defensible UserManagement secondary schema, but AuditEvent is primary because every record is an administrative or audit operation.",
+  "evidence": [
+    {
+      "source": "sampleData",
+      "details": "All 30 JSONL records include EventType, OperationName, OperationCategory, OperationResult, actor identity and IP fields, target resource fields, and request or correlation identifiers."
+    },
+    {
+      "source": "fieldDescription",
+      "details": "The supplied descriptions define control-plane operations, operation outcomes, audit settings, policy values, role assignments, credentials, exports, and resource targets."
+    },
+    {
+      "source": "securityScenario",
+      "details": "The request identifies successful privileged role assignment after failed attempts, audit tampering, API key creation, service principal credential creation, external sharing, public API exposure, export completion, and backup deletion."
+    }
+  ]
+}

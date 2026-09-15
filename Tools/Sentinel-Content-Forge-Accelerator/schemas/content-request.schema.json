@@ -154,10 +154,24 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "categories": {
+        "asimSchemas": {
           "type": "array",
           "items": {
-            "type": "string"
+            "enum": [
+              "AgentEvent",
+              "AlertEvent",
+              "AssetEntity",
+              "AuditEvent",
+              "Authentication",
+              "DhcpEvent",
+              "Dns",
+              "FileEvent",
+              "NetworkSession",
+              "ProcessEvent",
+              "RegistryEvent",
+              "UserManagement",
+              "WebSession"
+            ]
           },
           "uniqueItems": true
         },
@@ -225,6 +239,31 @@
         },
         "targetSolutionPath": {
           "type": "string"
+        },
+        "productResearch": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowOfficialProductDocumentationLookup": {
+              "type": "boolean"
+            },
+            "vendorName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "productName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "officialDocumentationUrls": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              },
+              "uniqueItems": true
+            }
+          }
         }
       }
     }

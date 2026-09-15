@@ -1,0 +1,46 @@
+id: f9b06b39-6fe5-4bb6-8cc5-1f26e38e45aa
+name: External privileged cloud control activity timeline
+description: Finds successful high-impact cloud control operations from unknown external sources and returns the actor, target, change values, and correlation context.
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+tactics:
+  - PrivilegeEscalation
+  - DefenseEvasion
+  - Exfiltration
+relevantTechniques:
+  - T1098.003
+  - T1562
+  - T1041
+query: |
+  let Lookback = 1d;
+  let HighImpactOperations = dynamic([
+    "roleAssignments.create",
+    "apiKeys.create",
+    "servicePrincipals.credentials.create",
+    "auditSettings.update",
+    "retentionPolicies.update",
+    "workspaceAccessPolicies.update",
+    "accessPolicies.update",
+    "dataExports.create",
+    "dataExports.complete",
+    "backups.delete"
+  ]);
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationResult == "Success" and ActorCountry == "ZZ"
+  | where OperationName in (HighImpactOperations)
+  | extend AccountCustomEntity = ActorUsername, IPCustomEntity = ActorIpAddr
+  | project TimeGenerated, OperationName, OperationCategory, ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, AuthMethod, IsPrivileged, TargetResourceType, TargetResourceName, TargetResourceId, TargetUserName, TargetRole, WorkspaceName, DestinationUrl, PreviousValue, NewValue, CorrelationId, AccountCustomEntity, IPCustomEntity
+  | order by TimeGenerated asc
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+version: 1.0.0

@@ -1,0 +1,29 @@
+version: 1
+
+# Approved mappings supplement explicit ASIM parser and schema-tag evidence.
+# A mapping must be traceable to a local ASIM parser, official product documentation,
+# or both. The refresh script never fetches external documentation at runtime.
+mappings:
+  - id: palo-alto-panos-network-session-traffic
+    reviewState: approved
+    mappingStatus: inferredFromRepository
+    asimSchemas:
+      - NetworkSession
+    match:
+      solutionPaths:
+        - Solutions/PaloAlto-PAN-OS
+      contentTypes:
+        - analyticRule
+        - huntingQuery
+        - workbook
+      requiredText:
+        - CommonSecurityLog
+        - Palo Alto Networks
+        - TRAFFIC
+    evidence:
+      - source: localAsimParser
+        reference: Parsers/ASimNetworkSession/Parsers/ASimNetworkSessionPaloAltoCEF.yaml
+        conclusion: Palo Alto PAN-OS traffic events in CommonSecurityLog are normalized to ASIM NetworkSession.
+      - source: officialProductDocumentation
+        reference: https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/traffic-log-fields.html
+        conclusion: Palo Alto PAN-OS traffic log fields provide the source data normalized by the referenced ASIM parser.

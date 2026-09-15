@@ -1,3 +1,4 @@
+# Provides shared Draft 2020-12 JSON Schema loading and validation helpers for accelerator scripts and tests.
 from __future__ import annotations
 
 import json

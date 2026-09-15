@@ -1,0 +1,53 @@
+id: 4718ed71-6c33-4a4d-8efd-7a1a583024a0
+name: Privileged role assignment after denied attempts
+description: Identifies a successful OrganizationOwner assignment that follows failed role-assignment attempts from the same actor and source address.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - PrivilegeEscalation
+  - Persistence
+relevantTechniques:
+  - T1098.003
+query: |
+  let Lookback = 1h;
+  let FailedRoleAssignments =
+    FabrikamCloudControlAudit_CL
+    | where TimeGenerated > ago(Lookback)
+    | where OperationName == "roleAssignments.create" and OperationResult == "Failure"
+    | summarize
+        FailureCount = count(),
+        FirstFailure = min(TimeGenerated),
+        LastFailure = max(TimeGenerated)
+        by ActorUsername, ActorUserId, ActorIpAddr, TargetUserId, TargetUserName, TargetRole, CorrelationId;
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationName == "roleAssignments.create" and OperationResult == "Success"
+  | where TargetRole == "OrganizationOwner" and ActorCountry == "ZZ"
+  | join kind=inner FailedRoleAssignments on ActorUsername, ActorUserId, ActorIpAddr, TargetUserId, TargetUserName, TargetRole, CorrelationId
+  | where TimeGenerated between (FirstFailure .. LastFailure + 15m)
+  | extend AccountCustomEntity = TargetUserName, IPCustomEntity = ActorIpAddr
+  | project TimeGenerated, ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, TargetUserName, TargetUserId, TargetRole, FailureCount, FirstFailure, LastFailure, CorrelationId, AccountCustomEntity, IPCustomEntity
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+customDetails:
+  ActorUsername: ActorUsername
+  TargetRole: TargetRole
+  FailureCount: FailureCount
+  CorrelationId: CorrelationId
+version: 1.0.0
+kind: Scheduled

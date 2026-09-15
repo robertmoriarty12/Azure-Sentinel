@@ -1,0 +1,54 @@
+{
+  "requestVersion": 1,
+  "sampleData": {
+    "path": "Tools/Sentinel-Content-Forge-Accelerator/examples/identity-authentication/fabrikam-identity-hub-sample-events.jsonl",
+    "format": "jsonl",
+    "fieldDescriptions": {
+      "IdentityProvider": "Authentication service that produced the event.",
+      "EventType": "Authentication operation represented by the event.",
+      "EventResult": "Authentication outcome, such as Success or Failure.",
+      "FailureReason": "Reason an authentication attempt failed when present.",
+      "TargetUsername": "Account targeted by the authentication attempt.",
+      "TargetUserId": "Stable identifier for the targeted account.",
+      "ActorUsername": "Identity associated with the authentication attempt.",
+      "SrcIpAddr": "Source IP address for the authentication attempt.",
+      "SrcCountry": "Country associated with the source IP address.",
+      "DeviceName": "Device name reported for the sign-in when available.",
+      "ClientApp": "Client application used for authentication.",
+      "AuthenticationProtocol": "Authentication protocol used by the client.",
+      "MfaRequired": "Whether multifactor authentication was required.",
+      "MfaResult": "Outcome of multifactor authentication when required.",
+      "RiskLevel": "Provider-assigned risk level for the sign-in.",
+      "RiskReasons": "Provider-assigned risk signals associated with the sign-in.",
+      "ConditionalAccessStatus": "Outcome of conditional access evaluation.",
+      "ApplicationName": "Target application for the sign-in.",
+      "NetworkLocation": "Network location classification for the sign-in.",
+      "IsInteractive": "Whether the sign-in was interactive."
+    }
+  },
+  "requestedContent": {
+    "types": [
+      "analyticRule",
+      "huntingQuery",
+      "workbook"
+    ],
+    "targetCounts": {
+      "analyticRule": 2,
+      "huntingQuery": 2,
+      "workbook": 1
+    }
+  },
+  "sourceBinding": {
+    "status": "unbound"
+  },
+  "context": {
+    "productDescription": "Synthetic authentication telemetry from the fictional Fabrikam Identity Hub service provider for testing the Sentinel Content Forge Accelerator.",
+    "knownSecurityScenarios": [
+      "Multiple failed password attempts against different accounts from one external source.",
+      "Successful authentication following a sequence of failed password attempts from the same external source.",
+      "Repeated denied multifactor authentication attempts followed by a successful sign-in.",
+      "A successful sign-in from an unfamiliar device and country shortly after a normal sign-in.",
+      "Legacy authentication activity without multifactor authentication."
+    ]
+  }
+}

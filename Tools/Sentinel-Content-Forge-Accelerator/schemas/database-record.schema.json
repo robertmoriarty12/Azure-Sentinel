@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Azure/Azure-Sentinel/blob/master/Tools/Sentinel-Content-Forge-Accelerator/schemas/database-record.schema.json",
   "title": "Microsoft Content Database record",
-  "description": "A normalized index record for a manifest-listed artifact in a Microsoft-supported Sentinel solution, with agent-assigned category labels for retrieval.",
+  "description": "A normalized index record for a manifest-listed artifact in a Microsoft-supported Sentinel solution, classified by ASIM schema for retrieval.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -172,25 +172,162 @@
       "additionalProperties": false,
       "required": [
         "taxonomyVersion",
-        "primaryCategory",
-        "secondaryCategories"
+        "asimSchemas",
+        "asimEvidence",
+        "mappingStatus",
+        "retrievalConfidence"
       ],
       "properties": {
         "taxonomyVersion": {
-          "const": 1
+          "const": 2
         },
-        "primaryCategory": {
-          "type": "string",
-          "minLength": 1
-        },
-        "secondaryCategories": {
+        "asimSchemas": {
+          "description": "Canonical ASIM schemas explicitly used or inferred for the artifact.",
           "type": "array",
           "items": {
-            "type": "string"
+            "enum": [
+              "AgentEvent",
+              "AlertEvent",
+              "AssetEntity",
+              "AuditEvent",
+              "Authentication",
+              "DhcpEvent",
+              "Dns",
+              "FileEvent",
+              "NetworkSession",
+              "ProcessEvent",
+              "RegistryEvent",
+              "UserManagement",
+              "WebSession"
+            ]
           },
           "uniqueItems": true
+        },
+        "asimEvidence": {
+          "description": "Parser, tag, or approved mapping evidence supporting ASIM schema classification.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "schema",
+              "source",
+              "value"
+            ],
+            "properties": {
+              "schema": {
+                "enum": [
+                  "AgentEvent",
+                  "AlertEvent",
+                  "AssetEntity",
+                  "AuditEvent",
+                  "Authentication",
+                  "DhcpEvent",
+                  "Dns",
+                  "FileEvent",
+                  "NetworkSession",
+                  "ProcessEvent",
+                  "RegistryEvent",
+                  "UserManagement",
+                  "WebSession"
+                ]
+              },
+              "source": {
+                "enum": [
+                  "parserReference",
+                  "schemaTag",
+                  "parserName",
+                  "mappingRegistry",
+                  "sourceTerm",
+                  "fieldTerm",
+                  "textTerm",
+                  "titlePathTerm",
+                  "entityType",
+                  "metadataDomain",
+                  "contentTypeFallback"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "mappingStatus": {
+          "enum": [
+            "explicit",
+            "inferredFromRepository",
+            "inferredFromOfficialProductDocumentation",
+            "inferredFromContent",
+            "ambiguous",
+            "unmapped",
+            "notApplicable"
+          ]
+        },
+        "retrievalConfidence": {
+          "description": "Confidence in the ASIM classification as a retrieval signal, not a claim that source data is ASIM normalized.",
+          "enum": [
+            "exact",
+            "high",
+            "medium",
+            "low",
+            "none"
+          ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mappingStatus": {
+                "enum": [
+                  "explicit",
+                  "inferredFromRepository",
+                  "inferredFromOfficialProductDocumentation",
+                  "inferredFromContent",
+                  "ambiguous"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "asimSchemas": {
+                "minItems": 1
+              },
+              "asimEvidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mappingStatus": {
+                "enum": [
+                  "unmapped",
+                  "notApplicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "asimSchemas": {
+                "maxItems": 0
+              },
+              "asimEvidence": {
+                "maxItems": 0
+              },
+              "retrievalConfidence": {
+                "const": "none"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,909 @@
+{
+  "schemaVersion": 1,
+  "databasePath": "Tools\\Sentinel-Content-Forge-Accelerator\\database\\runtime\\microsoft-content-database.jsonl",
+  "asimSchemas": [
+    "AuditEvent"
+  ],
+  "contentTypes": [
+    "analyticRule"
+  ],
+  "recordsRead": 2748,
+  "invalidLinesSkipped": 0,
+  "matchingRecords": 287,
+  "returnedRecords": [
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "ASimAuditEventLogs"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "ThreatIntelligence",
+          "ThreatIntelligenceTaxii",
+          "Workday",
+          "MicrosoftDefenderThreatIntelligence"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "ThreatIntelIndicators",
+          "Workday"
+        ],
+        "description": "Detects a match in Workday activity from any IP Indicator of Compromise (IOC) provided by Threat Intelligence (TI).",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "CommandAndControl"
+        ],
+        "techniques": [
+          "T1071"
+        ],
+        "title": "TI Map IP entity to Workday(ASimAuditEventLogs)"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Threat Intelligence (NEW)",
+        "manifestPath": "Solutions/Threat Intelligence (NEW)/Data/Solution_ThreatIntelligenceUpdated.json",
+        "metadataDomains": [
+          "Security - Threat Intelligence"
+        ],
+        "metadataPath": "Solutions/Threat Intelligence (NEW)/SolutionMetadata.json",
+        "name": "Threat Intelligence (NEW)",
+        "offerId": "azure-sentinel-solution-threatintelligence-updated",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "8f3889ac93e496233a26099013488b69dc5cc1860bcfc27bcc5e6815381a1d99",
+      "sourcePath": "Solutions/Threat Intelligence (NEW)/Analytic Rules/IPEntity_Workday_Updated.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "ASimAuditEventLogs"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "ThreatIntelligence",
+          "ThreatIntelligenceTaxii",
+          "Workday",
+          "MicrosoftDefenderThreatIntelligence"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "ThreatIntelligenceIndicator",
+          "Workday"
+        ],
+        "description": "Detects a match in Workday activity from any IP Indicator of Compromise (IOC) provided by Threat Intelligence (TI).",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "CommandAndControl"
+        ],
+        "techniques": [
+          "T1071"
+        ],
+        "title": "TI map IP entity to Workday(ASimAuditEventLogs)"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Threat Intelligence",
+        "manifestPath": "Solutions/Threat Intelligence/Data/Solution_ThreatIntelligenceTemplateSpec.json",
+        "metadataDomains": [
+          "Security - Threat Intelligence"
+        ],
+        "metadataPath": "Solutions/Threat Intelligence/SolutionMetadata.json",
+        "name": "Threat Intelligence",
+        "offerId": "azure-sentinel-solution-threatintelligence-taxii",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "15184e68f84daa81dade18b9786c92fda1c10334b4e9a132b9f6b4b8784ec7c8",
+      "sourcePath": "Solutions/Threat Intelligence/Analytic Rules/IPEntity_Workday.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "titlePathTerm",
+            "value": "api"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies successful AWS CloudTrail API activity originating from an IP address identified as a TOR exit node in\nthe external TOR list hosted at https://firewalliplists.gypthecat.com/lists/kusto/kusto-tor-exit.csv.zip. The rule alerts\nonly when CloudTrail indicates the request completed successfully with no ErrorCode and no ErrorMessage, and the source\nIP is present in the TOR exit node list.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Execution"
+        ],
+        "techniques": [
+          "T1204"
+        ],
+        "title": "AWSCloudTrail - Successful API executed from a Tor exit node"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "84df63310591b915a2606897ea6490a2f01ae51f7266871be6ec82e1a3f044c7",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_APIfromTor.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS",
+          "AWSS3"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies AWS CloudTrail events associated with changes to Amazon RDS database security groups and database\nsecurity group ingress rules, which may indicate unauthorized modification of internet-facing RDS access. Validate whether\nthe change was authorized and consistent with change control policy.\nRDS API Reference Docs: https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_Operations.html",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence",
+          "PrivilegeEscalation",
+          "DefenseEvasion"
+        ],
+        "techniques": [
+          "T1098.001",
+          "T1562.007"
+        ],
+        "title": "AWSCloudTrail - Changes to internet facing AWS RDS Database instances"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "bd7f0df65a2d1c3f53bade087db6cf105d77925802e5088a5e45b02756ca7315",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_ChangeToRDSDatabase.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS",
+          "AWSS3"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies changes to Amazon VPC(Virtual Private Cloud) settings that can alter network exposure, routing, or access controls.\nThis rule identifies changes to Amazon VPC (Virtual Private Cloud) settings such as new ACL entries, routes, routetable or Gateways. \nAWS VPC API Docs: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/OperationList-query-vpc.html'",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "PrivilegeEscalation",
+          "DefenseEvasion"
+        ],
+        "techniques": [
+          "T1078",
+          "T1562.007"
+        ],
+        "title": "AWSCloudTrail - Changes to Amazon VPC settings"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "fcb8a31cc6a4bc019b102aa988ec0f4bde440009d5dd00179dfcfc0dca1fcbed",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_ChangeToVPC.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          },
+          {
+            "schema": "WebSession",
+            "source": "fieldTerm",
+            "value": "UserAgent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "textTerm",
+            "value": "user agent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "titlePathTerm",
+            "value": "web"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "WebSession"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS",
+          "AWSS3"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies manipulation of AWS CloudTrail, CloudWatch/EventBridge, or VPC Flow Logs that can indicate defense evasion.\nThis alert identifies any manipulation of AWS CloudTrail, Cloudwatch/EventBridge or VPC Flow logs.\nMore Information: AWS CloudTrail API: https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_Operations.html \nAWS Cloudwatch/Eventbridge API: https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_Operations.html \nAWS DelteteFlowLogs API : https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DeleteFlowLogs.html '",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion"
+        ],
+        "techniques": [
+          "T1070"
+        ],
+        "title": "AWSCloudTrail - Changes made to AWS CloudTrail logs"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "16eddcba1a00ae597aa482705f1881a84da7a49fe1e89806e5a3cdf3693d1590",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_ClearStopChangeTrailLogs.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          },
+          {
+            "schema": "WebSession",
+            "source": "fieldTerm",
+            "value": "UserAgent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "textTerm",
+            "value": "user agent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "titlePathTerm",
+            "value": "web"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "WebSession"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS",
+          "AWSS3"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies AWS API calls that attempt to reduce logging or visibility in an account by stopping logging, deleting trails, deleting flow logs, or deleting event buses. This behavior can indicate defense evasion or the deliberate suppression of telemetry used to monitor security posture.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion"
+        ],
+        "techniques": [
+          "T1562.008"
+        ],
+        "title": "AWSCloudTrail - Config Service Resource Deletion Attempts"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "6be74466ce352557289a0779f10c85e63996da2fd4614cf72a3337d37554dd5a",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_ConfigServiceResourceDeletion.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          },
+          {
+            "schema": "Authentication",
+            "source": "fieldTerm",
+            "value": "MFAUsed"
+          },
+          {
+            "schema": "Authentication",
+            "source": "fieldTerm",
+            "value": "ConsoleLogin"
+          },
+          {
+            "schema": "Authentication",
+            "source": "textTerm",
+            "value": "multi factor authentication"
+          },
+          {
+            "schema": "Authentication",
+            "source": "titlePathTerm",
+            "value": "login"
+          },
+          {
+            "schema": "Authentication",
+            "source": "titlePathTerm",
+            "value": "logon"
+          },
+          {
+            "schema": "Authentication",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "Authentication"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS",
+          "AWSS3"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies successful AWS Management Console sign-ins where CloudTrail records a ConsoleLogin event without\nmulti-factor authentication. The rule looks for logins where MFAUsed is not Yes and the console response is not\nFailure, which can indicate credential misuse or weak account protection.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "PrivilegeEscalation",
+          "Persistence",
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1078"
+        ],
+        "title": "AWSCloudTrail - Login to AWS Management Console without MFA"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "8ebf2728712fa700985af32dde1667774eeccd6b76eb6a1730052b14d52aeec4",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_ConsoleLogonWithoutMFA.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies creation of IAM policies that grant CloudFormation and IAM permissions commonly used for privilege\nescalation, followed by attachment activity to a user, role, or group. Review whether the new policy and any\nsubsequent attachment were authorized because this pattern can enable an attacker to create or elevate access.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "PrivilegeEscalation",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1484",
+          "T1098.003"
+        ],
+        "title": "AWSCloudTrail - CloudFormation policy created then used for privilege escalation"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "5e9046fe7fc8828db087d70c8d24c69ad8cf6051aad806ce09823b19806e4c8c",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_CreatedCloudFormationPolicytoPrivilegeEscalation.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies creation of IAM policies that provide broad CRUD permissions for DynamoDB, followed by policy attachment activity. This sequence can indicate an attempt to grant capabilities that support\nprivilege escalation and should be validated against approved administrative changes.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "PrivilegeEscalation",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1484",
+          "T1098.003"
+        ],
+        "title": "AWSCloudTrail - Creation of CRUD DynamoDB policy and then privilege escalation"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "9adb1b6950c1455b07953081e88a11a2ec969d473e7f09472b7b5386e2fcca98",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_CreatedCRUDDyanmoDBPolicytoPrivilegeEscalation.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies creation of IAM policies that grant broad IAM CRUD permissions, followed by attachment of that policy to a user, role, or group. This pattern may indicate an attempt to establish or expand\nprivileged access and should be reviewed as potential privilege escalation.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "PrivilegeEscalation",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1484",
+          "T1098.003"
+        ],
+        "title": "AWSCloudTrail - Creation of new CRUD IAM policy and then privilege escalation"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "27168e8a28f8402a344e146ffed797f97a6162670e82402c2e4830cf2245701f",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_CreatedCRUDIAMtoPrivilegeEscalation.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies creation of IAM policies that grant permissions for broad KMS CRUD actions, followed by attachment activity to a principal. This sequence can be used to expand access to encryption keys or\ndisable protections and should be investigated as possible privilege escalation.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "PrivilegeEscalation",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1484",
+          "T1098.003"
+        ],
+        "title": "AWSCloudTrail - Creation of CRUD KMS policy and then privilege escalation"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "52bc82e6909db4b7fdd861b90fbfe75770a866228038bc0e7699d1b634eec44b",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_CreatedCRUDKMSPolicytoPrivilegeEscalation.yaml"
+    }
+  ]
+}

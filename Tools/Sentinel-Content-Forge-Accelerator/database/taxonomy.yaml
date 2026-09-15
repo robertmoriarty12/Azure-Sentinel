@@ -1,206 +1,486 @@
-version: 1
+version: 2
 
 databaseCategorization:
-  method: metadata-and-asim
-  unmatchedCategory: unclassified
+  method: asim-evidence-and-mapping-registry
+  unmatchedCategory: unmapped
+
+retrievalInference:
+  scoring:
+    sourceTerm: 8
+    fieldTerm: 4
+    textTerm: 3
+    titlePathTerm: 2
+    entityType: 1
+    maximumMatchesPerSignal: 2
+  thresholds:
+    highScore: 8
+    mediumScore: 5
+    secondaryMinimumScore: 6
+    secondaryMaximumDifference: 3
+    maximumSchemas: 2
+  metadataDomainFallbacks:
+    Security - Network: NetworkSession
+    Networking: NetworkSession
+    Identity: Authentication
+    User Behavior (UEBA): Authentication
+    Cloud Provider: AuditEvent
+    Security - Cloud Security: AuditEvent
+    Compliance: AuditEvent
+    DevOps: AuditEvent
+    Application: WebSession
+    Storage: FileEvent
+    Security - Information Protection: FileEvent
+    Security - Vulnerability Management: AssetEntity
+    IT Operations: AssetEntity
+    Security - Threat Intelligence: AlertEvent
+    Security - Threat Protection: AlertEvent
+    Security - Insider Threat: AuditEvent
+    Security - Others: AlertEvent
+    Internet of Things (IoT): AssetEntity
+    Security - Automation (SOAR): AlertEvent
+  contentTypeFallbacks:
+    analyticRule: AlertEvent
+    huntingQuery: AlertEvent
+    workbook: AuditEvent
+    parser: AuditEvent
+
+asimSchemas:
+  - id: AlertEvent
+    aliases:
+      - AlertEvent
+      - ASimAlertEvent
+      - vimAlertEvent
+    retrievalSignals:
+      sourceTerms:
+        - SecurityAlert
+        - AlertInfo
+        - AlertEvidence
+        - SecurityIncident
+        - AWSGuardDuty
+        - GuardDuty
+        - BehaviorAnalytics
+        - ThreatIntelligenceIndicator
+        - ThreatIntelIndicators
+      fieldTerms:
+        - AlertName
+        - AlertSeverity
+        - AlertType
+        - ProviderName
+        - CompromisedEntity
+        - Entities
+        - AlertId
+      textTerms:
+        - security alert
+        - alert finding
+        - incident alert
+      titlePathTerms:
+        - alert
+        - detection
+        - incident
+        - finding
+        - guardduty
+  - id: AuditEvent
+    aliases:
+      - AuditEvent
+      - ASimAuditEvent
+      - vimAuditEvent
+    retrievalSignals:
+      sourceTerms:
+        - AWSCloudTrail
+        - AzureActivity
+        - AuditLogs
+        - OfficeActivity
+        - CloudAppEvents
+        - GCPAuditLogs
+        - GCPAudit
+        - KubeAudit
+        - DataverseActivity
+        - EmailEvents
+        - MessageEvents
+      fieldTerms:
+        - OperationName
+        - ActivityDisplayName
+        - RequestParameters
+        - ResponseElements
+        - TargetResources
+        - InitiatedBy
+        - EventName
+        - Caller
+        - ResourceProvider
+      textTerms:
+        - control plane
+        - administrative activity
+        - audit event
+      titlePathTerms:
+        - audit
+        - activity
+        - configuration
+        - policy change
+        - api
+        - administrative
+  - id: Authentication
+    aliases:
+      - Authentication
+      - ASimAuthentication
+      - vimAuthentication
+    retrievalSignals:
+      sourceTerms:
+        - SigninLogs
+        - AADNonInteractiveUserSignInLogs
+        - AADServicePrincipalSignInLogs
+        - AADManagedIdentitySignInLogs
+        - DeviceLogonEvents
+        - IdentityLogonEvents
+        - IdentityLogon
+        - OktaSystemLog
+        - DuoAuthentication
+      fieldTerms:
+        - UserPrincipalName
+        - ResultType
+        - LogonType
+        - ConditionalAccessStatus
+        - MFAUsed
+        - AuthenticationRequirement
+        - AccountUpn
+        - AccountObjectId
+        - ConsoleLogin
+      textTerms:
+        - password spray
+        - brute force
+        - credential stuffing
+        - multi factor authentication
+      titlePathTerms:
+        - login
+        - logon
+        - sign-in
+        - signin
+        - mfa
+        - authentication
+        - credential
+      entityTypes:
+        - Account
+  - id: DhcpEvent
+    aliases:
+      - Dhcp
+      - DhcpEvent
+      - ASimDhcpEvent
+      - vimDhcpEvent
+    retrievalSignals:
+      sourceTerms:
+        - DhcpEvents
+        - DhcpEvent
+        - DHCP
+        - InfobloxDHCP
+        - WindowsDHCP
+      fieldTerms:
+        - DHCPOFFER
+        - DHCPACK
+        - DHCPDISCOVER
+        - Lease
+        - ClientMac
+        - MacAddress
+      textTerms:
+        - ip assignment
+        - dhcp lease
+      titlePathTerms:
+        - dhcp
+        - lease
+  - id: Dns
+    aliases:
+      - Dns
+      - ASimDns
+      - vimDns
+    retrievalSignals:
+      sourceTerms:
+        - DnsEvents
+        - DnsQueryEvents
+        - DnsQuery
+        - GCPDNSDataConnector
+      fieldTerms:
+        - DnsQuery
+        - QueryName
+        - ResponseCode
+        - DomainName
+        - DnsResponseName
+      textTerms:
+        - domain lookup
+        - dns query
+      titlePathTerms:
+        - dns
+        - nxdomain
+        - dga
+  - id: FileEvent
+    aliases:
+      - FileEvent
+      - ASimFileEvent
+      - vimFileEvent
+    retrievalSignals:
+      sourceTerms:
+        - DeviceFileEvents
+        - CloudStorageAggregatedEvents
+        - StorageBlobLogs
+        - SharePointFileOperation
+        - OneDriveEvents
+      fieldTerms:
+        - FileName
+        - FolderPath
+        - SHA256
+        - MD5
+        - FileOriginUrl
+        - ObjectKey
+        - BlobName
+        - FileCreated
+        - FileDeleted
+        - FileModified
+        - AttachmentName
+      textTerms:
+        - file activity
+        - file upload
+        - file download
+      titlePathTerms:
+        - file
+        - document
+        - blob
+        - storage
+        - upload
+        - download
+        - attachment
+        - hash
+      entityTypes:
+        - File
+        - FileHash
+  - id: NetworkSession
+    aliases:
+      - NetworkSession
+      - NetworkSessions
+      - ASimNetworkSession
+      - ASimNetworkSessions
+      - vimNetworkSession
+    retrievalSignals:
+      sourceTerms:
+        - DeviceNetworkEvents
+        - VMConnection
+        - AWSVPCFlow
+        - VPCFlow
+        - AzureFirewall
+        - WireData
+      fieldTerms:
+        - SrcIpAddr
+        - DstIpAddr
+        - SourceIP
+        - DestinationIP
+        - SourcePort
+        - DestinationPort
+        - SrcPortNumber
+        - DstPortNumber
+        - NetworkProtocol
+        - NetworkDirection
+        - SentBytes
+        - ReceivedBytes
+      textTerms:
+        - network flow
+        - network traffic
+        - port scan
+      titlePathTerms:
+        - network
+        - traffic
+        - flow
+        - connection
+        - beaconing
+        - firewall
+        - vpc
+        - nsg
+      entityTypes:
+        - IP
+  - id: ProcessEvent
+    aliases:
+      - ProcessCreate
+      - ProcessTerminate
+      - ProcessEvent
+      - ASimProcessCreate
+      - ASimProcessTerminate
+      - ASimProcessEvent
+      - vimProcessCreate
+      - vimProcessTerminate
+    retrievalSignals:
+      sourceTerms:
+        - DeviceProcessEvents
+        - CloudProcessEvents
+        - SysmonProcessEvents
+        - ProcessEvents
+      fieldTerms:
+        - ProcessCommandLine
+        - InitiatingProcessCommandLine
+        - ProcessId
+        - ParentProcess
+        - NewProcessName
+        - CommandLine
+        - ProcessName
+      textTerms:
+        - command execution
+        - process creation
+      titlePathTerms:
+        - process
+        - command
+        - powershell
+        - pwsh
+        - shell
+        - script
+        - execution
+      entityTypes:
+        - Process
+  - id: RegistryEvent
+    aliases:
+      - RegistryEvent
+      - ASimRegistryEvent
+      - vimRegistryEvent
+    retrievalSignals:
+      sourceTerms:
+        - DeviceRegistryEvents
+        - RegistryEvents
+      fieldTerms:
+        - RegistryKey
+        - RegistryValueName
+        - RegistryValueData
+        - RegistryValue
+        - SetValue
+        - DeleteValue
+      textTerms:
+        - run key
+        - registry value
+      titlePathTerms:
+        - registry
+        - defender exclusion
+  - id: UserManagement
+    aliases:
+      - UserManagement
+      - ASimUserManagement
+      - vimUserManagement
+    retrievalSignals:
+      sourceTerms:
+        - IdentityDirectoryEvents
+        - GoogleWorkspaceReportsAPI
+      fieldTerms:
+        - CreateUser
+        - DeleteUser
+        - UpdateUser
+        - AddMember
+        - RemoveMember
+        - AddMemberToRole
+        - RoleAssignment
+        - CreateAccessKey
+        - CreateLoginProfile
+        - GroupId
+      textTerms:
+        - user created
+        - user deleted
+        - group membership
+        - role assignment
+      titlePathTerms:
+        - user
+        - group
+        - role
+        - membership
+        - permission
+        - access key
+      entityTypes:
+        - Account
+        - SecurityGroup
+  - id: WebSession
+    aliases:
+      - WebSession
+      - ASimWebSession
+      - vimWebSession
+    retrievalSignals:
+      sourceTerms:
+        - W3CIISLog
+        - AppServiceHTTPLogs
+        - AWSWAF
+        - SquidProxy
+        - WebProxy
+      fieldTerms:
+        - RequestURL
+        - HttpRequestMethod
+        - HttpUserAgent
+        - csUriStem
+        - csUserAgent
+        - StatusCode
+        - UserAgent
+        - RequestUri
+        - URI
+        - Url
+      textTerms:
+        - web request
+        - http request
+        - user agent
+      titlePathTerms:
+        - web
+        - http
+        - url
+        - user agent
+        - apache
+        - iis
+        - waf
+        - proxy
+      entityTypes:
+        - URL
+  - id: AgentEvent
+    aliases:
+      - AgentEvent
+      - ASimAgentEvent
+      - vimAgentEvent
+    retrievalSignals:
+      sourceTerms:
+        - CopilotActivity
+        - AgentEvent
+        - AgentEvents
+        - AiActivity
+      fieldTerms:
+        - AgentId
+        - Model
+        - Prompt
+        - ToolInvocation
+        - Plugin
+      textTerms:
+        - tool invocation
+        - ai activity
+      titlePathTerms:
+        - copilot
+        - ai agent
+        - llm
+        - prompt
+  - id: AssetEntity
+    aliases:
+      - AssetEntity
+      - ASimAssetEntity
+      - vimAssetEntity
+    retrievalSignals:
+      sourceTerms:
+        - DeviceInfo
+        - DeviceTvmInfoGathering
+        - DeviceTvmSoftwareInventory
+        - AssetInventory
+        - SoftwareInventory
+      fieldTerms:
+        - DeviceName
+        - OSPlatform
+        - DeviceId
+        - ExposureLevel
+        - SoftwareName
+        - Vulnerability
+        - Inventory
+      textTerms:
+        - software inventory
+        - device posture
+      titlePathTerms:
+        - asset
+        - inventory
+        - vulnerability
+        - device posture
+        - software
+      entityTypes:
+        - Host
 
 sampleDataCategorization:
-  method: agent-guided
-  unmatchedCategory: unclassified
-
-categories:
-  - id: network
-    displayName: Network
-    metadataDomains:
-      - Networking
-      - Security - Network
-    asimFunctions:
-      - _Im_NetworkSession
-      - _Im_Dns
-      - _Im_WebSession
-    keywordHints:
-      - firewall
-      - network
-      - proxy
-      - dns
-      - http
-      - tls
-      - port
-      - packet
-    fieldHints:
-      - SrcIpAddr
-      - DstIpAddr
-      - SrcPortNumber
-      - DstPortNumber
-      - NetworkProtocol
-
-  - id: identity-authentication
-    displayName: Identity and authentication
-    metadataDomains:
-      - Identity
-      - User Behavior (UEBA)
-    asimFunctions:
-      - _Im_Authentication
-      - _Im_AuditEvent
-    keywordHints:
-      - authentication
-      - authorization
-      - login
-      - logon
-      - sign-in
-      - mfa
-      - identity
-      - directory
-    fieldHints:
-      - TargetUsername
-      - TargetUserId
-      - ActorUsername
-      - SrcIpAddr
-      - EventResult
-
-  - id: endpoint
-    displayName: Endpoint
-    metadataDomains: []
-    asimFunctions:
-      - _Im_ProcessCreate
-      - _Im_FileEvent
-      - _Im_RegistryEvent
-    keywordHints:
-      - endpoint
-      - process
-      - commandline
-      - malware
-      - antivirus
-      - edr
-      - registry
-    fieldHints:
-      - Process
-      - ProcessCommandLine
-      - FileName
-      - FileHash
-      - DvcHostname
-
-  - id: cloud-saas
-    displayName: Cloud and SaaS
-    metadataDomains:
-      - Cloud Provider
-      - Cloud Security
-      - Application
-    asimFunctions:
-      - _Im_AuditEvent
-    keywordHints:
-      - cloud
-      - saas
-      - api
-      - tenant
-      - subscription
-      - resource
-      - activity
-      - audit
-    fieldHints:
-      - AzureResourceId
-      - SubscriptionId
-      - TenantId
-      - OperationName
-      - CallerIpAddress
-
-  - id: database-audit
-    displayName: Database and audit
-    metadataDomains:
-      - Compliance
-      - Storage
-    asimFunctions:
-      - _Im_AuditEvent
-    keywordHints:
-      - database
-      - sql
-      - query
-      - audit
-      - table
-      - collection
-      - mongodb
-      - snowflake
-    fieldHints:
-      - DatabaseName
-      - QueryText
-      - ObjectName
-      - OperationName
-      - ActorUsername
-
-  - id: email-collaboration
-    displayName: Email and collaboration
-    metadataDomains: []
-    asimFunctions: []
-    keywordHints:
-      - email
-      - mailbox
-      - message
-      - attachment
-      - teams
-      - collaboration
-      - sharepoint
-      - onedrive
-    fieldHints:
-      - SenderFromAddress
-      - RecipientEmailAddress
-      - Subject
-      - AttachmentName
-      - MailboxOwnerUPN
-
-  - id: data-security
-    displayName: Data security
-    metadataDomains:
-      - Security - Information Protection
-      - Security - Insider Threat
-    asimFunctions: []
-    keywordHints:
-      - data loss
-      - dlp
-      - classification
-      - exfiltration
-      - sensitive
-      - information protection
-    fieldHints:
-      - SensitivityLabel
-      - FileName
-      - FileHash
-      - DestinationUrl
-      - UserPrincipalName
-
-  - id: threat-intelligence
-    displayName: Threat intelligence
-    metadataDomains:
-      - Security - Threat Intelligence
-    asimFunctions: []
-    keywordHints:
-      - threat intelligence
-      - indicator
-      - ioc
-      - observable
-      - reputation
-      - intel
-    fieldHints:
-      - IndicatorId
-      - ObservableValue
-      - ThreatType
-      - ConfidenceScore
-      - ValidUntil
-
-  - id: security-operations
-    displayName: Security operations
-    metadataDomains:
-      - Security - Automation (SOAR)
-    asimFunctions: []
-    keywordHints:
-      - incident
-      - alert
-      - case
-      - playbook
-      - automation
-      - response
-    fieldHints:
-      - IncidentNumber
-      - AlertName
-      - Severity
-      - Status
-      - Owner
+  method: asim-compatibility-agent-guided
+  unmatchedCategory: unmapped

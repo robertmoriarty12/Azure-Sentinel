@@ -1,0 +1,43 @@
+id: c813b3a2-ee06-48f9-aa74-a02b449e5afd
+name: Audit telemetry disabled or retention reduced
+description: Identifies successful changes that disable audit streaming or reduce the audit retention period to seven days.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - DefenseEvasion
+relevantTechniques:
+  - T1562
+  - T1070
+query: |
+  let Lookback = 1h;
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationResult == "Success"
+  | where OperationName in ("auditSettings.update", "retentionPolicies.update")
+  | where NewValue in ("Disabled", "7 days")
+  | extend AccountCustomEntity = ActorUsername, IPCustomEntity = ActorIpAddr
+  | project TimeGenerated, OperationName, OperationCategory, ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, TargetResourceType, TargetResourceName, PreviousValue, NewValue, CorrelationId, AccountCustomEntity, IPCustomEntity
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+customDetails:
+  OperationName: OperationName
+  TargetResource: TargetResourceName
+  PreviousValue: PreviousValue
+  NewValue: NewValue
+version: 1.0.0
+kind: Scheduled

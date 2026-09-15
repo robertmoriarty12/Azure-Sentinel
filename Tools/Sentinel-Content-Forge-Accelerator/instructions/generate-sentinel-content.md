@@ -10,10 +10,13 @@ Generate review-ready Microsoft Sentinel content from the user's representative 
 
 - Generate only the content types requested in `content-request.json`: analytic rules, hunting queries, workbooks, or a subset.
 - Do not generate content until the current run contains nonempty `references-*.json` files retrieved from the Microsoft Content Database.
+- Treat `decision-log.md` as a required narrative companion to `generation-evidence.json`. The evidence file records structured paths and fields; the decision log explains why each reference and scenario was chosen.
 - When `sourceBinding.status` is `provided`, use its connector ID and destination table or parser exactly as supplied.
 - When `sourceBinding.status` is `unbound`, derive a local provisional connector ID and table or parser name from the sample-data product label. Set the status to `provisional` and record the rationale in `content-request.json` before generating content.
 - A provisional binding is a local draft identifier, not a claim about a deployed Sentinel connector, table, or parser. Do not use it outside the staged run output.
-- Do not invent a source field, event value, or ASIM mapping. Provisional connector and data-source names are the only permitted derived identifiers.
+- Do not invent a source field or event value. Do not claim a raw source uses an ASIM parser unless the input or approved mapping evidence establishes that parser relationship. Provisional connector and data-source names are the only permitted derived identifiers.
+- Use an ASIM parser in generated KQL only when the source has explicit ASIM evidence or an approved inferred mapping. A raw sample classified only as `compatible` must use its source table or provisional data source in generated KQL.
+- For `compatible` raw sample data, record that the ASIM parser must be confirmed before producing source-agnostic ASIM content or integrating the staged output into a solution.
 - Use the selected Microsoft examples to learn relevant security scenarios, content structure, KQL style, MITRE mapping patterns, entity mapping patterns, and workbook design patterns.
 - Do not copy an entire source artifact. Produce original content tailored to the submitted data.
 - Do not use Partner or Community examples.
@@ -38,6 +41,20 @@ Generate review-ready Microsoft Sentinel content from the user's representative 
 
 7. Create `generation-evidence.json` according to `schemas/generation-evidence.schema.json`. Map every generated file to the selected reference source paths and the sample-data fields it uses.
 8. Continue directly to the validation stage after generation.
+
+## Decision Log Update
+
+Before writing generated artifacts, update Step 3 in `decision-log.md` with the source-binding decision, requested artifact counts, planned artifact names, chosen scenarios, required sample-data fields, and selected Microsoft references.
+
+After writing generated artifacts, update the same section with:
+
+1. Requested versus generated counts for analytic rules, hunting queries, and workbooks.
+2. Every generated artifact path, its scenario, the exact sample-data fields it uses, and the Microsoft references used to inform it.
+3. A source-field coverage result confirming that all generated query fields exist in the sample data or were explicitly supplied by the user.
+4. A binding-consistency result confirming the provided or provisional connector ID and data source are used consistently.
+5. A distinctness result explaining why generated artifacts do not duplicate one another.
+6. Any scenario omitted because the input did not contain sufficient fields or meaningful event behavior.
+7. An originality statement explaining how the generated output adapts selected patterns without copying a full reference artifact.
 
 ## Analytic Rules
 
@@ -73,7 +90,7 @@ For each workbook:
 - Use a unique `fromTemplateId` that begins with `sentinel-`.
 - Include a useful time-range parameter and multiple purposeful query or visualization items when the data supports them.
 - Query only the submitted data source and fields that the sample data supports.
-- Keep the workbook focused on investigation and operational visibility for the classified category.
+- Keep the workbook focused on investigation and operational visibility for the compatible ASIM schema or schemas.
 
 Use `.github/instructions/workbook.instructions.md` as the governing format and quality guidance.
 

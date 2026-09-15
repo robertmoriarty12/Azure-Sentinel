@@ -1,0 +1,72 @@
+{
+  "requestVersion": 1,
+  "sampleData": {
+    "path": "Tools/Sentinel-Content-Forge-Accelerator/examples/cloud-audit/fabrikam-cloud-control-audit-events.jsonl",
+    "format": "jsonl",
+    "fieldDescriptions": {
+      "EventType": "Type of service-provider event. All records are cloud audit events.",
+      "OperationName": "Specific control-plane or administrative operation performed in the service.",
+      "OperationCategory": "High-level action category such as Read, Create, Update, Delete, or Export.",
+      "OperationResult": "Outcome of the requested operation.",
+      "FailureReason": "Reason a failed operation was rejected when present.",
+      "ActorUsername": "User or service principal that initiated the operation.",
+      "ActorUserId": "Stable identifier for the actor.",
+      "ActorType": "Whether the actor is a user or service principal.",
+      "ActorIpAddr": "Source IP address used for the operation.",
+      "ActorCountry": "Country classification associated with the source IP address.",
+      "ActorUserAgent": "Client identifier reported by the service.",
+      "AuthMethod": "Authentication method used for the operation.",
+      "IsPrivileged": "Whether the actor had elevated permissions for the operation.",
+      "TargetResourceType": "Type of resource affected by the operation.",
+      "TargetResourceName": "Display name of the affected resource.",
+      "TargetResourceId": "Stable identifier for the affected resource.",
+      "TargetUserName": "User or service account affected by a role or credential operation when present.",
+      "TargetUserId": "Stable identifier for the affected user or service account when present.",
+      "TargetRole": "Role assigned or removed when the event changes access.",
+      "WorkspaceName": "Logical workspace affected by the operation when present.",
+      "DestinationUrl": "Export destination URL when the operation creates or completes a data export.",
+      "PreviousValue": "Prior policy, setting, or resource value when available.",
+      "NewValue": "Updated policy, setting, or resource value when available.",
+      "CorrelationId": "Identifier that groups related operations in one activity sequence."
+    }
+  },
+  "classificationHints": {
+    "asimSchemas": [
+      "AuditEvent",
+      "UserManagement"
+    ]
+  },
+  "requestedContent": {
+    "types": [
+      "analyticRule",
+      "huntingQuery"
+    ],
+    "targetCounts": {
+      "analyticRule": 4,
+      "huntingQuery": 2
+    }
+  },
+  "sourceBinding": {
+    "status": "provisional",
+    "connectorId": "FabrikamCloudControl",
+    "connectorName": "Fabrikam Cloud Control (provisional)",
+    "dataSource": {
+      "name": "FabrikamCloudControlAudit_CL",
+      "kind": "table"
+    },
+    "rationale": "The fictional ISV sample does not identify a deployed Sentinel connector or destination table. These draft identifiers are derived from the Fabrikam Cloud Control audit sample and must be confirmed or replaced before solution integration."
+  },
+  "context": {
+    "productDescription": "Synthetic cloud audit telemetry from Fabrikam Cloud Control, a fictional ISV cloud governance and workspace-management service provider.",
+    "knownSecurityScenarios": [
+      "Repeated failed privileged role-assignment attempts followed by a successful OrganizationOwner assignment from one unknown external source.",
+      "Audit streaming disabled and audit retention reduced from 365 days to 7 days.",
+      "Multiple API keys created from an unknown external source.",
+      "Service principal credential creation followed by a WorkspaceContributor assignment.",
+      "External workspace sharing and public API access enabled for the Finance workspace.",
+      "A full Finance workspace export completed to an external download location.",
+      "Backup deletion after other privileged changes.",
+      "Administrative remediation that restores audit settings and revokes unauthorized API keys."
+    ]
+  }
+}

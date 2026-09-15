@@ -24,6 +24,7 @@ Validate generated analytic rules, hunting queries, and workbooks before present
 6. Rerun the same validation command after each repair until no failed checks remain or the agent needs user input.
 7. When no failures remain, identify the checks marked `notRun` and tell the user what test-workspace or human review is still needed.
 8. Check `sourceBinding.status` in `content-request.json`. When it is `provisional`, explicitly identify the derived connector ID and data source as requiring confirmation before solution integration. When it is `unbound`, do not claim dependency validation was performed.
+9. Update Step 4 in `decision-log.md` after every static validation, behavior evaluation, repair, or rerun. Include the validation counts, artifact-specific failures or warnings, evaluation method, observed result, and remaining review gates.
 
 ## Validation Interpretation
 
@@ -41,6 +42,7 @@ Validate generated analytic rules, hunting queries, and workbooks before present
 - Do not claim a workbook is usable merely because its JSON parses. Open it in a test workspace and review its parameters, visualizations, and no-data behavior.
 - Do not replace a provisional binding with guessed production identifiers. Obtain them from the user or an actual connector definition before moving staged output into a solution.
 - Preserve the selected reference paths and generation evidence when repairing content so reviewers can trace the artifact back to the Microsoft examples and sample-data fields.
+- Preserve the first failing validation result in `decision-log.md`, describe the repair decision, and append the subsequent validation result. Do not rewrite history to show only the final pass.
 
 ## Governing Repository Guidance
 
@@ -57,5 +59,6 @@ The accelerator may label output as review-ready only when:
 1. `validation-report.json` contains zero failed checks.
 2. The report, selected references, classification, content request, and generation evidence are present in the run directory.
 3. The final user summary lists every remaining `notRun` review or execution gate.
+4. `decision-log.md` documents the final status, decisions, evaluations, repairs, and remaining review gates.
 
 Generated content must remain in the staged output directory until a human approves moving it into a real Sentinel solution or pull request.

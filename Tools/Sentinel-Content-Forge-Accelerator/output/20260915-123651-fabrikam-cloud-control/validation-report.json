@@ -1,0 +1,764 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-15T17:52:21Z",
+  "overallStatus": "needsReview",
+  "summary": {
+    "artifactsChecked": 6,
+    "passedChecks": 104,
+    "warningChecks": 0,
+    "failedChecks": 0,
+    "notRunChecks": 12
+  },
+  "artifacts": [
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_AuditTelemetryTampering.yaml",
+      "contentType": "analyticRule",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.severity",
+          "category": "structure",
+          "status": "passed",
+          "message": "The severity value is valid."
+        },
+        {
+          "id": "structure.status",
+          "category": "structure",
+          "status": "passed",
+          "message": "The status value is valid."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "structure.kind",
+          "category": "structure",
+          "status": "passed",
+          "message": "Analytic rule kind is supported."
+        },
+        {
+          "id": "structure.scheduled-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "semantic.schedule-order",
+          "category": "semantic",
+          "status": "passed",
+          "message": "The scheduled rule time range is valid."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_ExternalSharingOrPublicApiEnabled.yaml",
+      "contentType": "analyticRule",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.severity",
+          "category": "structure",
+          "status": "passed",
+          "message": "The severity value is valid."
+        },
+        {
+          "id": "structure.status",
+          "category": "structure",
+          "status": "passed",
+          "message": "The status value is valid."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "structure.kind",
+          "category": "structure",
+          "status": "passed",
+          "message": "Analytic rule kind is supported."
+        },
+        {
+          "id": "structure.scheduled-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "semantic.schedule-order",
+          "category": "semantic",
+          "status": "passed",
+          "message": "The scheduled rule time range is valid."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_MultipleApiKeysFromExternalSource.yaml",
+      "contentType": "analyticRule",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.severity",
+          "category": "structure",
+          "status": "passed",
+          "message": "The severity value is valid."
+        },
+        {
+          "id": "structure.status",
+          "category": "structure",
+          "status": "passed",
+          "message": "The status value is valid."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "structure.kind",
+          "category": "structure",
+          "status": "passed",
+          "message": "Analytic rule kind is supported."
+        },
+        {
+          "id": "structure.scheduled-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "semantic.schedule-order",
+          "category": "semantic",
+          "status": "passed",
+          "message": "The scheduled rule time range is valid."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_PrivilegedRoleAssignmentAfterFailures.yaml",
+      "contentType": "analyticRule",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.severity",
+          "category": "structure",
+          "status": "passed",
+          "message": "The severity value is valid."
+        },
+        {
+          "id": "structure.status",
+          "category": "structure",
+          "status": "passed",
+          "message": "The status value is valid."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "structure.kind",
+          "category": "structure",
+          "status": "passed",
+          "message": "Analytic rule kind is supported."
+        },
+        {
+          "id": "structure.scheduled-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "semantic.schedule-order",
+          "category": "semantic",
+          "status": "passed",
+          "message": "The scheduled rule time range is valid."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Hunting Queries/FabrikamCloudControl_AuditControlChangeTimeline.yaml",
+      "contentType": "huntingQuery",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Hunting Queries/FabrikamCloudControl_ExternalPrivilegedActivityTimeline.yaml",
+      "contentType": "huntingQuery",
+      "status": "needsReview",
+      "checks": [
+        {
+          "id": "structure.file-extension",
+          "category": "structure",
+          "status": "passed",
+          "message": "The artifact file extension matches its content type."
+        },
+        {
+          "id": "dependency.source-binding",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "The content uses a provisional connector and data-source binding.",
+          "details": "Confirm or replace connectorId=FabrikamCloudControl and dataSource=FabrikamCloudControlAudit_CL before solution integration."
+        },
+        {
+          "id": "structure.required-fields",
+          "category": "structure",
+          "status": "passed",
+          "message": "All required fields are present."
+        },
+        {
+          "id": "structure.id",
+          "category": "structure",
+          "status": "passed",
+          "message": "The ID is a valid GUID."
+        },
+        {
+          "id": "structure.name",
+          "category": "structure",
+          "status": "passed",
+          "message": "The name has a valid format."
+        },
+        {
+          "id": "structure.description",
+          "category": "structure",
+          "status": "passed",
+          "message": "The description has a valid format."
+        },
+        {
+          "id": "structure.version",
+          "category": "structure",
+          "status": "passed",
+          "message": "The version uses semantic versioning."
+        },
+        {
+          "id": "dependency.required-data-connectors-format",
+          "category": "dependency",
+          "status": "passed",
+          "message": "Data connector dependency entries have a valid structure."
+        },
+        {
+          "id": "dependency.requested-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The requested connector and data source are declared as dependencies."
+        },
+        {
+          "id": "semantic.tactics",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE tactics are valid."
+        },
+        {
+          "id": "semantic.techniques",
+          "category": "semantic",
+          "status": "passed",
+          "message": "MITRE technique formats are valid."
+        },
+        {
+          "id": "query.present",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is present."
+        },
+        {
+          "id": "query.length",
+          "category": "query",
+          "status": "passed",
+          "message": "The KQL query is within the character limit."
+        },
+        {
+          "id": "dependency.query-data-source",
+          "category": "dependency",
+          "status": "passed",
+          "message": "The KQL query references the requested data source."
+        },
+        {
+          "id": "query.execution",
+          "category": "manualReview",
+          "status": "notRun",
+          "message": "KQL execution was not run by the static validator.",
+          "details": "Run the query against representative sample data or a test workspace before approval."
+        },
+        {
+          "id": "semantic.entity-mappings",
+          "category": "semantic",
+          "status": "passed",
+          "message": "Entity mappings have a valid structure."
+        }
+      ]
+    }
+  ]
+}

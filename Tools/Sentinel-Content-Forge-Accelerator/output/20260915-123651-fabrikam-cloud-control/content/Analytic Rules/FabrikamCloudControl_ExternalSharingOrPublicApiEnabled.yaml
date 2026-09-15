@@ -1,0 +1,42 @@
+id: e0f6f1f9-593a-4a44-bcaa-6f9a5be69a23
+name: External sharing or public API access enabled
+description: Identifies successful policy changes that enable external workspace sharing or public API access from an unknown external source.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1190
+query: |
+  let Lookback = 1h;
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationResult == "Success" and ActorCountry == "ZZ"
+  | where OperationName in ("workspaceAccessPolicies.update", "accessPolicies.update")
+  | where NewValue in ("External sharing enabled", "Public API access enabled")
+  | extend AccountCustomEntity = ActorUsername, IPCustomEntity = ActorIpAddr
+  | project TimeGenerated, OperationName, ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, WorkspaceName, TargetResourceType, TargetResourceName, PreviousValue, NewValue, CorrelationId, AccountCustomEntity, IPCustomEntity
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+customDetails:
+  OperationName: OperationName
+  WorkspaceName: WorkspaceName
+  PreviousValue: PreviousValue
+  NewValue: NewValue
+version: 1.0.0
+kind: Scheduled

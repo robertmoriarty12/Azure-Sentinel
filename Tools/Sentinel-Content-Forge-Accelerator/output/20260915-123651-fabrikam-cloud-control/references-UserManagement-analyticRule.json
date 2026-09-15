@@ -1,0 +1,847 @@
+{
+  "schemaVersion": 1,
+  "databasePath": "Tools\\Sentinel-Content-Forge-Accelerator\\database\\runtime\\microsoft-content-database.jsonl",
+  "asimSchemas": [
+    "UserManagement"
+  ],
+  "contentTypes": [
+    "analyticRule"
+  ],
+  "recordsRead": 2748,
+  "invalidLinesSkipped": 0,
+  "matchingRecords": 49,
+  "returnedRecords": [
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "permission"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Triggers on admin permissions granted.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence"
+        ],
+        "techniques": [
+          "T1098"
+        ],
+        "title": "GWorkspace - Admin permissions granted"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "98fbd3cb64118606d142d74e0b3dbfac664a2cb7b13b761f6b325f605d0c5a73",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceAdminPermissionsGranted.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects alert events.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1190",
+          "T1133"
+        ],
+        "title": "GWorkspace - Alert events"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "74e46eb28a1c3659df7c5c826a687dd83707cce7fe9ca785737baf5eb023a050",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceAlertEvents.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Triggers when API Access has been granted to a new client.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "LateralMovement"
+        ],
+        "techniques": [
+          "T1550"
+        ],
+        "title": "GWorkspace - API Access Granted"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "282c0c519487e4ceff3ea38b5af45451feba96641866104afd9c8c7bd13f38ee",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceApiAccessToNewClient.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects user access change.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence"
+        ],
+        "techniques": [
+          "T1098"
+        ],
+        "title": "GWorkspace - User access has been changed"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "d6e33d937abce655da64d08ff1990f8ce766c26ae1596e67240800dddc8e1e41",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceChangedUserAccess.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "fieldTerm",
+            "value": "SrcIpAddr"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "titlePathTerm",
+            "value": "nsg"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "entityType",
+            "value": "IP"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement",
+          "NetworkSession"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects requests with different user agents from one source in short timeframe.'",
+        "entityTypes": [
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence",
+          "Collection"
+        ],
+        "techniques": [
+          "T1185",
+          "T1176"
+        ],
+        "title": "GWorkspace - Multiple user agents for single source"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "7e745fb94610e1bd422db9d46779c3c32e959dfb87c225f638d827b26ef3b42b",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceDifferentUAsFromSingleIP.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects outbound relays may be added to collect email.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Collection"
+        ],
+        "techniques": [
+          "T1114"
+        ],
+        "title": "GWorkspace - An Outbound Relay has been added to a G Suite Domain"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "b5e8cb926fb2d21c2aad8d5f2f833b64206269664de5209640ab5d86d82c9e4b",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceOutboundRelayAddedToSuiteDomain.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects possible brute force attack.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "CredentialAccess"
+        ],
+        "techniques": [
+          "T1110"
+        ],
+        "title": "GWorkspace - Possible brute force attack"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "9d9c42de0d1c64a27da0084a996cafb5862e6fe260c89f08b46e67a91a2ee29e",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspacePossibleBruteForce.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects possible maldoc file name in Google drive.'",
+        "entityTypes": [
+          "File",
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1566"
+        ],
+        "title": "GWorkspace - Possible maldoc file name in Google drive"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "3498ca772d5717c90a73ddc6371aeeff169d8055ec3f4c50f71bca7e40545e41",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspacePossibleMaldocFileNamesInGDRIVE.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Triggers on two-step authentification disabled for a user.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "CredentialAccess"
+        ],
+        "techniques": [
+          "T1111"
+        ],
+        "title": "GWorkspace - Two-step authentification disabled for a user"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "995860ca9eb33ff64b7961014e6ad017d749a4f5a2d3d3c6980db96cc71fabe6",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceTwoStepAuthenticationDisabledForUser.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Detects unexpected OS update.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "DefenseEvasion",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1036",
+          "T1554"
+        ],
+        "title": "GWorkspace - Unexpected OS update"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "84e7991d469eb175876df2be41b23ab62b49e5bb0ac785e037a19b95126984e1",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceUnexpectedOSUpdate.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "fieldTerm",
+            "value": "CreateAccessKey"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "access key"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Detects creation of a new IAM access key on an existing user account, which could be used to establish persistence. This action should be validated by the AWS account administrator. Reference: https://stratus-red-team.cloud/attack-techniques/AWS/aws.persistence.iam-backdoor-user/",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence"
+        ],
+        "techniques": [
+          "T1098.001"
+        ],
+        "title": "AWSCloudTrail - Creation of Access Key for IAM User"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "9743159f6dc6998f0c3a869ffbb8245d81cd215740eab412538fab6c72600bf5",
+      "sourcePath": "Solutions/Amazon Web Services/Analytic Rules/AWS_UserAccessKeyCreated.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "textTerm",
+            "value": "user created"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "medium",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "JiraAuditAPI"
+        ],
+        "contentType": "analyticRule",
+        "dataTypes": [
+          "JiraAudit"
+        ],
+        "description": "'Detects when new user was created.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Analytic Rules",
+        "tactics": [
+          "Persistence"
+        ],
+        "techniques": [
+          "T1078"
+        ],
+        "title": "Jira - New user created"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/AtlassianJiraAudit",
+        "manifestPath": "Solutions/AtlassianJiraAudit/Data/Solution_AtlassianJiraAudit.json",
+        "metadataDomains": [
+          "DevOps",
+          "Security - Automation (SOAR)"
+        ],
+        "metadataPath": "Solutions/AtlassianJiraAudit/SolutionMetadata.json",
+        "name": "AtlassianJiraAudit",
+        "offerId": "azure-sentinel-solution-atlassianjiraaudit",
+        "providers": [
+          "Atlassian"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "d92431c6d1e397c3370fd1f927fe6b423346ecaec9bcefc9586bb4393e016ae7",
+      "sourcePath": "Solutions/AtlassianJiraAudit/Analytic Rules/JiraNewUser.yaml"
+    }
+  ]
+}

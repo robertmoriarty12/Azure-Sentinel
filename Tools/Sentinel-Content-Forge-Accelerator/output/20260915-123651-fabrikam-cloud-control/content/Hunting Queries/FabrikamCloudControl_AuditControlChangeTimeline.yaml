@@ -1,0 +1,31 @@
+id: 4d24cb42-7e50-4f67-8e27-ee6127c43a3b
+name: Audit control change and remediation timeline
+description: Finds audit streaming and retention-policy changes, including remediation, so analysts can review the actor, old value, new value, and time sequence.
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+tactics:
+  - DefenseEvasion
+relevantTechniques:
+  - T1562
+  - T1070
+query: |
+  let Lookback = 1d;
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationName in ("auditSettings.update", "retentionPolicies.update")
+  | where OperationResult == "Success"
+  | extend AccountCustomEntity = ActorUsername, IPCustomEntity = ActorIpAddr
+  | project TimeGenerated, OperationName, OperationCategory, ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, AuthMethod, TargetResourceType, TargetResourceName, PreviousValue, NewValue, CorrelationId, AccountCustomEntity, IPCustomEntity
+  | order by TimeGenerated asc
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+version: 1.0.0

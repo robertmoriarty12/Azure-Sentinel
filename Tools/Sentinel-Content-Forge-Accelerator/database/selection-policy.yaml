@@ -18,7 +18,12 @@ selection:
 
 quality:
   assumeMicrosoftSupportedContentIsGood: true
-  categorizationAffectsEligibility: false
+  asimClassificationAffectsEligibility: false
+
+classification:
+  model: asim
+  taxonomyPath: database/taxonomy.yaml
+  mappingRegistryPath: database/asim-mapping-registry.yaml
 
 contentTypes:
   analyticRule:

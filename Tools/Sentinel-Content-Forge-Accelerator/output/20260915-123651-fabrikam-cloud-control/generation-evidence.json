@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "contentRequestPath": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content-request.json",
+  "classificationPath": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/classification.json",
+  "artifacts": [
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_PrivilegedRoleAssignmentAfterFailures.yaml",
+      "contentType": "analyticRule",
+      "purpose": "Detect a successful OrganizationOwner role assignment after denied attempts from the same actor and source address.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "TargetUserName", "TargetUserId", "TargetRole", "CorrelationId"],
+      "referencePaths": ["Solutions/Amazon Web Services/Analytic Rules/AWS_CreatedCloudFormationPolicytoPrivilegeEscalation.yaml", "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceAdminPermissionsGranted.yaml"]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_AuditTelemetryTampering.yaml",
+      "contentType": "analyticRule",
+      "purpose": "Detect audit streaming disabled or audit retention reduced to seven days.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationCategory", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "TargetResourceType", "TargetResourceName", "PreviousValue", "NewValue", "CorrelationId"],
+      "referencePaths": ["Solutions/Amazon Web Services/Analytic Rules/AWS_ClearStopChangeTrailLogs.yaml"]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_MultipleApiKeysFromExternalSource.yaml",
+      "contentType": "analyticRule",
+      "purpose": "Detect multiple API key creations by one unknown external actor during one hour.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "AuthMethod", "TargetResourceName", "WorkspaceName", "SourceApplication"],
+      "referencePaths": ["Solutions/Amazon Web Services/Analytic Rules/AWS_UserAccessKeyCreated.yaml"]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Analytic Rules/FabrikamCloudControl_ExternalSharingOrPublicApiEnabled.yaml",
+      "contentType": "analyticRule",
+      "purpose": "Detect unknown external actors enabling workspace sharing or public API access.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "WorkspaceName", "TargetResourceType", "TargetResourceName", "PreviousValue", "NewValue", "CorrelationId"],
+      "referencePaths": ["Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceChangedUserAccess.yaml", "Solutions/GoogleWorkspaceReports/Analytic Rules/GWorkspaceApiAccessToNewClient.yaml"]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Hunting Queries/FabrikamCloudControl_ExternalPrivilegedActivityTimeline.yaml",
+      "contentType": "huntingQuery",
+      "purpose": "Investigate successful high-impact cloud-control activity from unknown external sources.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationCategory", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "AuthMethod", "IsPrivileged", "TargetResourceType", "TargetResourceName", "TargetResourceId", "TargetUserName", "TargetRole", "WorkspaceName", "DestinationUrl", "PreviousValue", "NewValue", "CorrelationId"],
+      "referencePaths": ["Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/InitialAccess/entra-app-credential-change-sp-signin-burst-chain.yaml", "Solutions/Amazon Web Services/Hunting Queries/AWS_CreateAccessKey.yaml", "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceDocumentSharedExternally.yaml"]
+    },
+    {
+      "path": "Tools/Sentinel-Content-Forge-Accelerator/output/20260915-123651-fabrikam-cloud-control/content/Hunting Queries/FabrikamCloudControl_AuditControlChangeTimeline.yaml",
+      "contentType": "huntingQuery",
+      "purpose": "Investigate audit streaming and retention changes, including remediation activity.",
+      "sampleDataFields": ["TimeGenerated", "OperationName", "OperationCategory", "OperationResult", "ActorUsername", "ActorUserId", "ActorIpAddr", "ActorCountry", "AuthMethod", "TargetResourceType", "TargetResourceName", "PreviousValue", "NewValue", "CorrelationId"],
+      "referencePaths": ["Solutions/Amazon Web Services/Analytic Rules/AWS_ClearStopChangeTrailLogs.yaml", "Solutions/Amazon Web Services/Hunting Queries/AWS_BucketVersioningSuspended.yaml"]
+    }
+  ]
+}

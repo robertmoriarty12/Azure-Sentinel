@@ -5,6 +5,8 @@
 # Per-request generated content and reports
 /output/*
 !/output/.gitkeep
+!/output/20260914-185340-contoso-edge-network/
+!/output/20260914-185340-contoso-edge-network/**
 
 # Python execution artifacts
 __pycache__/

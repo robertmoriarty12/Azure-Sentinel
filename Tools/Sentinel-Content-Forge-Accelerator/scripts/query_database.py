@@ -1,3 +1,4 @@
+# Retrieves trusted Microsoft Content Database references by canonical ASIM schema and content type.
 from __future__ import annotations
 
 import argparse
@@ -24,7 +25,7 @@ SUPPORTED_CONTENT_TYPES = (
 def parse_arguments() -> argparse.Namespace:
     accelerator_root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(
-        description="Retrieve Microsoft Content Database records by category and content type."
+        description="Retrieve Microsoft Content Database records by ASIM schema and content type."
     )
     parser.add_argument(
         "--database",
@@ -32,9 +33,10 @@ def parse_arguments() -> argparse.Namespace:
         help="Path to the JSONL Microsoft Content Database. Defaults to runtime, then the checked-in baseline.",
     )
     parser.add_argument(
-        "--category",
+        "--asim-schema",
+        action="append",
         required=True,
-        help="Category ID defined in database/taxonomy.yaml.",
+        help="Canonical ASIM schema ID defined in database/taxonomy.yaml. Repeat to match multiple schemas.",
     )
     parser.add_argument(
         "--content-type",
@@ -56,25 +58,24 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_taxonomy_category_ids(taxonomy_path: Path) -> set[str]:
+def load_asim_schema_ids(taxonomy_path: Path) -> set[str]:
     with taxonomy_path.open(encoding="utf-8") as taxonomy_file:
         taxonomy = yaml.safe_load(taxonomy_file)
     if not isinstance(taxonomy, Mapping):
         raise ValueError(f"Expected a YAML mapping in {taxonomy_path}")
 
-    categories = taxonomy.get("categories", [])
-    if not isinstance(categories, list):
-        raise ValueError("Expected categories to be a list in taxonomy.yaml")
+    schema_definitions = taxonomy.get("asimSchemas", [])
+    if not isinstance(schema_definitions, list):
+        raise ValueError("Expected asimSchemas to be a list in taxonomy.yaml")
 
-    category_ids = {
-        category["id"]
-        for category in categories
-        if isinstance(category, Mapping) and isinstance(category.get("id"), str)
+    schema_ids = {
+        schema["id"]
+        for schema in schema_definitions
+        if isinstance(schema, Mapping) and isinstance(schema.get("id"), str)
     }
-    unmatched_category = taxonomy.get("databaseCategorization", {}).get("unmatchedCategory")
-    if isinstance(unmatched_category, str):
-        category_ids.add(unmatched_category)
-    return category_ids
+    if not schema_ids:
+        raise ValueError("No ASIM schema IDs were found in taxonomy.yaml")
+    return schema_ids
 
 
 def resolve_database_path(database_path: Path | None, accelerator_root: Path) -> Path:
@@ -113,35 +114,86 @@ def is_microsoft_supported(record: Mapping[str, Any]) -> bool:
     return isinstance(solution, Mapping) and solution.get("supportTier") == "Microsoft"
 
 
-def is_category_match(record: Mapping[str, Any], category: str) -> tuple[bool, bool]:
+def is_asim_schema_match(
+    record: Mapping[str, Any], requested_schemas: set[str]
+) -> bool:
     classification = record.get("classification")
     if not isinstance(classification, Mapping):
-        return False, False
+        return False
 
-    if classification.get("primaryCategory") == category:
-        return True, True
+    record_schemas = classification.get("asimSchemas", [])
+    if not isinstance(record_schemas, list):
+        return False
+    return bool(requested_schemas.intersection(record_schemas))
 
-    secondary_categories = classification.get("secondaryCategories", [])
-    return isinstance(secondary_categories, list) and category in secondary_categories, False
 
 
-def record_sort_key(record: Mapping[str, Any], is_primary_match: bool) -> tuple[int, str, str]:
+def record_sort_key(
+    record: Mapping[str, Any], requested_schemas: set[str]
+) -> tuple[int, int, int, str, str]:
+    classification = record.get("classification")
+    mapping_status = (
+        classification.get("mappingStatus", "unmapped")
+        if isinstance(classification, Mapping)
+        else "unmapped"
+    )
+    mapping_status_order = {
+        "explicit": 0,
+        "inferredFromRepository": 1,
+        "inferredFromOfficialProductDocumentation": 2,
+        "inferredFromContent": 3,
+        "ambiguous": 4,
+        "unmapped": 5,
+        "notApplicable": 6,
+    }
+    confidence = (
+        classification.get("retrievalConfidence", "none")
+        if isinstance(classification, Mapping)
+        else "none"
+    )
+    confidence_order = {
+        "exact": 0,
+        "high": 1,
+        "medium": 2,
+        "low": 3,
+        "none": 4,
+    }
+    record_schemas = (
+        classification.get("asimSchemas", [])
+        if isinstance(classification, Mapping)
+        else []
+    )
+    match_position = min(
+        (
+            index
+            for index, schema_id in enumerate(record_schemas)
+            if schema_id in requested_schemas
+        ),
+        default=99,
+    )
     content = record.get("content")
     content_type = content.get("contentType", "") if isinstance(content, Mapping) else ""
     source_path = record.get("sourcePath", "")
-    return (0 if is_primary_match else 1, str(content_type).casefold(), str(source_path).casefold())
+    return (
+        mapping_status_order.get(str(mapping_status), 99),
+        confidence_order.get(str(confidence), 99),
+        match_position,
+        str(content_type).casefold(),
+        str(source_path).casefold(),
+    )
 
 
 def build_result(
     database_path: Path,
-    category: str,
+    requested_asim_schemas: list[str],
     requested_content_types: list[str],
     records: list[dict[str, Any]],
     invalid_lines: int,
     limit: int,
 ) -> dict[str, Any]:
-    selected_records: list[tuple[dict[str, Any], bool]] = []
+    selected_records: list[dict[str, Any]] = []
     matching_records = 0
+    requested_schema_set = set(requested_asim_schemas)
 
     for record in records:
         if not is_microsoft_supported(record):
@@ -151,18 +203,19 @@ def build_result(
             continue
         if requested_content_types and content.get("contentType") not in requested_content_types:
             continue
-        is_match, is_primary_match = is_category_match(record, category)
-        if not is_match:
+        if not is_asim_schema_match(record, requested_schema_set):
             continue
         matching_records += 1
-        selected_records.append((record, is_primary_match))
+        selected_records.append(record)
 
-    selected_records.sort(key=lambda item: record_sort_key(item[0], item[1]))
-    returned_records = [record for record, _ in selected_records[:limit]]
+    selected_records.sort(
+        key=lambda record: record_sort_key(record, requested_schema_set)
+    )
+    returned_records = selected_records[:limit]
     return {
         "schemaVersion": 1,
         "databasePath": str(database_path),
-        "category": category,
+        "asimSchemas": requested_asim_schemas,
         "contentTypes": requested_content_types or list(SUPPORTED_CONTENT_TYPES),
         "recordsRead": len(records),
         "invalidLinesSkipped": invalid_lines,
@@ -196,16 +249,18 @@ def main() -> int:
         return 2
 
     try:
-        category_ids = load_taxonomy_category_ids(taxonomy_path)
-        if arguments.category not in category_ids:
-            valid_categories = ", ".join(sorted(category_ids))
+        schema_ids = load_asim_schema_ids(taxonomy_path)
+        requested_asim_schemas = list(dict.fromkeys(arguments.asim_schema))
+        invalid_schemas = sorted(set(requested_asim_schemas).difference(schema_ids))
+        if invalid_schemas:
+            valid_schemas = ", ".join(sorted(schema_ids))
             raise ValueError(
-                f"Unknown category '{arguments.category}'. Valid categories: {valid_categories}"
+                f"Unknown ASIM schema(s) {', '.join(invalid_schemas)}. Valid schemas: {valid_schemas}"
             )
         records, invalid_lines = load_records(database_path, record_schema_path)
         result = build_result(
             database_path,
-            arguments.category,
+            requested_asim_schemas,
             arguments.content_type or [],
             records,
             invalid_lines,

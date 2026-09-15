@@ -2,42 +2,60 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Azure/Azure-Sentinel/blob/master/Tools/Sentinel-Content-Forge-Accelerator/schemas/classification.schema.json",
   "title": "Sentinel Content Forge classification",
-  "description": "The agent's score-free category assignment for a submitted sample-data request.",
+  "description": "The agent's score-free ASIM schema compatibility assessment for submitted sample data.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schemaVersion",
     "contentRequestPath",
-    "primaryCategory",
-    "secondaryCategories",
+    "asimSchemas",
+    "mappingStatus",
     "rationale",
-    "signals"
+    "evidence"
   ],
   "properties": {
     "schemaVersion": {
-      "const": 1
+      "const": 2
     },
     "contentRequestPath": {
       "type": "string",
       "minLength": 1
     },
-    "primaryCategory": {
-      "type": "string",
-      "minLength": 1
-    },
-    "secondaryCategories": {
+    "asimSchemas": {
       "type": "array",
       "items": {
-        "type": "string",
-        "minLength": 1
+        "enum": [
+          "AgentEvent",
+          "AlertEvent",
+          "AssetEntity",
+          "AuditEvent",
+          "Authentication",
+          "DhcpEvent",
+          "Dns",
+          "FileEvent",
+          "NetworkSession",
+          "ProcessEvent",
+          "RegistryEvent",
+          "UserManagement",
+          "WebSession"
+        ]
       },
       "uniqueItems": true
+    },
+    "mappingStatus": {
+      "enum": [
+        "explicit",
+        "compatible",
+        "ambiguous",
+        "unmapped",
+        "notApplicable"
+      ]
     },
     "rationale": {
       "type": "string",
       "minLength": 1
     },
-    "signals": {
+    "evidence": {
       "type": "array",
       "minItems": 1,
       "items": {
@@ -55,7 +73,9 @@
               "dataSource",
               "fieldDescription",
               "securityScenario",
-              "asimHint"
+              "asimHint",
+              "localAsimParser",
+              "officialProductDocumentation"
             ]
           },
           "details": {
@@ -65,5 +85,46 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mappingStatus": {
+            "enum": [
+              "explicit",
+              "compatible",
+              "ambiguous"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "asimSchemas": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mappingStatus": {
+            "enum": [
+              "unmapped",
+              "notApplicable"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "asimSchemas": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
 }

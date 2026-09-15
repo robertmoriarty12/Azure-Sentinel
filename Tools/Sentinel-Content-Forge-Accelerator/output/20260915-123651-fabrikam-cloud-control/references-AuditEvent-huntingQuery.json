@@ -1,0 +1,875 @@
+{
+  "schemaVersion": 1,
+  "databasePath": "Tools\\Sentinel-Content-Forge-Accelerator\\database\\runtime\\microsoft-content-database.jsonl",
+  "asimSchemas": [
+    "AuditEvent"
+  ],
+  "contentTypes": [
+    "huntingQuery"
+  ],
+  "recordsRead": 2748,
+  "invalidLinesSkipped": 0,
+  "matchingRecords": 390,
+  "returnedRecords": [
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "_Im_AuditEvent"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [
+          "_Im_AuditEvent"
+        ],
+        "connectorIds": [
+          "AzureActiveDirectory",
+          "MicrosoftThreatProtection"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AuditLogs",
+          "CloudAppEvents"
+        ],
+        "description": "Detects consent or application permission grant changes followed by first-seen CloudAppEvents bursts for OAuth apps.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess",
+          "Discovery",
+          "Collection"
+        ],
+        "techniques": [
+          "T1550.001",
+          "T1528",
+          "T1087.004"
+        ],
+        "title": "OAuth consent change followed by first-seen OAuthAppId burst"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Hybrid Attack - Cloud & Identity",
+        "manifestPath": "Solutions/Hybrid Attack - Cloud & Identity/Data/Solution_HybridAttackCloud&Identity.json",
+        "metadataDomains": [
+          "Security - Threat Protection"
+        ],
+        "metadataPath": "Solutions/Hybrid Attack - Cloud & Identity/SolutionMetadata.json",
+        "name": "Hybrid Attack - Cloud & Identity",
+        "offerId": "azure-sentinel-solution-hybridattackcloudidentity",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "eff2cf20e49dabfbdda84abf70c6da55bd46e7c61e6810972221674519b35472",
+      "sourcePath": "Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/Discovery/oauth-consent-followed-by-firstseen-oauthappid-burst.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "_Im_AuditEvent"
+          },
+          {
+            "schema": "Authentication",
+            "source": "parserReference",
+            "value": "_Im_Authentication"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "Authentication"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [
+          "_Im_AuditEvent",
+          "_Im_Authentication"
+        ],
+        "connectorIds": [
+          "AzureActiveDirectory"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AuditLogs",
+          "AADServicePrincipalSignInLogs"
+        ],
+        "description": "This query hunts for Entra application or service principal credential changes that are followed by rapid sign-in activity for the affected principal.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "CredentialAccess",
+          "DefenseEvasion"
+        ],
+        "techniques": [
+          "T1098",
+          "T1078.004",
+          "T1550"
+        ],
+        "title": "Entra App credential change followed by service principal sign-in burst"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Hybrid Attack - Cloud & Identity",
+        "manifestPath": "Solutions/Hybrid Attack - Cloud & Identity/Data/Solution_HybridAttackCloud&Identity.json",
+        "metadataDomains": [
+          "Security - Threat Protection"
+        ],
+        "metadataPath": "Solutions/Hybrid Attack - Cloud & Identity/SolutionMetadata.json",
+        "name": "Hybrid Attack - Cloud & Identity",
+        "offerId": "azure-sentinel-solution-hybridattackcloudidentity",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "239ea4d5b6400653165bf1b63b5355a5e255a3bd53414d8b52c7db9da3d08ede",
+      "sourcePath": "Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/InitialAccess/entra-app-credential-change-sp-signin-burst-chain.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "_Im_AuditEvent"
+          },
+          {
+            "schema": "Authentication",
+            "source": "parserReference",
+            "value": "_Im_Authentication"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent",
+          "Authentication"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [
+          "_Im_AuditEvent",
+          "_Im_Authentication"
+        ],
+        "connectorIds": [
+          "AzureActiveDirectory"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AuditLogs",
+          "SigninLogs"
+        ],
+        "description": "Detects likely cloud persistence by correlating app credential operations with near-term service principal authentication bursts.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "PrivilegeEscalation"
+        ],
+        "techniques": [
+          "T1098",
+          "T1078.004",
+          "T1550.001"
+        ],
+        "title": "App credential change followed by SP sign-in burst"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Hybrid Attack - Cloud & Identity",
+        "manifestPath": "Solutions/Hybrid Attack - Cloud & Identity/Data/Solution_HybridAttackCloud&Identity.json",
+        "metadataDomains": [
+          "Security - Threat Protection"
+        ],
+        "metadataPath": "Solutions/Hybrid Attack - Cloud & Identity/SolutionMetadata.json",
+        "name": "Hybrid Attack - Cloud & Identity",
+        "offerId": "azure-sentinel-solution-hybridattackcloudidentity",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "62da6d53392a4305abf24c0161a65f8c222ce426d12b31922a0e6025990cfd7a",
+      "sourcePath": "Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/Persistence/app-cred-change-sp-burst.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "Authentication",
+            "source": "parserReference",
+            "value": "_Im_Authentication"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "_Im_AuditEvent"
+          }
+        ],
+        "asimSchemas": [
+          "Authentication",
+          "AuditEvent"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [
+          "_Im_Authentication",
+          "_Im_AuditEvent"
+        ],
+        "connectorIds": [
+          "AzureActiveDirectory",
+          "AzureActivity"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "SigninLogs",
+          "AzureActivity"
+        ],
+        "description": "This query hunts for uncommon service principal sign-ins that are quickly followed by Azure role assignment write operations.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "CredentialAccess",
+          "PrivilegeEscalation",
+          "Persistence"
+        ],
+        "techniques": [
+          "T1528",
+          "T1078.004",
+          "T1098"
+        ],
+        "title": "Rare service principal sign-in followed by RBAC write"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Hybrid Attack - Cloud & Identity",
+        "manifestPath": "Solutions/Hybrid Attack - Cloud & Identity/Data/Solution_HybridAttackCloud&Identity.json",
+        "metadataDomains": [
+          "Security - Threat Protection"
+        ],
+        "metadataPath": "Solutions/Hybrid Attack - Cloud & Identity/SolutionMetadata.json",
+        "name": "Hybrid Attack - Cloud & Identity",
+        "offerId": "azure-sentinel-solution-hybridattackcloudidentity",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "29615b27254a296cc176e99a613e421b1617e76757a8577c00a4d9628631d583",
+      "sourcePath": "Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/InitialAccess/rare-sp-signin-followed-by-rbac-write.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "ProcessEvent",
+            "source": "parserReference",
+            "value": "_Im_ProcessEvent"
+          },
+          {
+            "schema": "Authentication",
+            "source": "parserReference",
+            "value": "_Im_Authentication"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "parserReference",
+            "value": "_Im_AuditEvent"
+          }
+        ],
+        "asimSchemas": [
+          "ProcessEvent",
+          "Authentication",
+          "AuditEvent"
+        ],
+        "mappingStatus": "explicit",
+        "retrievalConfidence": "exact",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [
+          "_Im_ProcessEvent",
+          "_Im_Authentication",
+          "_Im_AuditEvent"
+        ],
+        "connectorIds": [
+          "MicrosoftThreatProtection"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "DeviceLogonEvents",
+          "DeviceProcessEvents",
+          "IdentityInfo"
+        ],
+        "description": "This query hunts for remote administration of a likely AAD Connect or sync host that is followed by privileged Entra audit activity by the same hybrid identity.",
+        "entityTypes": [
+          "Host",
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "PrivilegeEscalation",
+          "LateralMovement"
+        ],
+        "techniques": [
+          "T1021.001",
+          "T1047",
+          "T1098",
+          "T1078.004"
+        ],
+        "title": "AAD Connect host remote admin followed by Entra privilege operation"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Hybrid Attack - Cloud & Identity",
+        "manifestPath": "Solutions/Hybrid Attack - Cloud & Identity/Data/Solution_HybridAttackCloud&Identity.json",
+        "metadataDomains": [
+          "Security - Threat Protection"
+        ],
+        "metadataPath": "Solutions/Hybrid Attack - Cloud & Identity/SolutionMetadata.json",
+        "name": "Hybrid Attack - Cloud & Identity",
+        "offerId": "azure-sentinel-solution-hybridattackcloudidentity",
+        "providers": [
+          "Microsoft"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "a68f9473e4d573fcb0caa51ed6c9178ad73ad02602e90b42424f43cd93d8a5d7",
+      "sourcePath": "Solutions/Hybrid Attack - Cloud & Identity/Hunting Queries/LateralMovement/aad-connect-host-remote-admin-followed-by-entra-privilege-operation.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identify repeated failed AssumeRole attempts against existing IAM roles, which may indicate privilege escalation or lateral movement using a compromised identity.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "CredentialAccess",
+          "PrivilegeEscalation"
+        ],
+        "techniques": [
+          "T1110.001",
+          "T1098.003"
+        ],
+        "title": "AWSCloudTrail - IAM Assume Role Brute Force"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "2d1eb8518912ddb725db68cf84668694d23619e31b03ff3cea0d7097d9c40987",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_AssumeRoleBruteForce.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Detects S3 bucket versioning suspension events that may indicate preparation for destructive actions such as ransomware attack by reducing object recovery options.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Impact"
+        ],
+        "techniques": [
+          "T1485",
+          "T1565.001"
+        ],
+        "title": "AWSCloudTrail - S3 Bucket Versioning Suspended"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "d59e4d9540d18ca98fe1ae85a56b61e557a0a839ac829ac3b33ad851063011b0",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_BucketVersioningSuspended.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Detects CreateAccessKey events where a principal creates new access keys, which may indicate persistence or privilege abuse if generated for another identity.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "PrivilegeEscalation"
+        ],
+        "techniques": [
+          "T1098",
+          "T1098.004"
+        ],
+        "title": "AWSCloudTrail - IAM New Access Key Created for User"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "17c9cb35ee5cd2a0ab4990275689a4be7b2b71b3d88f7feb5a03e23929d07387",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_CreateAccessKey.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "titlePathTerm",
+            "value": "activity"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Detects CreateLoginProfile events that may indicate unauthorized password creation for IAM users and potential account persistence or privilege abuse.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "PrivilegeEscalation"
+        ],
+        "techniques": [
+          "T1098",
+          "T1098.001"
+        ],
+        "title": "AWSCloudTrail - IAM CreateLoginProfile Activity"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "e5958f8c626999e7d1c5d427171ed3a315183c080450287281346e0369acb65e",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_CreateLoginProfile.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "RequestParameters"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Detects EC2 RunInstances events without a key pair and with user data present, which may indicate malicious startup script execution on newly provisioned instances.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Execution"
+        ],
+        "techniques": [
+          "T1204",
+          "T1059"
+        ],
+        "title": "AWSCloudTrail - EC2 Instance Launched Without Key Pair"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "515e1976c2f103a3f46f0f58f2be2b004ef98fbc3d7b5f2d0e8b8b4c08fd34a0",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_EC2_WithoutKeyPair.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies ECR container image scan results reporting low severity vulnerabilities, which may indicate security weaknesses in container images requiring review before deployment.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Execution"
+        ],
+        "techniques": [
+          "T1204.003"
+        ],
+        "title": "AWSCloudTrail - ECR Container Image Low Severity Findings"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "7c3655000bc54305e7434a538068477bac7349f34a90ae1393c1e2b2eb2c72af",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_ECRContainerLow.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "AuditEvent",
+            "source": "sourceTerm",
+            "value": "AWSCloudTrail"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "ResponseElements"
+          },
+          {
+            "schema": "AuditEvent",
+            "source": "fieldTerm",
+            "value": "EventName"
+          }
+        ],
+        "asimSchemas": [
+          "AuditEvent"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "AWS"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "AWSCloudTrail"
+        ],
+        "description": "Identifies ECR container image scan results reporting medium severity vulnerabilities, which may indicate security weaknesses in container images requiring prompt review and remediation.",
+        "entityTypes": [
+          "Account",
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Execution"
+        ],
+        "techniques": [
+          "T1204.003"
+        ],
+        "title": "AWSCloudTrail - ECR Container Image Medium Severity Findings"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/Amazon Web Services",
+        "manifestPath": "Solutions/Amazon Web Services/Data/Solution_AmazonWebServices.json",
+        "metadataDomains": [
+          "Security - Cloud Security"
+        ],
+        "metadataPath": "Solutions/Amazon Web Services/SolutionMetadata.json",
+        "name": "Amazon Web Services",
+        "offerId": "azure-sentinel-solution-amazonwebservices",
+        "providers": [
+          "Amazon Web Services"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "29333971b0304495f7e07d624b9b14285a2d447d6bf751fef78e8f01894235b7",
+      "sourcePath": "Solutions/Amazon Web Services/Hunting Queries/AWS_ECRContainerMedium.yaml"
+    }
+  ]
+}

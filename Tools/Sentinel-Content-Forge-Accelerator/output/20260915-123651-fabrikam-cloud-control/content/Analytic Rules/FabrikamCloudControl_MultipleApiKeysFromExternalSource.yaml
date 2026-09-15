@@ -1,0 +1,51 @@
+id: 5730b99b-d5a0-4ae8-8127-7027d2f90d72
+name: Multiple API keys created from external source
+description: Identifies two or more successful API key creations by the same actor and unknown external source during one hour.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: FabrikamCloudControl
+    dataTypes:
+      - FabrikamCloudControlAudit_CL
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - Persistence
+  - PrivilegeEscalation
+relevantTechniques:
+  - T1098.001
+query: |
+  let Lookback = 1h;
+  let MinimumApiKeyCreations = 2;
+  FabrikamCloudControlAudit_CL
+  | where TimeGenerated > ago(Lookback)
+  | where OperationName == "apiKeys.create" and OperationResult == "Success"
+  | where ActorCountry == "ZZ"
+  | summarize
+      StartTime = min(TimeGenerated),
+      EndTime = max(TimeGenerated),
+      ApiKeyCreationCount = count(),
+      ApiKeyNames = make_set(TargetResourceName, 20),
+      WorkspaceNames = make_set(WorkspaceName, 20),
+      SourceApplications = make_set(SourceApplication, 10)
+      by ActorUsername, ActorUserId, ActorIpAddr, ActorCountry, AuthMethod
+  | where ApiKeyCreationCount >= MinimumApiKeyCreations
+  | extend AccountCustomEntity = ActorUsername, IPCustomEntity = ActorIpAddr
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: AccountCustomEntity
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+customDetails:
+  ApiKeyCreationCount: ApiKeyCreationCount
+  ApiKeyNames: ApiKeyNames
+  WorkspaceNames: WorkspaceNames
+  AuthMethod: AuthMethod
+version: 1.0.0
+kind: Scheduled

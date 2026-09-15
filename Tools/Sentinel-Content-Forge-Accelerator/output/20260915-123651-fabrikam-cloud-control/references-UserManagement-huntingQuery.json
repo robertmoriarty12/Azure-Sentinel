@@ -1,0 +1,859 @@
+{
+  "schemaVersion": 1,
+  "databasePath": "Tools\\Sentinel-Content-Forge-Accelerator\\database\\runtime\\microsoft-content-database.jsonl",
+  "asimSchemas": [
+    "UserManagement"
+  ],
+  "contentTypes": [
+    "huntingQuery"
+  ],
+  "recordsRead": 2748,
+  "invalidLinesSkipped": 0,
+  "matchingRecords": 73,
+  "returnedRecords": [
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches document shared externally.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Exfiltration",
+          "Impact"
+        ],
+        "techniques": [
+          "T1048",
+          "T1565"
+        ],
+        "title": "GWorkspace - Document shared externally"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "6d233b109f800703027ee20cbe52dcc48bc477b62ad9f8a990a82b48ab9437de",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceDocumentSharedExternally.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches document shared publicy  in web.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Exfiltration",
+          "Impact"
+        ],
+        "techniques": [
+          "T1048",
+          "T1565"
+        ],
+        "title": "GWorkspace - Document shared publicy in web"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "aaf6f2924117cfcec34271a14d9afe9d1ce879504a151a69d1a4ef4d6ba7d220",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceDocumentSharedPublicily.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches document shared publicy with link.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Exfiltration",
+          "Impact"
+        ],
+        "techniques": [
+          "T1048",
+          "T1565"
+        ],
+        "title": "GWorkspace - Document shared publicy with link"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "315654d56f490645e4876700705ebc3985a45aceaf61c3ffbc4cb2eba3e0e4c0",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceDocumentSharedPublicilyWithLink.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "fieldTerm",
+            "value": "SrcIpAddr"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "titlePathTerm",
+            "value": "nsg"
+          },
+          {
+            "schema": "NetworkSession",
+            "source": "entityType",
+            "value": "IP"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement",
+          "NetworkSession"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches users with multi IP addresses.'",
+        "entityTypes": [
+          "IP"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1078"
+        ],
+        "title": "GWorkspace - Multi IP addresses by user"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "a568b5b52bd8466ba79109e1e05f77efb021d7c501ea1b289f462aad8bc2dba4",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceMultiIPAddresses.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches possible SCAM/SPAM or phishing via calendar.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1566"
+        ],
+        "title": "GWorkspace - Possible SCAM/SPAM or Phishing via Calendar"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "3e8bbd514d6d59a27c0d292a7164b4075bed543f68ec4047c26202102934d987",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspacePossibleSCAMSPAMorPhishingCalendar.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches rare document types by users.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1566"
+        ],
+        "title": "GWorkspace - Rare document types by users"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "b738862627aceaf8fa104a93e5c398b35c8a085ee048b91dd2ac6d363a63b44b",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceRareDocType.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches shared private document.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Exfiltration",
+          "Impact"
+        ],
+        "techniques": [
+          "T1048",
+          "T1565"
+        ],
+        "title": "GWorkspace - Shared private document"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "783a25bb7f95374cd49005cd75ab402a2eb68fb672cf08aea10023927c665d8e",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceSharedPrivateDocument.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches suspended users.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Impact"
+        ],
+        "techniques": [
+          "T1531"
+        ],
+        "title": "GWorkspace - Suspended users"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "791e9f65f9478a25ed459f79552257d886ed562fc276543af3ea1b74d8e4b1b6",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceSuspendedUsers.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          },
+          {
+            "schema": "WebSession",
+            "source": "fieldTerm",
+            "value": "URL"
+          },
+          {
+            "schema": "WebSession",
+            "source": "textTerm",
+            "value": "user agent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "titlePathTerm",
+            "value": "user agent"
+          },
+          {
+            "schema": "WebSession",
+            "source": "entityType",
+            "value": "URL"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement",
+          "WebSession"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches uncommon user agent strings.'",
+        "entityTypes": [
+          "URL",
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "Persistence",
+          "Collection"
+        ],
+        "techniques": [
+          "T1185",
+          "T1176"
+        ],
+        "title": "GWorkspace - Uncommon user agent strings"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "bd846588986732ad695d687e495c457e0301a137472393a3df445d9870cc6efb",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceUncommonUAsString.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches unknown login type.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess",
+          "DefenseEvasion",
+          "LateralMovement"
+        ],
+        "techniques": [
+          "T1550",
+          "T1078"
+        ],
+        "title": "GWorkspace - Unknown login type"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "4be6226dfb8bff2b907fc4d6520d84679b5a4316a98ef9845e53b02539007356",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceUnknownLoginType.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches calendar invites used to deliver spam. This query shows results when user reports a calander invite as spam.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAccess"
+        ],
+        "techniques": [
+          "T1566"
+        ],
+        "title": "GWorkspace - User reported calendar invite as spam"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "1dd24cf47ca3c407dd3a670370481e0937c920bc69c9e1df94f1cffd3263f2df",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceUserReportedCalendarInviteAsSpam.yaml"
+    },
+    {
+      "classification": {
+        "asimEvidence": [
+          {
+            "schema": "UserManagement",
+            "source": "sourceTerm",
+            "value": "GoogleWorkspaceReportsAPI"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "titlePathTerm",
+            "value": "user"
+          },
+          {
+            "schema": "UserManagement",
+            "source": "entityType",
+            "value": "Account"
+          }
+        ],
+        "asimSchemas": [
+          "UserManagement"
+        ],
+        "mappingStatus": "inferredFromContent",
+        "retrievalConfidence": "high",
+        "taxonomyVersion": 2
+      },
+      "content": {
+        "asimFunctions": [],
+        "connectorIds": [
+          "GoogleWorkspaceReportsAPI"
+        ],
+        "contentType": "huntingQuery",
+        "dataTypes": [
+          "GWorkspaceActivityReports"
+        ],
+        "description": "'Query searches users with several devices.'",
+        "entityTypes": [
+          "Account"
+        ],
+        "fileExtension": ".yaml",
+        "manifestKey": "Hunting Queries",
+        "tactics": [
+          "InitialAcces"
+        ],
+        "techniques": [
+          "T1078"
+        ],
+        "title": "GWorkspace - Users with several devices"
+      },
+      "schemaVersion": 1,
+      "solution": {
+        "folderPath": "Solutions/GoogleWorkspaceReports",
+        "manifestPath": "Solutions/GoogleWorkspaceReports/Data/Solution_GoogleWorkspaceReports.json",
+        "metadataDomains": [
+          "IT Operations",
+          "Cloud Provider"
+        ],
+        "metadataPath": "Solutions/GoogleWorkspaceReports/SolutionMetadata.json",
+        "name": "GoogleWorkspaceReports",
+        "offerId": "azure-sentinel-solution-googleworkspacereports",
+        "providers": [
+          "Google"
+        ],
+        "publisherId": "azuresentinel",
+        "supportTier": "Microsoft"
+      },
+      "sourceHash": "8069dd33c2ac78cdf51b36532fd3df74d808b5e29bc2416716add77bec70a606",
+      "sourcePath": "Solutions/GoogleWorkspaceReports/Hunting Queries/GWorkspaceUserWithSeveralDevices.yaml"
+    }
+  ]
+}

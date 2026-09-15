@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T19:22:58Z",
+  "generatedAt": "2026-09-14T23:22:19Z",
   "sourceRoot": "Solutions",
   "selection": {
     "supportTier": "Microsoft",
@@ -16,6 +16,22 @@
     "duplicateArtifacts": 0,
     "contentParseWarnings": 0,
     "errors": 0
+  },
+  "classification": {
+    "mappedRecords": 2447,
+    "mappingStatusCounts": {
+      "explicit": 121,
+      "inferredFromContent": 2321,
+      "inferredFromRepository": 5,
+      "notApplicable": 301
+    },
+    "retrievalConfidenceCounts": {
+      "exact": 121,
+      "high": 1397,
+      "low": 554,
+      "medium": 375,
+      "none": 301
+    }
   },
   "warnings": [
     {

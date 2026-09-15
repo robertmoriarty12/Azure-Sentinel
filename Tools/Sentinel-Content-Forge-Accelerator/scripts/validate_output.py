@@ -1,3 +1,4 @@
+# Statically validates staged Sentinel analytic rules, hunting queries, and workbooks and writes a review report.
 from __future__ import annotations
 
 import argparse
