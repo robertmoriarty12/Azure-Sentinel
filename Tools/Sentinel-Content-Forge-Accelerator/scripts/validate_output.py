@@ -707,7 +707,16 @@ def validate_analytic_schedule(content: Mapping[str, Any]) -> list[dict[str, str
                     "queryFrequency must be less than or equal to queryPeriod.",
                 )
             )
-        elif period_milliseconds > 14 * 24 * 60 * 60 * 1000:
+        elif frequency_milliseconds < period_milliseconds:
+            checks.append(
+                warning_check(
+                    "semantic.schedule-overlap",
+                    "semantic",
+                    "queryPeriod exceeds queryFrequency, so consecutive evaluations overlap.",
+                    "Document suppression, a stable episode key, or the accepted duplicate-alert risk.",
+                )
+            )
+        if period_milliseconds > 14 * 24 * 60 * 60 * 1000:
             checks.append(
                 failed_check(
                     "semantic.query-period-limit",

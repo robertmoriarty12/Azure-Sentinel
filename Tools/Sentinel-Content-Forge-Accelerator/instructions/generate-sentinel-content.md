@@ -9,6 +9,7 @@ Generate review-ready Microsoft Sentinel content from the user's representative 
 ## Generation Boundaries
 
 - Generate only the content types requested in `content-request.json`: analytic rules, hunting queries, workbooks, or a subset.
+- Determine the analytic-rule delivery audience before choosing an output format. For an ISV building solution content for publication through the Microsoft Sentinel GitHub content workflow, generate the repository YAML artifact. For an end user or customer deploying directly to a Sentinel workspace, generate an ARM deployment-template JSON artifact. When both audiences are requested, generate both representations from the same rule definition and verify that their behavior is equivalent.
 - Do not generate content until the current run contains nonempty `references-*.json` files retrieved from the Microsoft Content Database.
 - Treat `decision-log.md` as a required narrative companion to `generation-evidence.json`. The evidence file records structured paths and fields; the decision log explains why each reference and scenario was chosen.
 - When `sourceBinding.status` is `provided`, use its connector ID and destination table or parser exactly as supplied.
@@ -29,9 +30,11 @@ Generate review-ready Microsoft Sentinel content from the user's representative 
 1. Read `content-request.json`, `classification.json`, and all `references-*.json` files for the current run. Stop and report the missing retrieval artifact if any requested content type has no selected Microsoft references.
 2. Open the original `sourcePath` files for selected references that best match the incoming data shape and requested content type.
 3. Inspect `sourceBinding` in `content-request.json`. Use a provided binding unchanged. If it is unbound, derive a provisional binding, record its rationale, and save the updated request before creating any YAML or JSON.
-4. Create a concise generation plan that names every proposed artifact, its purpose, required source fields, expected MITRE tactic or techniques when applicable, the source-binding status, and the reference paths informing it.
-5. Verify each required source field exists in the submitted sample data or has a supplied field description before generating the artifact.
-6. Generate artifacts into these directories:
+4. Identify the delivery audience and output format for each analytic rule: ISV solution publication uses YAML; direct customer deployment uses ARM JSON; dual delivery uses both.
+5. Create a concise generation plan that names every proposed artifact, its purpose, output format and audience, required source fields, expected MITRE tactic or techniques when applicable, the source-binding status, and the reference paths informing it.
+6. Verify each required source field exists in the submitted sample data or has a supplied field description before generating the artifact. When the sample is an API or Graph export but the rule targets a Log Analytics table, map every export property to the documented workspace-table column and type. Do not assume that casing, nested paths, or success fields are identical.
+7. For each analytic rule, create a behavior contract in the decision log before generation. Map every material claim in the name and description to the source fields and KQL conditions that enforce it. Include grouping keys, thresholds, time windows, event ordering, exclusions, and the scheduled-query overlap policy.
+8. Generate artifacts into these directories:
 
    ```text
    output/<run-id>/content/Analytic Rules/
@@ -39,8 +42,8 @@ Generate review-ready Microsoft Sentinel content from the user's representative 
    output/<run-id>/content/Workbooks/
    ```
 
-7. Create `generation-evidence.json` according to `schemas/generation-evidence.schema.json`. Map every generated file to the selected reference source paths and the sample-data fields it uses.
-8. Continue directly to the validation stage after generation.
+9. Create `generation-evidence.json` according to `schemas/generation-evidence.schema.json`. Map every generated file to the selected reference source paths and the sample-data fields it uses.
+10. Continue directly to the validation stage after generation.
 
 ## Decision Log Update
 
@@ -61,11 +64,21 @@ After writing generated artifacts, update the same section with:
 For each analytic rule:
 
 - Use a unique GUID for `id`.
+- Generate YAML for ISV solution publication and ARM deployment-template JSON for direct customer deployment. Do not treat these formats as interchangeable delivery artifacts.
+- For standalone ARM analytic rules, omit `templateVersion` unless `alertRuleTemplateName` is present and nonempty. Template metadata belongs only to rules instantiated from an alert-rule template.
+- When converting YAML schedules to ARM JSON, convert durations to ISO 8601 and enum values to the ARM API representation, such as `1h` to `PT1H` and `gt` to `GreaterThan`.
+- When emitting both YAML and ARM JSON, verify that the rule GUID, display name, description, severity, KQL, schedule, trigger, ATT&CK mappings, entities, and custom details remain equivalent.
 - Include a clear sentence-case `name`, a concise ASCII `description`, valid `severity`, `status`, `kind`, and semantic `version`.
 - Declare the provided or provisional connector ID and data source together in `requiredDataConnectors`.
-- Use valid MITRE tactics and techniques that match the behavior, not merely the product category.
+- Use valid MITRE tactics and techniques that match observable query behavior, not merely the product category or an event that happens later in the attack chain.
+- Review every technique against its official MITRE ATT&CK page. Record the technique ID, tactic, ATT&CK URL, review date, behavior-specific rationale, and the exact query conditions supporting the mapping in `decision-log.md`.
+- Do not add a technique for behavior the query does not observe. For example, a successful authentication after credential guessing does not by itself establish subsequent Valid Accounts abuse.
 - Return columns needed by the entity mappings and include at least one useful investigation entity when the source data supports it.
 - For scheduled rules, include a valid query frequency, query period, trigger operator, and trigger threshold.
+- When a rule claims a sequence, enforce event ordering explicitly. Define the start and end of the initiating episode, require subsequent events after that end when the prose says "followed by," and bound the complete sequence with an explicit correlation horizon.
+- Record the source and rationale for every threshold and time window. Label each value as reference-derived, sample-derived, production-derived, or provisional, and describe the expected false-positive tradeoff.
+- When `queryPeriod` exceeds `queryFrequency`, document how repeated evaluation is handled. Use suppression or a stable episode key when supported; otherwise record duplicate alerts as a remaining operational risk.
+- Phrase the name and description no more strongly than the available telemetry supports. Use "behavior consistent with" when required fields cannot prove the named technique, such as password spraying without an attempted-password or equivalent fingerprint.
 - Write KQL that references only the supplied data source and supported source fields.
 
 Use `.github/instructions/detections.instructions.md` as the governing format and quality guidance.

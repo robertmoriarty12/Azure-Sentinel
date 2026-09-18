@@ -4,7 +4,7 @@ These instructions are for a GitHub Copilot agent. Load this file when a user as
 
 ## Purpose
 
-Use the local Azure-Sentinel repository to refresh the Microsoft Content Database, determine the ASIM schema compatibility of the user's data, retrieve relevant Microsoft-supported examples by ASIM schema, generate source-specific Sentinel content, and validate the staged output.
+Use the local Azure-Sentinel repository to optionally refresh the Microsoft Content Database with the user's approval, determine the ASIM schema compatibility of the user's data, retrieve relevant Microsoft-supported examples by ASIM schema, generate source-specific Sentinel content, and validate the staged output.
 
 The user has already cloned the Azure-Sentinel repository. Do not clone the repository, deploy Azure resources, run `git pull`, switch branches, or modify files under `Solutions`.
 
@@ -13,6 +13,8 @@ The user has already cloned the Azure-Sentinel repository. Do not clone the repo
 The only required input is a path to representative sample data.
 
 The user may also provide a connector ID, a destination table or parser name, and requested content types. If content types are not specified, default to one analytic rule, one hunting query, and one workbook.
+
+Before refreshing the Microsoft Content Database, ask the user whether they want to update it from the current local Azure-Sentinel checkout. Do not treat the initial content-generation request as refresh approval. If the user already explicitly requested or declined a database update in the current conversation, do not ask again.
 
 Do not block database refresh, sample-data classification, or reference retrieval when connector and destination information is absent. Create `content-request.json` with one of these source-binding states:
 
@@ -24,7 +26,7 @@ Do not present a provisional connector ID or data source as an actual deployed S
 
 ## Workflow
 
-Complete the stages in order. Do not skip database refresh, do not generate output before retrieval, and do not present generated output as publish-ready before validation and human review.
+Complete the stages in order. Resolve the database-update choice before classification, do not generate output before retrieval, and do not present generated output as publish-ready before validation and human review.
 
 Before preflight, create a unique run ID using this format:
 
@@ -56,13 +58,23 @@ Verify the imports again before continuing. Do not install unrelated packages.
 
 ### Stage 1: Refresh the Microsoft Content Database
 
-Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/update-microsoft-content-database.md`.
+Ask whether the user wants to update the Microsoft Content Database from new or changed content in the current local checkout.
+
+When the user approves, load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/update-microsoft-content-database.md`. Before refreshing, read the existing runtime database when present and retain its records keyed by `sourcePath` and `sourceHash`. Run the refresh, then compare the refreshed records with that snapshot and record:
+
+- added records: a `sourcePath` exists only after refresh;
+- updated records: a `sourcePath` exists before and after refresh but its `sourceHash` changed;
+- removed records: a `sourcePath` exists only before refresh.
+
+The refresh script rebuilds the runtime database from all currently eligible manifest-listed Microsoft-supported content, so approved new and changed content is included automatically. Do not append records manually. When no runtime database existed before refresh, report all refreshed records as added.
+
+When the user declines, do not run the refresh script. Use the existing runtime database if it is present and nonempty; otherwise use the checked-in baseline database. Stop and explain the missing prerequisite if neither database is available or usable.
 
 The database must include only manifest-listed assets from solutions whose `SolutionMetadata.json` has `support.tier: Microsoft`. Treat Microsoft support tier as the v1 admission rule for good reference examples. Every analytic rule, hunting query, workbook, and parser must receive one or more best-fit ASIM retrieval schemas with evidence and `retrievalConfidence`; deployment playbooks remain `notApplicable`. ASIM schemas organize and retrieve the database; they do not decide whether content is good or claim that every source is ASIM normalized.
 
-Stop if database refresh reports errors or produces no records.
+Stop if an approved database refresh reports errors or produces no records.
 
-Update Step 1 in `decision-log.md` with the refresh-report values and the decision to proceed or stop.
+Update Step 1 in `decision-log.md` with the user's update choice. For an approved refresh, include the refresh-report values, added/updated/removed counts and paths, and the decision to proceed or stop. For a declined refresh, record the selected runtime or baseline database path and the decision to proceed or stop.
 
 ### Stage 2: Classify Sample Data and Retrieve References
 
@@ -88,20 +100,23 @@ Load and follow `Tools/Sentinel-Content-Forge-Accelerator/instructions/validate-
 
 Repair deterministic validation failures in the generated run output and rerun validation. Do not edit reference examples, the database policy, taxonomy, or files under `Solutions` to make validation pass.
 
+For every analytic rule, evaluate its behavior contract with positive, negative, and boundary cases. Review each ATT&CK mapping against the official technique page and tie it to observable query conditions. A sample replay may test semantics but is not KQL execution. If the static validator cannot produce `validation-report.json`, mark the run `staged-incomplete` and do not present it as review-ready.
+
 Update Step 4 in `decision-log.md` after every validation or repair attempt. Preserve earlier failures and repairs rather than replacing them with a later result.
 
 ## Final Response
 
 Report:
 
-1. The database refresh summary: Microsoft-supported solutions, indexed artifacts, warnings, and errors.
+1. The database update choice and database path used. When refreshed, include Microsoft-supported solutions, indexed artifacts, added/updated/removed records, warnings, and errors.
 2. The sample-data ASIM schemas, mapping status, and rationale.
 3. Every selected Microsoft reference path, ASIM mapping status, retrieval confidence, and the source evidence that made it relevant.
 4. Every generated artifact path and its purpose.
 5. Validation status, including failed checks, warnings, and checks not run.
-6. Source-binding status and, when provisional, the connector ID and data source that require confirmation.
-7. The remaining human or test-workspace actions required before the content can move into a solution or pull request.
-8. The path to `decision-log.md` and its final run decision.
+6. Analytic-rule behavior evaluation results, ATT&CK evidence, threshold provenance, schedule-overlap decision, and whether the method was KQL execution or semantic replay.
+7. Source-binding status and, when provisional, the connector ID and data source that require confirmation.
+8. The remaining human or test-workspace actions required before the content can move into a solution or pull request.
+9. The path to `decision-log.md` and its final run decision.
 
 ## Safety and Scope Rules
 

@@ -40,6 +40,20 @@ The Sentinel Content Forge Accelerator is a local, agent-guided content-developm
 
 The project is deliberately not a content deployment tool. It does not modify `Solutions/`, change solution manifests, deploy Azure resources, or create a pull request. It produces review-ready drafts and the evidence needed to decide whether they should later become solution content.
 
+### Enhance an Existing Workbook
+
+The focused workbook pipeline can inspect, safely enhance, and statically validate an existing Sentinel workbook without overwriting it:
+
+```powershell
+$pipeline = "Tools/Sentinel-Content-Foundry-main/Sentinel-Content-Forge-Accelerator/scripts/workbook_pipeline.py"
+python $pipeline inspect --workbook <workbook.json>
+python $pipeline review-visualizations --workbook <workbook.json> --report <visualization-report.json>
+python $pipeline enhance --workbook <workbook.json> --output <workbook.enhanced.json> --report <enhancement-report.json>
+python $pipeline validate --workbook <workbook.enhanced.json> --report <validation-report.json>
+```
+
+The enhancement command adds an empty `fallbackResourceIds` field when absent, a required `TimeRange` parameter when absent, and missing query no-data and time-context settings. Validation checks workbook structure, parameters, query item shape, unresolved parameter references, and hard-coded Azure resource IDs. Visualization review detects unsupported or conflicting chart settings, KQL `render` mismatches, table-only workbooks, missing titles, and missing table or tile formatting. It does not execute KQL or render the workbook.
+
 The wider Azure-Sentinel checkout contributes two read-only inputs:
 
 - `Solutions/` supplies the Microsoft-supported, manifest-listed analytic rules, hunting queries, workbooks, parsers, and playbooks used as reference records.
@@ -369,6 +383,7 @@ Every Python script begins with a short purpose comment. Run executable scripts 
 | [scripts/refresh_database.py](scripts/refresh_database.py) | Local `Solutions/`, selection policy, ASIM taxonomy, and approved mapping registry. | Produces validated JSONL database records and a refresh report. It enforces manifest membership, Microsoft support tier, and ASIM mapping precedence. |
 | [scripts/query_database.py](scripts/query_database.py) | A runtime or baseline JSONL database, canonical `--asim-schema` values, and optional content-type filters. | Validates database records, filters references by schema and content type, and returns them in mapping-strength order. |
 | [scripts/validate_output.py](scripts/validate_output.py) | Staged analytic-rule, hunting-query, or workbook files and an optional content request. | Writes a structured report covering file structure, dependencies, KQL presence, MITRE fields, entity mappings, and manual-review gates. It does not execute KQL or render workbooks. |
+| [scripts/workbook_pipeline.py](scripts/workbook_pipeline.py) | An existing Sentinel workbook JSON file. | Inspects, safely enhances, validates, and reviews visualization configuration without overwriting the source workbook. |
 | [scripts/schema_utils.py](scripts/schema_utils.py) | A JSON document and one of the contract schemas. | Shared `Draft202012Validator` and `FormatChecker` helper used by refresh, retrieval, validation, and tests. It has no standalone command-line workflow. |
 
 Common commands:
@@ -397,7 +412,6 @@ python Tools/Sentinel-Content-Forge-Accelerator/scripts/validate_output.py `
 |---|---|---|
 | `examples/network/` | Azure DDoS and Contoso Edge JSONL event samples with matching content requests. | Demonstrates network telemetry, sample-only intake, and provisional binding. |
 | `examples/identity-authentication/` | Fabrikam Identity Hub JSONL events and a matching content request. | Demonstrates authentication-oriented sample classification. |
-| `examples/cloud-audit/` | Fabrikam Cloud Control JSONL audit events and a matching content request. | Demonstrates cloud control-plane auditing, role changes, credential creation, audit tampering, data export, and remediation scenarios. |
 | `examples/validation/` | A deliberately invalid analytic rule. | Confirms that static validation reports deterministic failures. |
 
 ### Tests

@@ -41,7 +41,8 @@ Use these sections in this order. Keep entries specific to the current run.
 | ASIM schemas | `<schemas or unmapped>` |
 | ASIM mapping status | `<explicit, inferred, ambiguous, unmapped, or not applicable>` |
 | Source binding | `<provided, provisional, or unbound>` |
-| Final status | `<in progress, failed, needs review, or complete>` |
+| Delivery audience and format | `<ISV solution publication: YAML; direct customer deployment: ARM JSON; or both>` |
+| Final status | `<in progress, staged-incomplete, failed, needs review, or complete>` |
 
 ## Step 0: Input and Preflight
 
@@ -130,6 +131,13 @@ Use these sections in this order. Keep entries specific to the current run.
 - Rationale: `<why this binding was supplied or derived>`
 - Integration impact: `<what must happen before it can move into a solution>`
 
+### Delivery-Format Decision
+
+- Audience: `<ISV solution publisher, Sentinel end user/customer, or both>`
+- Format: `<YAML, ARM deployment-template JSON, or both>`
+- Rationale: `<publication or direct-deployment requirement>`
+- Equivalence requirement: `<how YAML and ARM behavior will be compared when both are generated>`
+
 ### Content Coverage Evaluation
 
 | Requested type | Requested count | Generated count | Decision |
@@ -144,12 +152,27 @@ Use these sections in this order. Keep entries specific to the current run.
 |---|---|---|---|---|
 | `<path>` | `<scenario>` | `<fields>` | `Solutions/...` | `<observed behavior or meaningful coverage>` |
 
+### Analytic Rule Behavior Contracts
+
+| Artifact | Material claim | Enforcing query conditions | Grouping key | Threshold and provenance | Time and ordering semantics | Overlap policy |
+|---|---|---|---|---|---|---|
+| `<path>` | `<claim from name or description>` | `<filters, joins, and predicates>` | `<fields>` | `<value; reference, sample, production, or provisional>` | `<window and event order>` | `<suppression, episode key, or accepted duplicate risk>` |
+
+### ATT&CK Mapping Review
+
+| Artifact | Technique and tactic | Official URL | Reviewed | Observable support | Limitation |
+|---|---|---|---|---|---|
+| `<path>` | `<ID; tactic>` | `https://attack.mitre.org/techniques/...` | `<YYYY-MM-DD>` | `<query conditions>` | `<what the telemetry cannot prove>` |
+
 ### Generation Evaluations
 
 | Evaluation | Result | Decision or evidence |
 |---|---|---|
 | Source-field coverage | `<pass or fail>` | `<every referenced field exists, or list missing fields>` |
 | Binding consistency | `<pass or fail>` | `<connector and data source used consistently>` |
+| Target-schema mapping | `<pass or fail>` | `<mapping from sample/API fields to target table columns and dynamic properties>` |
+| Delivery-format suitability | `<pass or fail>` | `<why YAML or ARM JSON matches the intended audience>` |
+| Dual-format equivalence | `<pass, fail, or not applicable>` | `<comparison of rule behavior across YAML and ARM JSON>` |
 | Scenario distinctness | `<pass or fail>` | `<why outputs are not duplicates>` |
 | Originality | `<pass or fail>` | `<how output adapts patterns without copying a source artifact>` |
 | Unsupported scenario handling | `<generated or omitted>` | `<reason>` |
@@ -164,15 +187,21 @@ Use these sections in this order. Keep entries specific to the current run.
 
 ### Behavior Evaluation
 
-| Artifact | Evaluation method | Observed result | Result |
-|---|---|---|---|
-| `<path>` | `<sample-data replay, KQL test, or workbook rendering>` | `<specific counts or outcome>` | `<pass, fail, or not run>` |
+| Artifact | Case | Expected alerts | Observed alerts | False positives | False negatives | Method | Result |
+|---|---|---:|---:|---:|---:|---|---|
+| `<path>` | `<positive, negative, or boundary condition>` | `<count>` | `<count>` | `<count>` | `<count>` | `<sample replay or KQL test>` | `<pass, fail, or not run>` |
 
 ### Repairs
 
 | Issue | Decision | Result |
 |---|---|---|
 | `<validation check or issue>` | `<repair performed or why no repair>` | `<rerun result>` |
+
+### Deployment Verification
+
+| Artifact | Audience | Deployment result | Evidence | Remaining limitation |
+|---|---|---|---|---|
+| `<path>` | `<ISV or customer>` | `<pass, fail, or not run>` | `<observed deployment response>` | `<runtime behavior not yet observed, if applicable>` |
 
 ### Remaining Review Gates
 
@@ -200,8 +229,14 @@ Record each evaluation that applies to the run. A result may be `pass`, `fail`, 
 9. Requested-content coverage: compare requested counts to generated counts and explain omissions.
 10. Scenario distinctness: explain why generated rules, hunts, and workbook views are not redundant.
 11. Static validation: report the latest validation result and preserve any repair loop.
-12. Behavior evaluation: when possible, replay thresholds or filters against representative sample data; otherwise state why it was not run.
-13. Human and test-workspace gates: state KQL execution, workbook rendering, analyst review, and source-binding confirmation separately.
+12. Behavior contract: map every analytic-rule claim to query conditions, grouping, thresholds, windows, event ordering, and overlap handling.
+13. ATT&CK mapping: record official evidence and explain which observable query behavior supports each tactic and technique.
+14. Behavior evaluation: test positive, negative, and boundary cases for every analytic rule. Record expected and observed alerts, false positives, and false negatives. State explicitly whether evaluation used KQL execution or a semantic replay.
+15. Static validation availability: when no `validation-report.json` is produced, mark the run `staged-incomplete`; other checks do not substitute for it.
+16. Human and test-workspace gates: state KQL execution, workbook rendering, analyst review, schedule-overlap handling, and source-binding confirmation separately.
+17. Delivery format: record whether the intended consumer is an ISV publishing solution YAML or a customer deploying ARM JSON, and confirm the generated artifact matches that audience.
+18. Target-table translation: record how representative API or export fields map to the actual Log Analytics table, including casing, dynamic properties, and result semantics.
+19. ARM template validity: for standalone rules, confirm `templateVersion` is absent unless `alertRuleTemplateName` is nonempty; preserve failed deployment errors and subsequent repairs.
 
 ## When to Update
 

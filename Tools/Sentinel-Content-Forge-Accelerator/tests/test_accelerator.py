@@ -369,6 +369,31 @@ class SentinelContentForgeAcceleratorTests(unittest.TestCase):
             self.assertIn("dependency.query-data-source", invalid_check_ids)
             self.assertIn("semantic.schedule-order", invalid_check_ids)
 
+            valid_checks_by_id = {
+                check["id"]: check for check in valid_artifact["checks"]
+            }
+            self.assertNotIn("semantic.schedule-overlap", valid_checks_by_id)
+
+    def test_static_validation_warns_when_schedule_overlaps(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            rule_directory = Path(temporary_directory) / "Analytic Rules"
+            rule_directory.mkdir(parents=True)
+            rule_path = rule_directory / "OverlappingRule.yaml"
+            rule_path.write_text(
+                VALID_RULE.replace("queryFrequency: 1h", "queryFrequency: 15m"),
+                encoding="utf-8",
+            )
+
+            artifact = validate_artifact(
+                rule_path, ("ExampleConnector", "ExampleNetworkEvents_CL")
+            )
+
+            self.assertIsNotNone(artifact)
+            checks_by_id = {check["id"]: check for check in artifact["checks"]}
+            self.assertEqual(
+                "warning", checks_by_id["semantic.schedule-overlap"]["status"]
+            )
+
     def test_sample_only_request_defers_source_binding(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             request_path = Path(temporary_directory) / "content-request.json"
