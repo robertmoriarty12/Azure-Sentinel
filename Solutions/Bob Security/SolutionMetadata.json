@@ -1,0 +1,21 @@
+{
+  "publisherId": "bobsec1326",
+  "offerId": "bob_security",
+  "firstPublishDate": "2026-10-13",
+  "version": "3.0.0",
+  "providers": [
+    "Bob Security"
+  ],
+  "categories": {
+    "domains": [
+      "Security - Threat Protection",
+      "Security - Cloud Security"
+    ]
+  },
+  "support": {
+    "name": "Bob Security",
+    "email": "rmoriarty@microsoft.com",
+    "tier": "Partner",
+    "link": "https://bobsecurity.com"
+  }
+}

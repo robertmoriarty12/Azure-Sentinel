@@ -1,0 +1,14 @@
+{
+  "Name": "Bob Security",
+  "Author": "Bob Security - rmoriarty@microsoft.com",
+  "Logo": "<img src=\"https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Logos/Azure_Sentinel.svg\" width=\"75px\" height=\"75px\">",
+  "Description": "The [Bob Security](https://bobsecurity.com) solution for Microsoft Sentinel enables push-based ingestion of unified agent risk alerts into the `UnifiedAgentRisk_CL` table.\n\n**Underlying Microsoft Technologies used:**\n\nThis solution takes a dependency on the following technologies, and some of these dependencies either may be in [Preview](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) state or might result in additional ingestion or operational costs:\n\na. [Azure Monitor Logs Ingestion API](https://learn.microsoft.com/azure/azure-monitor/logs/logs-ingestion-api-overview)\n\nb. [Azure Monitor data collection rules](https://learn.microsoft.com/azure/azure-monitor/essentials/data-collection-rule-overview)",
+  "Data Connectors": [
+    "Data Connectors/BobSecurity_PUSH_CCP/BobSecurity_connectorDefinition.json"
+  ],
+  "BasePath": "C:\\GitHub\\Azure-Sentinel\\Solutions\\Bob Security",
+  "Version": "3.0.0",
+  "Metadata": "SolutionMetadata.json",
+  "TemplateSpec": true,
+  "Is1PConnector": false
+}
