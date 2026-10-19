@@ -11,8 +11,9 @@ Set these environment variables before running:
     LOGS_DCR_RULE_ID
     LOGS_DCR_STREAM_NAME
 
-The tenant ID is used only for OAuth authentication. TenantId is reserved and
-is not included in the uploaded records.
+AZURE_TENANT_ID is used only for OAuth authentication. TenantId is reserved and
+is not included in the uploaded records. CustomerTenantId identifies the
+customer represented by each sample.
 """
 
 import os
@@ -33,6 +34,7 @@ def create_samples():
 
     # Required fields
     required = {
+        "CustomerTenantId": "8f3c6d19-2a74-4b61-9e30-51d8e7a4c902",
         "PartnerSchemaVersion": "1.0.0",
         "EventSchema": "AlertEvent",
         "EventSchemaVersion": "0.1",

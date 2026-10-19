@@ -7,7 +7,7 @@
     "Data Connectors/BobSecurity_PUSH_CCP/BobSecurity_connectorDefinition.json"
   ],
   "BasePath": "C:\\GitHub\\Azure-Sentinel\\Solutions\\Bob Security",
-  "Version": "3.0.0",
+  "Version": "3.1.0",
   "Metadata": "SolutionMetadata.json",
   "TemplateSpec": true,
   "Is1PConnector": false
